@@ -2,8 +2,13 @@ function DadosDAO(connection){
 	this._connection = connection;
 }
 
-DadosDAO.prototype.getAssociacoes = function(callback){
-	this._connection.query('select * from ASSOCIACOES', callback);
+DadosDAO.prototype.getAssociacoes = function(tipo, callback){
+	console.log(">>>>", tipo.tipo);
+	this._connection.query('select * from ASSOCIACOES where tipo = ?', tipo.tipo, callback);
+}
+
+DadosDAO.prototype.getAssociacao = function(id, callback){
+	this._connection.query('select * from ASSOCIACOES where id= ' + id.id, callback);
 }
 
 /*NoticiasDAO.prototype.getNoticia = function(id_noticia, callback){

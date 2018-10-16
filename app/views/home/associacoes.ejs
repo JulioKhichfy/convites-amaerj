@@ -1,0 +1,182 @@
+<!DOCTYPE HTML>
+<html lang="pt-br">
+<head>
+	<meta charset="UTF-8">
+
+	<title>Gerência de eventos e convites</title>
+
+	<!-- bootstrap - link cdn -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+	<!-- incluindo css -->
+	<link href="css/style.css" rel="stylesheet">
+
+	<!-- favicon -->
+	<link rel="shortcut icon" href="images/favicon.ico" />
+</head>
+
+	<body>
+		<nav class="navbar navbar-default navbar-static-top">
+			<div class="container">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					
+					<img src="images/logo.png" />
+				</div>
+
+				<div id="navbar" class="navbar-collapse collapse">
+					<ul class="nav navbar-nav navbar-right">
+						<li><a href="index.html">HOME</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<form action="/filtrar" method="post">
+						<label for="nome">Tipo:</label>
+						<input type="tipo" name="tipo" placeholder="nome">
+						<input type="button" value="Pesquisar por tipo" >	
+					</form>
+				</div>
+        		<div class="col-md-12">
+			        <h4>ASSOCIAÇÕES</h4>
+			        <div class="table-responsive">
+              			<table id="mytable" class="table table-bordred table-striped">
+                   			<thead>
+                   				<th><input type="checkbox" id="checkall" /></th>
+				                <th>Tratamento</th>
+			                    <th>Nome</th>
+		                     	<th>Cargo</th>
+		                     	<th>Email</th>
+		                     	<th>Telefone</th>
+		                     	<th>CEP</th>
+		                     	<th>Endereço</th>
+		                     	<th>Sexo</th>
+		                     	<th>Situação</th>
+
+		                      	<th>Editar</th>
+		                       	<th>Remover</th>
+                   			</thead>
+    						<tbody>
+								<% for(var i = 0; i < associacoes.length; i++) {%>
+									<tr>
+									    <td><input type="checkbox" class="checkthis" /></td>
+									    <td><%= associacoes[i].tratamento %></td>
+									    <td><%= associacoes[i].nome %></td>
+									    <td><%= associacoes[i].cargo %></td>
+									    <td><%= associacoes[i].email %></td>
+									    <td><%= associacoes[i].telefone %></td>
+									    <td><%= associacoes[i].cep %></td>
+									    <td><%= associacoes[i].endereco %></td>
+									    <td><%= associacoes[i].sexo %></td>
+									    <td><%= associacoes[i].situacao %></td>
+									    <td>
+									    	<a href="/editar?id=<%=associacoes[i].id%>" >editar</a>
+									    	<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-associacao="flamengo">Open modal for @mdo</button>
+									    	<p data-placement="top" data-toggle="tooltip" title="Edit">
+										    	<button class="btn btn-primary btn-xs" data-title="Edit" data-toggle="modal" data-target="#edit" >
+										    		<span class="glyphicon glyphicon-pencil"></span>
+										    	</button>
+									    	</p>
+									    </td>
+									    <td>
+									    	<p data-placement="top" data-toggle="tooltip" title="Delete">
+									    		<button class="btn btn-danger btn-xs" data-title="Delete" data-toggle="modal" data-target="#delete" >
+									    			<span class="glyphicon glyphicon-trash"></span>
+									    		</button>
+									    	</p>
+									    </td>
+									</tr>
+								<%}%>
+    						</tbody>
+						</table>
+						<div class="clearfix"></div>
+						<ul class="pagination pull-right">
+						  <li class="disabled"><a href="#"><span class="glyphicon glyphicon-chevron-left"></span></a></li>
+						  <li class="active"><a href="#">1</a></li>
+						  <li><a href="#">2</a></li>
+						  <li><a href="#">3</a></li>
+						  <li><a href="#">4</a></li>
+						  <li><a href="#">5</a></li>
+						  <li><a href="#"><span class="glyphicon glyphicon-chevron-right"></span></a></li>
+						</ul>
+        			</div>
+    			</div>
+			</div>
+		</div>
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="nome" class="col-form-label"></label>
+            <input type="text" class="form-control" id="nome">
+          </div>
+          <div class="form-group">
+            <label for="message-text" class="col-form-label">Message:</label>
+            <textarea class="form-control" id="message-text"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Send message</button>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+    
+<div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+					<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+				</button>
+				<h4 class="modal-title custom_align" id="Heading">Delete this entry</h4>
+			</div>
+			<div class="modal-body">
+				<div class="alert alert-danger">
+					<span class="glyphicon glyphicon-warning-sign"></span> Are you sure you want to delete this Record?
+				</div>
+			</div>
+			<div class="modal-footer ">
+				<button type="button" class="btn btn-success" >
+					<span class="glyphicon glyphicon-ok-sign"></span> Yes
+				</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">
+					<span class="glyphicon glyphicon-remove"></span> No
+				</button>
+			</div>
+		</div>
+	<!-- /.modal-content --> 
+	</div>
+<!-- /.modal-dialog --> 
+</div>
+	    
+<!-- JQuery -->
+<script src="js/jquery-2.2.1.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+<script src="js/table-bootsnip.js"></script>
+	
+	</body>
+</html>
