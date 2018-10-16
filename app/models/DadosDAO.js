@@ -2,13 +2,19 @@ function DadosDAO(connection){
 	this._connection = connection;
 }
 
-DadosDAO.prototype.getAssociacoes = function(tipo, callback){
-	console.log(">>>>", tipo.tipo);
-	this._connection.query('select * from ASSOCIACOES where tipo = ?', tipo.tipo, callback);
+DadosDAO.prototype.getAssociacoes = function(tipos, callback){
+	console.log(">>>> tipos " + tipos);
+	var tableName = tipos.replace(' ', '');
+	console.log(">>>> tableName " + tableName);
+	this._connection.query("select * from "+tableName+" where tipo = ?", tipos, callback);
 }
 
 DadosDAO.prototype.getAssociacao = function(id, callback){
 	this._connection.query('select * from ASSOCIACOES where id= ' + id.id, callback);
+}
+
+DadosDAO.prototype.getTipos = function(callback){
+	this._connection.query('select distinct tipo from associacoes union select distinct tipo from autoridadesespeciais', callback);
 }
 
 /*NoticiasDAO.prototype.getNoticia = function(id_noticia, callback){

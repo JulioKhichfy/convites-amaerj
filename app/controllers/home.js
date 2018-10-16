@@ -12,10 +12,14 @@
 module.exports.filtrar = function(application, req, res){
 	var connection = application.config.dbConnection();
 	var dadosModel = new application.app.models.DadosDAO(connection);
-	var tipo = req.body;
-	console.log("tipo a ser filtrado " + req.body);
-	dadosModel.getAssociacoes(tipo, function(error, result){
-		res.render("home/lista", {listagem : result});
+	var tipos;
+	console.log("tipo a ser filtrado " + req.body['tipos']);
+	dadosModel.getTipos(function(error,result){
+		tipos=result;
+	});
+
+	dadosModel.getAssociacoes(req.body['tipos'], function(error, result){
+		res.render("home/lista", {listagem : result, tipos:tipos});
 		//res.send(result);
 	});
 
@@ -23,7 +27,13 @@ module.exports.filtrar = function(application, req, res){
 
 module.exports.show = function(application, req, res){
 	var listagem=null;
-	res.render("home/lista", {listagem:listagem});
+	var connection = application.config.dbConnection();
+	var dadosModel = new application.app.models.DadosDAO(connection);
+	dadosModel.getTipos(function(error,result){
+		res.render("home/lista", {listagem:listagem, tipos:result});
+		//res.send(result);
+	});
+	
 }
 
 module.exports.editar = function(application, req, res){

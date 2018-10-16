@@ -5,7 +5,7 @@ module.exports = function(application){
 	});*/
 
 	application.get('/show', function(req, res){
-		application.app.controllers.home.filtrar(application, req, res);
+		application.app.controllers.home.show(application, req, res);
 	});
 
 	application.post('/filtrar', function(req, res){
