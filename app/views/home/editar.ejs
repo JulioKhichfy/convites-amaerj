@@ -43,7 +43,7 @@
         		<div class="col-md-12">
 			        <h4><%= tablename %></h4>
 			        <div class="table-responsive">
-              		<form action="/salvar" method="post">
+              		<form action="/update" method="post">
               			<table id="mytable" class="table table-bordred table-striped">
                    			<thead>
 				                <th>Tratamento</th>
@@ -51,8 +51,8 @@
 			                </thead>    
 			                <tbody>
 								<tr>
-								    <td><input type="text" name ="" value="<% tupla[0].tratamento %>" placeholder="TRATAMENTO"></td>
-								    <td><input type="text" name ="" value="<%= tupla[0].nome %>" placeholder="NOME"></td>
+								    <td><input type="text" name ="tratamento" value="<%= tupla[0].tratamento %>" placeholder="TRATAMENTO"></td>
+								    <td><input type="text" name ="nome" value="<%= tupla[0].nome %>" placeholder="NOME"></td>
 								</tr>
 							</tbody>
 							
@@ -63,9 +63,9 @@
 			                </thead>
 			                <tbody>
 			                	<tr>
-		                	 		<td><input type="text" name ="" value="<%= tupla[0].cargo %>" placeholder="CARGO"></td>
-						    		<td><input type="text" name ="" value="<%= tupla[0].email %>" placeholder="EMAIL"></td>
-							    	<td><input type="text" name ="" value="<%= tupla[0].telefone %>" placeholder="TELEFONE"></td>
+		                	 		<td><input type="text" name ="cargo" value="<%= tupla[0].cargo %>" placeholder="CARGO"></td>
+						    		<td><input type="text" name ="email" value="<%= tupla[0].email %>" placeholder="EMAIL"></td>
+							    	<td><input type="text" name ="telefone" value="<%= tupla[0].telefone %>" placeholder="TELEFONE"></td>
 							   	</tr>
 			                </tbody>
 
@@ -76,9 +76,9 @@
 			                </thead> 
 			                <tbody>
 			                	<tr>
-			                		<td><input type="text" name ="" value="<%= tupla[0].cep %>" placeholder="CEP>"></td>
-								    <td><input type="text" name ="" value="<%= tupla[0].situacao %>" placeholder="SITUAÇÃO"></td>
-								    <td><input type="text" name ="" value="<%= tupla[0].sexo %>" placeholder="SEXO"></td>
+			                		<td><input type="text" name ="cep" value="<%= tupla[0].cep %>" placeholder="CEP>"></td>
+								    <td><input type="text" name ="situacao" value="<%= tupla[0].situacao %>" placeholder="SITUAÇÃO"></td>
+								    <td><input type="text" name ="sexo" value="<%= tupla[0].sexo %>" placeholder="SEXO"></td>
 								</tr>   
 			                </tbody>   
 		                      	
@@ -90,7 +90,7 @@
     						<tbody>
     							<tr>
 							   		<td>
-								   		<textarea rows="6" cols="80" name="endereco"> <%= tupla[0].endereco %>"><%= tupla[0].endereco %></textarea>
+								   		<textarea rows="6" cols="80" name="endereco"><%= tupla[0].endereco %></textarea>
 							   		</td>
 							   		<td>
 										<a href="javascript:history.back()"  class="btn btn-primary">CANCELAR</a>
@@ -100,7 +100,8 @@
 									</td>
 								</tr>
     						</tbody>
-							<input type="hidden" value="<%= tupla[0].id %>">
+							<input type="hidden" name="id" value="<%= tupla[0].id %>">
+							<input type="hidden" name="tablename" value="<%= tablename %>">
 						</table>
 					</form>
         			</div>

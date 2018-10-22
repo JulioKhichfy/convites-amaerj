@@ -1,8 +1,8 @@
 module.exports = function(application){
 
-	/*application.get('/associacoes', function(req, res){
-		application.app.controllers.home.associacoes(application, req, res);
-	});*/
+	application.post('/update', function(req, res){
+		application.app.controllers.home.update(application, req, res);
+	});
 
 	application.get('/show', function(req, res){
 		application.app.controllers.home.show(application, req, res);

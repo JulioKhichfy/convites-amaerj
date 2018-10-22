@@ -3,6 +3,9 @@ module.exports.filtrar = function(application, req, res){
 	var connection = application.config.dbConnection();
 	var dadosModel = new application.app.models.DadosDAO(connection);
 	var tipo = req.body['tipos'];
+	if(tipo==undefined){
+		return res.redirect('/show');
+	}
 	var tipos;
 	dadosModel.getTipos(function(error,result){
 		tipos=result;
@@ -23,8 +26,6 @@ module.exports.show = function(application, req, res){
 		res.render("home/lista", {listagem:listagem, tipos:result});
 		//res.send(result);
 	});
-
-	
 }
 
 module.exports.editar = function(application, req, res){
@@ -38,4 +39,16 @@ module.exports.editar = function(application, req, res){
 		res.render("home/editar", {tupla : result, tablename:tablename});
 		//res.send(result);
 	});	
+
+}
+
+module.exports.update = function(application, req, res){
+	var connection = application.config.dbConnection();
+	var dadosModel = new application.app.models.DadosDAO(connection);
+	var tupla=req.body;
+	dadosModel.update(tupla, function(error,result){
+		//res.render("home/lista", {listagem:listagem, tipos:result});
+		//res.send(result);
+		res.redirect('/show');
+	});
 }

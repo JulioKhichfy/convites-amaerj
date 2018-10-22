@@ -18,6 +18,22 @@ DadosDAO.prototype.getTipos = function(callback){
 	this._connection.query('SELECT distinct tipo FROM ASSOCIACOES UNION SELECT  distinct tipo FROM AUTORIDADESESPECIAIS', callback);
 }
 
+DadosDAO.prototype.update = function(body,callback){
+	var tablename = body["tablename"].replace(" ","");
+	var id = body["id"];
+	var tratamento = body["tratamento"];
+	var nome = body["nome"]; 
+	var cargo = body["cargo"];
+	var email = body["email"];
+	var telefone = body["telefone"];
+	var cep = body["cep"];
+	var endereco = body["endereco"];
+	var situacao = body["situacao"];
+	var sexo = body["sexo"];
+	var sql = 'UPDATE '+tablename+' SET tratamento =\''+tratamento+'\', nome = \''+nome+'\',cargo=\''+cargo+'\',email=\''+email+'\',telefone=\''+telefone+'\',cep=\''+cep+'\',endereco=\''+endereco+'\',situacao=\''+situacao+'\',sexo=\''+sexo+'\' WHERE id = '+id;
+	console.log("SQL " + sql);
+	this._connection.query(sql,callback);
+}		
 /*NoticiasDAO.prototype.getNoticia = function(id_noticia, callback){
 	console.log(id_noticia.id_noticia);
 	this._connection.query('select * from noticias where id_noticia = ' + id_noticia.id_noticia, callback);
