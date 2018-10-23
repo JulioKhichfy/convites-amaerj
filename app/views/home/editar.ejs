@@ -88,6 +88,8 @@
     							<th></th>
     						</thead>
     						<tbody>
+    							<input type="hidden" name="id" value="<%= tupla[0].id %>">
+								<input type="hidden" name="tablename" value="<%= tablename %>">
     							<tr>
 							   		<td>
 								   		<textarea rows="6" cols="80" name="endereco"><%= tupla[0].endereco %></textarea>
@@ -100,8 +102,7 @@
 									</td>
 								</tr>
     						</tbody>
-							<input type="hidden" name="id" value="<%= tupla[0].id %>">
-							<input type="hidden" name="tablename" value="<%= tablename %>">
+							
 						</table>
 					</form>
         			</div>

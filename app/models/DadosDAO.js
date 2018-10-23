@@ -2,20 +2,18 @@ function DadosDAO(connection){
 	this._connection = connection;
 }
 
-DadosDAO.prototype.getTable = function(tablename,tipo, callback){
-	this._connection.query("select * from "+tablename+" where tipo = ?", tipo, callback);
+DadosDAO.prototype.getTable = function(tablename, callback){
+	console.log("no model tbn "+ tablename);
+	this._connection.query("select * from "+tablename+" where tipo = ?", tablename, callback);
 }
 
 DadosDAO.prototype.getTupla = function(id, tablename, callback){
-	var table = tablename.replace(" ", "");
-	table = table.replace("-", "");
-	console.log("no model "+ id, " " + table);
-	this._connection.query("select id, tratamento, nome, cargo, email, telefone, cep, endereco, sexo, situacao from "+ table +" where id = " + id, callback);
+	this._connection.query("select id, tratamento, nome, cargo, email, telefone, cep, endereco, sexo, situacao from "+ tablename +" where id = " + id, callback);
 }
 
 
 DadosDAO.prototype.getTipos = function(callback){
-	this._connection.query('SELECT distinct tipo FROM ASSOCIACOES UNION SELECT  distinct tipo FROM AUTORIDADESESPECIAIS', callback);
+	this._connection.query('SELECT distinct tipo FROM ASSOCIACOES UNION SELECT distinct tipo FROM AUTORIDADES_ESPECIAIS', callback);
 }
 
 DadosDAO.prototype.update = function(body,callback){

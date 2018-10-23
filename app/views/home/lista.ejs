@@ -41,11 +41,10 @@
 			<div class="row">
 				<div class="col-md-12">
 					<form action="/filtrar" method="post">
-						<label for="nome">Tipo:</label>
-						<select name="tipos">
+						<select name="tables">
 							<option selected="selected" disabled="true">Selecione</option>		
-							<% for(var k = 0; k < tipos.length; k++) {%>
-								<option value='<%= tipos[k].tipo %>'><%= tipos[k].tipo %></option>		
+							<% for(var k = 0; k < tables.length; k++) {%>
+								<option value='<%= tables[k] %>'><%= tables[k] %></option>		
 							<% } %>
 						</select>
 						<input type="submit" value="Pesquisar por tipo" >	
@@ -53,7 +52,7 @@
 				</div>
 				<%if(listagem != null){%>
         		<div class="col-md-12">
-			        <h4><%= listagem[0].tipo %></h4>
+			        <h4><%= (listagem[0].tipo) %></h4>
 			        <div class="table-responsive">
               			<table id="mytable" class="table table-bordred table-striped">
                    			<thead>
