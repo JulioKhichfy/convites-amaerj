@@ -4,11 +4,17 @@ function DadosDAO(connection){
 
 DadosDAO.prototype.getTable = function(tablename, callback){
 	console.log("no model tbn "+ tablename);
-	this._connection.query("select * from "+tablename+" where tipo = ?", tablename, callback);
+	this._connection.query("select * from "+tablename+" where tipo = ? " + " order by id desc ", tablename, callback);
 }
 
+DadosDAO.prototype.buscar = function(form, callback){
+	
+	this._connection.query("select * from "+form["tipo"]+" where tipo like '%"+form["buscanome"]+"%' order by id desc ", callback);
+}
+
+
 DadosDAO.prototype.getTupla = function(id, tablename, callback){
-	this._connection.query("select id, tratamento, nome, cargo, email, telefone, cep, endereco, sexo, situacao from "+ tablename +" where id = " + id, callback);
+	this._connection.query("select id, tratamento, nome, cargo, email, telefone, cep, endereco, sexo, situacao from "+ tablename +" where id = " + id , callback);
 }
 
 
@@ -32,6 +38,15 @@ DadosDAO.prototype.update = function(body,callback){
 	console.log("SQL " + sql);
 	this._connection.query(sql,callback);
 }		
+
+DadosDAO.prototype.salvar = function(form, callback){
+	this._connection.query('insert into '+form["tipo"]+' set ? ', form, callback)
+}
+
+DadosDAO.prototype.remover = function(form, callback){
+	this._connection.query('delete from '+form["tipo"]+' where id= ? ', form["id"], callback)
+}
+
 /*NoticiasDAO.prototype.getNoticia = function(id_noticia, callback){
 	console.log(id_noticia.id_noticia);
 	this._connection.query('select * from noticias where id_noticia = ' + id_noticia.id_noticia, callback);

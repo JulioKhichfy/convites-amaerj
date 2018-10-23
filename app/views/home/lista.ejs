@@ -31,7 +31,7 @@
 
 				<div id="navbar" class="navbar-collapse collapse">
 					<ul class="nav navbar-nav navbar-right">
-						<li><a href="index.html">HOME</a></li>
+						<li><a href="/show">HOME</a></li>
 					</ul>
 				</div>
 			</div>
@@ -52,7 +52,36 @@
 				</div>
 				<%if(listagem != null){%>
         		<div class="col-md-12">
-			        <h4><%= (listagem[0].tipo) %></h4>
+        			<div class="jumbotron jumbotron-fluid">
+  						<div class="container">
+    						<div class="row">
+					        	<div class="col-md-9">
+					        		<h3><%= listagem[0].tipo %></h3>
+					        	</div>
+					        	<div class="col-md-3">
+					        		<a href="/novo?tablename=<%=listagem[0].tipo%>" class="btn btn-primary">INSERIR NOVO +</a>
+					        	</div>
+			        		</div>
+			        		<div class="w-100"></div>
+			        		<div class="w-100"></div>
+			        		<div class="row">
+			        			<form action="/buscar" method="post" name=formbuscar>
+						        	<div class="col-md-2">
+						        		<input type="text" name="buscanome" placeholder="Buscar por nome">
+						        	</div>
+						        	<div class="col-md-2">
+						        		<input type="text" name="email" placeholder="Buscar por email">
+						        	</div>
+						        	<input type="hidden" name="tipo" value="<%= listagem[0].tipo %>" placeholder="Buscar por email">
+						        	<div class="col-md-2">
+						        		<button type="submit" class="btn btn-primary">PESQUISAR</button>
+						        	</div>
+					        	</form>
+			        		</div>
+  						</div>
+					</div>
+			        		
+			        <hr>
 			        <div class="table-responsive">
               			<table id="mytable" class="table table-bordred table-striped">
                    			<thead>
@@ -86,9 +115,13 @@
 									    	<a href="/editar?id=<%=listagem[i].id%>&tablename=<%=listagem[0].tipo%>" class="btn btn-primary">editar</a>
 									    </td>
 									    <td>
-									    	<a href="/remover?id=<%=listagem[i].id%>" class="btn btn-primary">
-									    		<span class="glyphicon glyphicon-trash"></span>
-									    	</a>
+									    	<form action="/remover" method="post">
+									    		<input type="hidden" name="id" value="<%=listagem[i].id%>">
+									    		<input type="hidden" name="tipo" value="<%=listagem[i].tipo%>">
+										    	<button type="submit" class="btn btn-primary">
+										    		<span class="glyphicon glyphicon-trash"></span>
+										    	</button>
+									    	</form>
 									    </td>
 									</tr>
 								<%}%>

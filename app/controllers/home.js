@@ -2,11 +2,11 @@
 module.exports.filtrar = function(application, req, res){
 	var connection = application.config.dbConnection();
 	var dadosModel = new application.app.models.DadosDAO(connection);
-	var tbn = req.body['tables'].replace(" ","_");
+	var tbn = req.body['tables'];
 	if(tbn==undefined){
 		return res.redirect('/show');
 	}
-	
+	tbn = tbn.replace(" ","_");
 	var tipos;
 	dadosModel.getTipos(function(error,result){
 		tipos=parser_table_name(result);
@@ -51,21 +51,20 @@ module.exports.editar = function(application, req, res){
 
 }
 
+module.exports.novo = function(application, req, res){
+	res.render("home/novo", {tablename : req.query['tablename']});
+}
+
 module.exports.update = function(application, req, res){
 	var connection = application.config.dbConnection();
 	var dadosModel = new application.app.models.DadosDAO(connection);
-	
 	var tupla=req.body;
-	console.log(">>>>> tupla " + tupla["tablename"]);
-
 	var dados;
 	var tipos;
-	
 
 	dadosModel.update(tupla, function(error,result){
 		console.log("callback do update ERROR " + error);
 		console.log("callback do update RESULT " + result);
-		
 	});
 
 	dadosModel.getTable(tupla["tablename"], function(error, result){
@@ -74,12 +73,64 @@ module.exports.update = function(application, req, res){
 
 	dadosModel.getTipos(function(error,result){
 		tipos=parser_table_name(result);
-		console.log(">>>>> tipos " + tipos);
 		res.render("home/lista", {listagem:dados, tables:tipos});
 	});
-	
-	//res.render("home/lista", {listagem:dados, tables:tipos});
-		//res.send(result);
-	
-	
+}
+
+module.exports.salvar = function(application, req, res){
+	var connection = application.config.dbConnection();
+	var dadosModel = new application.app.models.DadosDAO(connection);
+	var form=req.body;
+	var dados;
+	var tipos;
+
+	dadosModel.salvar(form, function(error, result){
+		console.log("callback do update ERROR " + error);
+		console.log("callback do update RESULT " + result);
+	});
+	dadosModel.getTable(form["tipo"], function(error, result){
+		dados=result;
+	});
+
+	dadosModel.getTipos(function(error,result){
+		tipos=parser_table_name(result);
+		res.render("home/lista", {listagem:dados, tables:tipos});
+	});	
+}
+
+module.exports.remover = function(application, req, res){
+	var connection = application.config.dbConnection();
+	var dadosModel = new application.app.models.DadosDAO(connection);
+	var form=req.body;
+	var dados;
+	var tipos;
+	dadosModel.remover(form, function(error, result){
+		console.log("callback do update ERROR " + error);
+		console.log("callback do update RESULT " + result);
+	});
+	dadosModel.getTable(form["tipo"], function(error, result){
+		dados=result;
+	});
+
+	dadosModel.getTipos(function(error,result){
+		tipos=parser_table_name(result);
+		res.render("home/lista", {listagem:dados, tables:tipos});
+	});
+}
+
+module.exports.buscar = function(application, req, res){
+	var connection = application.config.dbConnection();
+	var dadosModel = new application.app.models.DadosDAO(connection);
+	var form=req.body;
+	var dados;
+	dadosModel.buscar(form, function(error, result){
+		console.log("callback do update ERROR " + error);
+		console.log("callback do update RESULT " + result);
+		dados=result;
+	});
+
+	dadosModel.getTipos(function(error,result){
+		tipos=parser_table_name(result);
+		res.render("home/lista", {listagem:dados, tables:result});
+	});
 }
