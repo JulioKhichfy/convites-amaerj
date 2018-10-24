@@ -39,27 +39,17 @@
 
 		<div class="container">
 			<div class="row">
-				<div class="col-md-12">
-					<form action="/filtrar" method="post">
-						<select name="tables">
-							<option selected="selected" disabled="true">Selecione</option>		
-							<% for(var k = 0; k < tables.length; k++) {%>
-								<option value='<%= tables[k] %>'><%= tables[k] %></option>		
-							<% } %>
-						</select>
-						<input type="submit" value="Pesquisar por tipo" >	
-					</form>
-				</div>
-				<%if(listagem != null){%>
+			
+				<%if(listagem.length > 0){%>
         		<div class="col-md-12">
         			<div class="jumbotron jumbotron-fluid">
   						<div class="container">
     						<div class="row">
 					        	<div class="col-md-9">
-					        		<h3><%= listagem[0].tipo %></h3>
+					        		<h3><%= listagem[0].nome %></h3>
 					        	</div>
 					        	<div class="col-md-3">
-					        		<a href="/novo?tablename=<%=listagem[0].tipo%>" class="btn btn-primary">INSERIR NOVO +</a>
+					        		<a href="/eventos/novo" class="btn btn-primary">INSERIR NOVO +</a>
 					        	</div>
 			        		</div>
 			        		<div class="w-100"></div>
@@ -74,39 +64,26 @@
 			        <div class="table-responsive">
               			<table id="mytable" class="table table-bordred table-striped">
                    			<thead>
-                   				<th><input type="checkbox" id="checkall" /></th>
-				                <th>Tratamento</th>
 			                    <th>Nome</th>
-		                     	<th>Cargo</th>
-		                     	<th>Email</th>
-		                     	<th>Telefone</th>
-		                     	<th>CEP</th>
+		                     	<th>Data</th>
+		                     	<th>Hora</th>
 		                     	<th>Endereço</th>
-		                     	<th>Sexo</th>
-		                     	<th>Situação</th>
 		                      	<th>Editar</th>
 		                       	<th>Remover</th>
                    			</thead>
     						<tbody id="mytable_body">
 								<% for(var i = 0; i < listagem.length; i++) {%>
 									<tr>
-									    <td><input type="checkbox" class="checkthis" /></td>
-									    <td><%= listagem[i].tratamento %></td>
 									    <td><%= listagem[i].nome %></td>
-									    <td><%= listagem[i].cargo %></td>
-									    <td><%= listagem[i].email %></td>
-									    <td><%= listagem[i].telefone %></td>
-									    <td><%= listagem[i].cep %></td>
+									    <td><%= listagem[i].data %></td>
+									    <td><%= listagem[i].hora %></td>
 									    <td><%= listagem[i].endereco %></td>
-									    <td><%= listagem[i].sexo %></td>
-									    <td><%= listagem[i].situacao %></td>
 									    <td>
-									    	<a href="/editar?id=<%=listagem[i].id%>&tablename=<%=listagem[0].tipo%>" class="btn btn-primary">editar</a>
+									    	<a href="/eventos/editar?id=<%=listagem[i].id%>>" class="btn btn-primary">editar</a>
 									    </td>
 									    <td>
-									    	<form action="/remover" method="post">
+									    	<form action="/eventos/remover" method="post">
 									    		<input type="hidden" name="id" value="<%=listagem[i].id%>">
-									    		<input type="hidden" name="tipo" value="<%=listagem[i].tipo%>">
 										    	<button type="submit" class="btn btn-primary">
 										    		<span class="glyphicon glyphicon-trash"></span>
 										    	</button>
@@ -118,6 +95,18 @@
 						</table>
         			</div>
     			</div>
+    			<%}else {%>
+    				<div class="jumbotron jumbotron-fluid">
+  						<div class="container">
+  							<h4>Nenhum evento cadastradado, clique para cadastrar</h4>
+    						<form action="/eventos-novo" method="post">
+    							<button type="submit" class="btn btn-primary">NOVO</button>
+    						</form>
+    						<div class="col-md-3">
+								<a href="/eventos-novo"  class="btn btn-primary">ir</a>
+							</div>
+    					</div>
+    				</div>
     			<%}%>
 			</div>
 		</div>

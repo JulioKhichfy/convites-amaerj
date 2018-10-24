@@ -27,7 +27,14 @@ module.exports = function(application){
 	application.post('/remover', function(req, res){
 		application.app.controllers.home.remover(application, req, res);
 	});
-	application.post('/buscar', function(req, res){
-		application.app.controllers.home.buscar(application, req, res);
+
+	application.get('/eventos', function(req, res){
+		application.app.controllers.home.eventos(application, req, res);
 	});
+
+	application.get('/eventos-novo', function(req, res){
+		console.log(">>> ROUTER");
+		application.app.controllers.home.novoevento(application, req, res);
+	});
+	
 }

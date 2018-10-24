@@ -1,0 +1,78 @@
+<!DOCTYPE HTML>
+<html lang="pt-br">
+<head>
+	<meta charset="UTF-8">
+
+	<title>NOVO EVENTO</title>
+
+	<!-- bootstrap - link cdn -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+	<!-- incluindo css -->
+	<link href="css/style.css" rel="stylesheet">
+
+	<!-- favicon -->
+	<link rel="shortcut icon" href="images/favicon.ico" />
+</head>
+
+	<body>
+		<nav class="navbar navbar-default navbar-static-top">
+			<div class="container">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					
+					<img src="images/logo.png" />
+				</div>
+
+				<div id="navbar" class="navbar-collapse collapse">
+					<ul class="nav navbar-nav navbar-right">
+						<li><a href="index.html">HOME</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+
+		<div class="container">
+			<div class="row">
+        		<div class="col-md-12">
+			        <h4>Novo Evento</h4>
+			       
+              		<form action="/eventos/salvar" method="post" name="formsalvar">
+              			<div class="row">
+	              			<div class="form-group">
+	    						<label for="evento_nome">Nome</label>
+	              				<input class="form-control form-control-lg" type="text" name ="nome" id="evento_nome" placeholder="Nome do Evento">
+		              			
+		              			<label for="evento_data">Data</label>
+		              			<input class="form-control form-control-lg" type="text" name ="data" id="evento_data" placeholder="Data do Evento">
+		              			
+		              			<label for="evento_hora">Hora</label>
+		              			<input class="form-control form-control-lg" type="text" name ="hora" id="evento_hora" placeholder="Hora de início">
+		              			
+		              			<label for="evento_endereco">Endereço</label>
+		              			<input class="form-control form-control-lg" type="text" name ="endereco" id="evento_endereco" placeholder="Endereço">
+		              			<br>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-3">
+								<a href="javascript:history.back()"  class="btn btn-primary">CANCELAR</a>
+							</div>
+							<div class="col-md-3">
+								<button type="submit" class="btn btn-primary">SALVAR</button>
+							</div>		
+						</div>	
+					</form>
+    			</div>
+			</div>
+		</div>
+<!-- JQuery -->
+<script src="js/jquery-2.2.1.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+	</body>
+</html>

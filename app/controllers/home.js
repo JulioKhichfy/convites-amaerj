@@ -118,19 +118,19 @@ module.exports.remover = function(application, req, res){
 	});
 }
 
-module.exports.buscar = function(application, req, res){
+module.exports.eventos = function(application, req, res){
 	var connection = application.config.dbConnection();
-	var dadosModel = new application.app.models.DadosDAO(connection);
-	var form=req.body;
-	var dados;
-	dadosModel.buscar(form, function(error, result){
-		console.log("callback do update ERROR " + error);
-		console.log("callback do update RESULT " + result);
-		dados=result;
+	var eventosModel = new application.app.models.DadosDAO(connection);
+	eventosModel.eventos(function(error, result){
+		console.log(">>>> result ", result);
+		res.render("home/eventos/lista", {listagem:result});
 	});
 
-	dadosModel.getTipos(function(error,result){
-		tipos=parser_table_name(result);
-		res.render("home/lista", {listagem:dados, tables:result});
-	});
+}
+
+module.exports.novoevento = function(application, req, res){
+	//var connection = application.config.dbConnection();
+	//var eventossModel = new application.app.models.DadosDAO(connection);
+	console.log(">>> CONTROLADOR");
+	res.render("eventos/novo");
 }

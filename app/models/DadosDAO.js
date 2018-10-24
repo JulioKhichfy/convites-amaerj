@@ -47,6 +47,10 @@ DadosDAO.prototype.remover = function(form, callback){
 	this._connection.query('delete from '+form["tipo"]+' where id= ? ', form["id"], callback)
 }
 
+DadosDAO.prototype.eventos = function(callback){
+	this._connection.query('SELECT * FROM EVENTOS', callback);
+}
+
 /*NoticiasDAO.prototype.getNoticia = function(id_noticia, callback){
 	console.log(id_noticia.id_noticia);
 	this._connection.query('select * from noticias where id_noticia = ' + id_noticia.id_noticia, callback);
