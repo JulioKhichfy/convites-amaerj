@@ -32,9 +32,24 @@ module.exports = function(application){
 		application.app.controllers.home.eventos(application, req, res);
 	});
 
-	application.get('/eventos-novo', function(req, res){
-		console.log(">>> ROUTER");
+	application.get('/eventos/novo', function(req, res){
 		application.app.controllers.home.novoevento(application, req, res);
+	});
+
+	application.post('/eventos/salvar', function(req, res){
+		application.app.controllers.home.salvarevento(application, req, res);
+	});
+
+	application.post('/eventos/remover', function(req, res){
+		application.app.controllers.home.removerevento(application, req, res);
+	});
+
+	application.post('/eventos/editar', function(req, res){
+		application.app.controllers.home.novoevento(application, req, res);
+	});
+
+	application.post('/convidar', function(req, res){
+		application.app.controllers.home.convidar(application, req, res);
 	});
 	
 }

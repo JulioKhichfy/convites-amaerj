@@ -3,7 +3,7 @@ module.exports.filtrar = function(application, req, res){
 	var connection = application.config.dbConnection();
 	var dadosModel = new application.app.models.DadosDAO(connection);
 	var tbn = req.body['tables'];
-	if(tbn==undefined){
+	if(tbn===undefined){
 		return res.redirect('/show');
 	}
 	tbn = tbn.replace(" ","_");
@@ -12,8 +12,12 @@ module.exports.filtrar = function(application, req, res){
 		tipos=parser_table_name(result);
 	});
 
+	var eventoscadastrados;
+	dadosModel.eventos(function(error,result){
+		eventoscadastrados = result;
+	});
 	dadosModel.getTable(tbn, function(error, result){
-		res.render("home/lista", {listagem : result, tables : tipos});
+		res.render("home/lista", {listagem : result, tables : tipos, eventoscadastrados : eventoscadastrados});
 		//res.send(result);
 	});
 }
@@ -22,8 +26,14 @@ module.exports.show = function(application, req, res){
 	var listagem=null;
 	var connection = application.config.dbConnection();
 	var dadosModel = new application.app.models.DadosDAO(connection);
+	var eventoscadastrados;
+	
+	dadosModel.eventos(function(error,result){
+		eventoscadastrados = result;
+	});
+
 	dadosModel.getTipos(function(error,result){
-		res.render("home/lista", {listagem:listagem, tables:parser_table_name(result)});
+		res.render("home/lista", {listagem:listagem, tables:parser_table_name(result),eventoscadastrados:eventoscadastrados});
 		//res.send(to_select);
 	});
 }
@@ -129,8 +139,62 @@ module.exports.eventos = function(application, req, res){
 }
 
 module.exports.novoevento = function(application, req, res){
+	var id = req.body["id"];
+	if(id===undefined){
+		res.render("home/eventos/novo",{evento:[]});
+	}else{
+		var connection = application.config.dbConnection();
+		var eventosModel = new application.app.models.DadosDAO(connection);
+		eventosModel.buscarevento(id, function(error, result){
+			res.render("home/eventos/novo",{evento:result});
+		});
+	}
+}
+
+module.exports.salvarevento = function(application, req, res){
+	var connection = application.config.dbConnection();
+	var eventosModel = new application.app.models.DadosDAO(connection);
+	var evento = req.body;
+	if(evento["id"] === undefined){
+		eventosModel.salvarevento(evento, function(error, result){
+			res.redirect("/eventos");
+		});	
+	}else{
+		eventosModel.alterarevento(evento, function(error, result){
+			res.redirect("/eventos");
+		});	
+	}
+	
+}
+
+
+
+module.exports.removerevento = function(application, req, res){
+	var connection = application.config.dbConnection();
+	var eventosModel = new application.app.models.DadosDAO(connection);
+	var evento = req.body;
+	eventosModel.removerevento(evento["id"], function(error, result){
+		res.redirect("/eventos");
+	});
+}
+
+module.exports.editarevento = function(application, req, res){
+	var connection = application.config.dbConnection();
+	var eventosModel = new application.app.models.DadosDAO(connection);
+	var evento = req.body;
+	eventosModel.buscarevento(evento["id"], function(error, result){
+		//res.send(result);
+		res.render("home/eventos/novo",{evento:result});
+	});
+}
+
+module.exports.convidar = function(application, req, res){
 	//var connection = application.config.dbConnection();
-	//var eventossModel = new application.app.models.DadosDAO(connection);
-	console.log(">>> CONTROLADOR");
-	res.render("eventos/novo");
+	//var eventosModel = new application.app.models.DadosDAO(connection);
+	var evento = req.body;
+	/*eventosModel.buscarevento(evento["id"], function(error, result){
+		//res.send(result);
+		res.render("home/eventos/novo",{evento:result});
+	});*/
+	res.send(evento);
 }

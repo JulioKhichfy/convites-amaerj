@@ -51,6 +51,25 @@ DadosDAO.prototype.eventos = function(callback){
 	this._connection.query('SELECT * FROM EVENTOS', callback);
 }
 
+DadosDAO.prototype.salvarevento = function(evento, callback){
+	this._connection.query('insert into eventos set ? ', evento, callback);
+}
+
+DadosDAO.prototype.alterarevento = function(evento, callback){
+	var sql = 'UPDATE eventos SET nome =\''+evento["nome"]+'\', data = \''+evento["data"]+'\',hora=\''+evento["hora"]+'\',endereco=\''+evento["endereco"]+'\' WHERE id = '+evento["id"];
+	console.log(">>>> sql ", sql);
+	this._connection.query(sql, callback);
+}
+
+DadosDAO.prototype.removerevento = function(id, callback){
+	this._connection.query('delete from eventos where id= ? ', id, callback)
+}
+
+DadosDAO.prototype.buscarevento = function(id, callback){
+	this._connection.query('select * from eventos where id= ? ', id, callback);
+}
+
+
 /*NoticiasDAO.prototype.getNoticia = function(id_noticia, callback){
 	console.log(id_noticia.id_noticia);
 	this._connection.query('select * from noticias where id_noticia = ' + id_noticia.id_noticia, callback);
