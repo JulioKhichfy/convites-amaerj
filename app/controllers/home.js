@@ -2,7 +2,19 @@
 module.exports.filtrar = function(application, req, res){
 	var connection = application.config.dbConnection();
 	var dadosModel = new application.app.models.DadosDAO(connection);
+	
+	var idEvento=req.query.idEvento;
+	var idSelecionavel = req.query.idPessoa
+	var nomedatabela = req.query.tbn;
+
+	console.log(">>>>>>> idEvento ", idEvento);
+	console.log(">>>>>>> idSelecionavel ", idSelecionavel);
+	console.log(">>>>>>> nomedatabela ", nomedatabela);
+
+
 	var tbn = req.body['tables'];
+	var selecionaveis;
+	
 	if(tbn===undefined){
 		return res.redirect('/show');
 	}
@@ -16,6 +28,11 @@ module.exports.filtrar = function(application, req, res){
 	dadosModel.eventos(function(error,result){
 		eventoscadastrados = result;
 	});
+
+	dadosModel.getSelecionaveisFromTbn(tbn, function(error,result){
+		selecionaveis = result;
+	});
+	
 	dadosModel.getTable(tbn, function(error, result){
 		res.render("home/lista", {listagem : result, tables : tipos, eventoscadastrados : eventoscadastrados});
 		//res.send(result);
@@ -188,13 +205,14 @@ module.exports.editarevento = function(application, req, res){
 	});
 }
 
-module.exports.convidar = function(application, req, res){
-	//var connection = application.config.dbConnection();
-	//var eventosModel = new application.app.models.DadosDAO(connection);
-	var evento = req.body;
-	/*eventosModel.buscarevento(evento["id"], function(error, result){
-		//res.send(result);
-		res.render("home/eventos/novo",{evento:result});
-	});*/
-	res.send(evento);
+module.exports.selecionar2evento = function(application, req, res){
+	var connection = application.config.dbConnection();
+	var eventosModel = new application.app.models.DadosDAO(connection);
+	var selecionado2evento = req.body;
+	eventosModel.selecionar2evento(selecionado2evento, function(error, result){
+		//res.send(selecionado2evento);
+		//res.render("home/lista",{evento:result});
+		res.redirect('/filtrar?idEvento='+selecionado2evento["idEvento"]+'&idPessoa='+selecionado2evento["idPessoa"]+'&tbn='+selecionado2evento["tablename"]);
+	});
+	//res.send(evento);
 }

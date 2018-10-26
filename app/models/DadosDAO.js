@@ -69,6 +69,18 @@ DadosDAO.prototype.buscarevento = function(id, callback){
 	this._connection.query('select * from eventos where id= ? ', id, callback);
 }
 
+DadosDAO.prototype.selecionar2evento = function(selecionado, callback){
+	this._connection.query('insert into selecionaveis set ?', selecionado, callback);
+}
+
+DadosDAO.prototype.getSelecionaveisFromTbn = function(selecionado, callback){
+	var sql= 'select * from selecionaveis where id_evento='+selecionado["idEvento"]+' and id_pessoa='+selecionado["idPessoa"]+' and tipo_tbn=\''+selecionado["tablename"]+'\'' ;
+	console.log("GET SELECIONAVEIS ", sql);
+	this._connection.query(sql, callback);
+}
+
+
+
 
 /*NoticiasDAO.prototype.getNoticia = function(id_noticia, callback){
 	console.log(id_noticia.id_noticia);

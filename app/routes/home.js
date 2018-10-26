@@ -12,6 +12,10 @@ module.exports = function(application){
 		application.app.controllers.home.filtrar(application, req, res);
 	});
 
+	application.get('/filtrar', function(req, res){
+		application.app.controllers.home.filtrar(application, req, res);
+	});
+
 	application.get('/editar', function(req, res){
 		application.app.controllers.home.editar(application, req, res);
 	});
@@ -48,8 +52,8 @@ module.exports = function(application){
 		application.app.controllers.home.novoevento(application, req, res);
 	});
 
-	application.post('/convidar', function(req, res){
-		application.app.controllers.home.convidar(application, req, res);
+	application.post('/selecionar', function(req, res){
+		application.app.controllers.home.selecionar2evento(application, req, res);
 	});
 	
 }
