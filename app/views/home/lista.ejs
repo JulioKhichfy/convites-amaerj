@@ -53,6 +53,7 @@
 						<input type="submit" value="Pesquisar por tipo" >	
 					</form>
 				</div>
+
 			</div>
 			<%if(listagem != null){%>
 				<div class="row">
@@ -77,8 +78,19 @@
 				</div>    		
 	    		<div class="w-100"></div>
 	    		<div class="row">
-	    			<div class="col-md-12">
-		        		Pesquisar<input type="text" id="myInput" style="max-width:200px" />
+	    			<div class="col-md-6">
+		        		PESQUISAR:<input type="text" id="myInput" style="max-width:200px" />
+		        	</div>
+		        	<div class="col-md-6">
+		        		<form action="/selecionar" method="post">
+				    		<input type="hidden" name="alinha" id="idlinha">
+				    		<input type="hidden" name="oevento" id="idEvento">
+				    		<input type="hidden" name="atabela" id="idtable">
+					    	<button type="submit" class="btn btn-primary">
+					    		SELECIONAR CONVIDADOS
+					    	</button>
+						</form>
+		        		
 		        	</div>
 	    		</div>
 		        <div class="table-responsive">
@@ -100,7 +112,8 @@
 						<tbody id="mytable_body">
 							<% for(var i = 0; i < listagem.length; i++) {%>
 								<tr>
-									<td  id="tr<%=i%>"><input type="checkbox" class="checkthis" onclick="func" /></td>
+
+									<td><input value="<%= listagem[i].id %>" type="checkbox" class="checkthis" name="selecionados" /></td>
 								    <td><%= listagem[i].tratamento %></td>
 								    <td><%= listagem[i].nome %></td>
 								    <td><%= listagem[i].cargo %></td>
@@ -129,7 +142,6 @@
 				</div>
 			<%}%>
 		</div>
-	
 
 	    
 <!-- JQuery -->

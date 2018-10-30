@@ -207,13 +207,13 @@ module.exports.editarevento = function(application, req, res){
 }
 
 module.exports.selecionar2evento = function(application, req, res){
-	var connection = application.config.dbConnection();
-	var eventosModel = new application.app.models.DadosDAO(connection);
+	//var connection = application.config.dbConnection();
+	//var eventosModel = new application.app.models.DadosDAO(connection);
 	var selecionado2evento = req.body;
-	eventosModel.selecionar2evento(selecionado2evento, function(error, result){
+	/*eventosModel.selecionar2evento(selecionado2evento, function(error, result){
 		//res.send(selecionado2evento);
 		//res.render("home/lista",{evento:result});
 		res.redirect('/filtrar?idEvento='+selecionado2evento["idEvento"]+'&idPessoa='+selecionado2evento["idPessoa"]+'&tbn='+selecionado2evento["tablename"]);
-	});
-	//res.send(evento);
+	});*/
+	res.send(selecionado2evento);
 }

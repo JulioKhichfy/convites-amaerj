@@ -16,22 +16,27 @@ $(document).ready(function(){
         }
     });
 
-    $("#mytable_body").click(function () {
-        
-        if($(this).prop("checked", true)){
-            $(this).parent('td').removeClass('fica_verde');
-            alert("sai verde");
-        }
-        else{
+    $("[data-toggle=tooltip]").tooltip();
+
+
+    $("#mytable_body .checkthis").click(function () {
+
+        if ($(this).is(':checked')) 
+        {
+            $(this).prop("checked", true);
             $(this).parent('td').addClass('fica_verde');
-            alert("pinta verde");
+            $("#idlinha").val(this.val());
+                
         }
+        else 
+        {
+            $(this).prop("checked", false);
+            $(this).parent('td').removeClass('fica_verde');
+            $("#idlinha").val("");
             
+        }
     });
 
-    
-
-    $("[data-toggle=tooltip]").tooltip();
 
     $("#myInput").on("keyup", function() {
         var value = $(this).val().toLowerCase();
@@ -43,5 +48,10 @@ $(document).ready(function(){
     $('#meusEventos').change(function(){ 
         var value = $(this).val();
         $("#idEvento").prop("value",value);
+    });
+
+    $('#tables').change(function(){ 
+        var value = $(this).val();
+        $("#idTable").prop("value",value);
     });
 });
