@@ -173,6 +173,7 @@ module.exports.salvarevento = function(application, req, res){
 	var eventosModel = new application.app.models.DadosDAO(connection);
 	var evento = req.body;
 	if(evento["id"] === undefined){
+		console.log("salvando evento ", evento);
 		eventosModel.salvarevento(evento, function(error, result){
 			res.redirect("/eventos");
 		});	

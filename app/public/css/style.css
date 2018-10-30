@@ -7,7 +7,7 @@ a:hover{
 	color:#000;
 }
 
-.dados_wrapper{
+/*.dados_wrapper{
 	background-color: #FFF;
 	padding:15px;
 	margin-bottom:15px;
@@ -16,7 +16,7 @@ a:hover{
 
 .navbar{
 	background:#FFF;
-}
+}*/
 
 /**autor/
 .dado_nome{
@@ -25,7 +25,7 @@ a:hover{
 }
 
 /*.dado_titulo{*/
-.dado_nome{
+/*.dado_nome{
 	color:#000;
 	font-size:22px;
 	text-decoration: none;
@@ -45,4 +45,8 @@ a:hover{
 	text-align: center;
 	background:#FFF;
 	padding:20px;
+}*/
+
+.fica_verde{
+	background-color:green;
 }

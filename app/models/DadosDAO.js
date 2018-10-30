@@ -52,7 +52,7 @@ DadosDAO.prototype.eventos = function(callback){
 }
 
 DadosDAO.prototype.salvarevento = function(evento, callback){
-	this._connection.query('insert into eventos set ? ', evento, callback);
+	this._connection.query('insert into EVENTOS set ? ', evento, callback);
 }
 
 DadosDAO.prototype.alterarevento = function(evento, callback){

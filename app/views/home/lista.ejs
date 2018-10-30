@@ -84,7 +84,7 @@
 		        <div class="table-responsive">
 	      			<table id="mytable" class="table table-bordred table-striped">
 	           			<thead>
-	           				<th>Convidar</th>
+	           				<th><input type="checkbox" id="checkall" /></th>
 			                <th>Tratamento</th>
 		                    <th>Nome</th>
 	                     	<th>Cargo</th>
@@ -100,12 +100,7 @@
 						<tbody id="mytable_body">
 							<% for(var i = 0; i < listagem.length; i++) {%>
 								<tr>
-									<form action="/selecionar" method="post" name="btn_selecionar">
-										<input type="hidden" id="idEvento" name="id_evento">
-										<input type="hidden" id="idPessoa" name="id_pessoa" value="<%=listagem[i].id %>">
-										<input type="hidden" id="tableName" name="tipo_tbn" value="<%=listagem[i].tipo %>">
-									    <td><button type="submit" class="btn btn-primary">Convidar</button></td>
-									</form>
+									<td  id="tr<%=i%>"><input type="checkbox" class="checkthis" onclick="func" /></td>
 								    <td><%= listagem[i].tratamento %></td>
 								    <td><%= listagem[i].nome %></td>
 								    <td><%= listagem[i].cargo %></td>
