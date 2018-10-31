@@ -2,23 +2,17 @@
 module.exports.filtrar = function(application, req, res){
 	var connection = application.config.dbConnection();
 	var dadosModel = new application.app.models.DadosDAO(connection);
-	
-	var idEvento=req.query.idEvento;
-	var idSelecionavel = req.query.idPessoa
-	var nomedatabela = req.query.tbn;
-
-	console.log(">>>>>>> idEvento ", idEvento);
-	console.log(">>>>>>> idSelecionavel ", idSelecionavel);
-	console.log(">>>>>>> nomedatabela ", nomedatabela);
-
 
 	var tbn = req.body['tables'];
-	var selecionaveis;
+	console.log(">>>>>>>>>>>>>" + tbn);
+	
 	
 	if(tbn===undefined){
 		return res.redirect('/show');
 	}
+	
 	tbn = tbn.replace(" ","_");
+
 	var tipos;
 	dadosModel.getTipos(function(error,result){
 		tipos=parser_table_name(result);
@@ -29,12 +23,13 @@ module.exports.filtrar = function(application, req, res){
 		eventoscadastrados = result;
 	});
 
+	/*var selecionaveis;
 	dadosModel.getSelecionaveisFromTbn(tbn, function(error,result){
 		selecionaveis = result;
-	});
+	});*/
 	
 	dadosModel.getTable(tbn, function(error, result){
-		res.render("home/lista", {listagem : result, tables : tipos, eventoscadastrados : eventoscadastrados});
+		res.render("home/lista", {listagem : result, tables : tipos, eventoscadastrados : eventoscadastrados, tbn:req.body['tables']});
 		//res.send(result);
 	});
 }
@@ -50,8 +45,8 @@ module.exports.show = function(application, req, res){
 	});
 
 	dadosModel.getTipos(function(error,result){
-		res.render("home/lista", {listagem:listagem, tables:parser_table_name(result),eventoscadastrados:eventoscadastrados});
-		//res.send(to_select);
+		res.render("home/lista", {listagem:listagem, tables:parser_table_name(result),eventoscadastrados:eventoscadastrados, tbn:null});
+		//res.send(result);
 	});
 }
 
@@ -119,29 +114,44 @@ module.exports.salvar = function(application, req, res){
 		dados=result;
 	});
 
+	var eventoscadastrados;
+	dadosModel.eventos(function(error,result){
+		eventoscadastrados = result;
+	});
+
 	dadosModel.getTipos(function(error,result){
 		tipos=parser_table_name(result);
-		res.render("home/lista", {listagem:dados, tables:tipos});
+		res.render("home/lista", {listagem:dados, tables:tipos, eventoscadastrados:eventoscadastrados});
 	});	
 }
 
 module.exports.remover = function(application, req, res){
 	var connection = application.config.dbConnection();
 	var dadosModel = new application.app.models.DadosDAO(connection);
-	var form=req.body;
+	//var form=req.body;
 	var dados;
 	var tipos;
-	dadosModel.remover(form, function(error, result){
+	
+	var id = req.query['id'];
+	var tablename = req.query['tablename'];
+
+	dadosModel.remover(id, tablename, function(error, result){
 		console.log("callback do update ERROR " + error);
 		console.log("callback do update RESULT " + result);
 	});
-	dadosModel.getTable(form["tipo"], function(error, result){
+
+	dadosModel.getTable(tablename, function(error, result){
 		dados=result;
+	});
+
+	var eventoscadastrados;
+	dadosModel.eventos(function(error,result){
+		eventoscadastrados = result;
 	});
 
 	dadosModel.getTipos(function(error,result){
 		tipos=parser_table_name(result);
-		res.render("home/lista", {listagem:dados, tables:tipos});
+		res.render("home/lista", {listagem:dados, tables:tipos, eventoscadastrados:eventoscadastrados});
 	});
 }
 
@@ -218,12 +228,37 @@ module.exports.selecionar2evento = function(application, req, res){
 	res.send(selecionado2evento);
 }
 
-module.exports.incluirconvidado = function(application, req, res){
+module.exports.gerenciarconvidado = function(application, req, res){
 	var connection = application.config.dbConnection();
 	var eventosModel = new application.app.models.DadosDAO(connection);
-	var linha = req.body;
-	/*eventosModel.removerevento(evento["id"], function(error, result){
-		res.redirect("/eventos");
+	var selecionado = req.body;
+	
+	var tipos;
+	eventosModel.getTipos(function(error,result){
+		tipos=parser_table_name(result);
+	});
+
+	var eventoscadastrados;
+	eventosModel.eventos(function(error,result){
+		eventoscadastrados = result;
+	});
+
+	if(selecionado["statuscheckbox"]==="true"){
+		console.log("inserir convidado em :", selecionado);
+	}else{
+		console.log("remover convidado de :", selecionado);
+	}
+
+	/*var selecionaveis;
+	dadosModel.getSelecionaveisFromTbn(tbn, function(error,result){
+		selecionaveis = result;
 	});*/
-	res.send(linha);
+	
+	/*dadosModel.getTable(tbn, function(error, result){
+		res.render("home/lista", {listagem : result, tables : tipos, eventoscadastrados : eventoscadastrados});
+		//res.send(result);
+	});*/
+
+
+	res.send(selecionado);
 }

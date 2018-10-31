@@ -28,7 +28,7 @@ module.exports = function(application){
 		application.app.controllers.home.salvar(application, req, res);
 	});
 	
-	application.post('/remover', function(req, res){
+	application.get('/remover', function(req, res){
 		application.app.controllers.home.remover(application, req, res);
 	});
 
@@ -58,7 +58,7 @@ module.exports = function(application){
 
 	application.post('/convidados', function(req, res){
 		console.log("alouuuuuu");
-		application.app.controllers.home.incluirconvidado(application, req, res);
+		application.app.controllers.home.gerenciarconvidado(application, req, res);
 	});
 
 	application.post('/excluir-convidado', function(req, res){

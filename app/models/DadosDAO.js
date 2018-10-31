@@ -43,8 +43,8 @@ DadosDAO.prototype.salvar = function(form, callback){
 	this._connection.query('insert into '+form["tipo"]+' set ? ', form, callback)
 }
 
-DadosDAO.prototype.remover = function(form, callback){
-	this._connection.query('delete from '+form["tipo"]+' where id= ? ', form["id"], callback)
+DadosDAO.prototype.remover = function(id, tablename, callback){
+	this._connection.query('delete from '+tablename+' where id='+id, callback)
 }
 
 DadosDAO.prototype.eventos = function(callback){

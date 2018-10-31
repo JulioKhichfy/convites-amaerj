@@ -45,16 +45,21 @@
 				<div class="col-md-6">
 					<form action="/filtrar" method="post">
 						<select id="tables" name="tables">
-							<option selected="selected" disabled="true" value="-1">Selecione</option>		
+							<%if(tbn == null){%>
+								<option selected="selected" disabled="true" value="-1">Selecione</option>
+							<%}else{%>
+								<option selected="selected" value="<%= tbn %>"><%=tbn%></option>
+							<%}%>
 							<% for(var k = 0; k < tables.length; k++) {%>
-								<option value='<%= tables[k] %>'><%= tables[k] %></option>		
+								<%if(tables[k] != tbn)%>
+									<option value='<%= tables[k] %>'><%= tables[k] %></option>		
 							<% } %>
 						</select>
 						<input type="submit" value="Pesquisar por tipo" >	
 					</form>
 				</div>
-
 			</div>
+
 			<%if(listagem != null){%>
 				<div class="row">
 	        		<div class="col-md-12">
@@ -81,17 +86,6 @@
 	    			<div class="col-md-6">
 		        		PESQUISAR:<input type="text" id="myInput" style="max-width:200px" />
 		        	</div>
-		        	<!--<div class="col-md-6">
-		        		<form action="/selecionar" method="post">
-				    		<input type="hidden" name="alinha" id="idlinha">
-				    		<input type="hidden" name="oevento" id="idEvento">
-				    		<input type="hidden" name="atabela" id="idtable">
-					    	<button type="submit" class="btn btn-primary">
-					    		SELECIONAR CONVIDADOS
-					    	</button>
-						</form>
-		        		
-		        	</div>-->
 	    		</div>
 		        <div class="table-responsive">
 	      			<table id="mytable" class="table table-bordred table-striped">
@@ -111,36 +105,32 @@
 	           			</thead>
 						<tbody id="mytable_body">
 							<form action="/convidados" method="post" id="formconvidados">
-							<% for(var i = 0; i < listagem.length; i++) {%>
-								<tr>
-									<td><input value="<%= listagem[i].id %>" type="checkbox" class="checkthis" name="selecionado"/></td>
-								    <td><%= listagem[i].tratamento %></td>
-								    <td><%= listagem[i].nome %></td>
-								    <td><%= listagem[i].cargo %></td>
-								    <td><%= listagem[i].email %></td>
-								    <td><%= listagem[i].telefone %></td>
-								    <td><%= listagem[i].cep %></td>
-								    <td><%= listagem[i].endereco %></td>
-								    <td><%= listagem[i].sexo %></td>
-								    <td><%= listagem[i].situacao %></td>
-								    <input type="hidden" name="id2conv" value="<%=listagem[i].id%>">
-								    <input type="hidden" name="tipo2conv" value="<%=listagem[i].tipo%>">
-								    <input type="hidden" name="evento2conv" id="idEvento">
-								    <td>
-								    	<a href="/editar?id=<%=listagem[i].id%>&tablename=<%=listagem[0].tipo%>" class="btn btn-primary">editar</a>
-								    </td>
-
-								    <td>
-								    	<form action="/remover" method="post">
-								    		<input type="hidden" name="id" value="<%=listagem[i].id%>">
-								    		<input type="hidden" name="tipo" value="<%=listagem[i].tipo%>">
-									    	<button type="submit" class="btn btn-primary">
-									    		<span class="glyphicon glyphicon-trash"></span>
-									    	</button>
-								    	</form>
-								    </td>
-								</tr>
-							<%}%>
+								<% for(var i = 0; i < listagem.length; i++) {%>
+									<tr>
+										<td><input value="<%= listagem[i].id %>" type="checkbox" class="checkthis"/></td>
+									    <td><%= listagem[i].tratamento %></td>
+									    <td><%= listagem[i].nome %></td>
+									    <td><%= listagem[i].cargo %></td>
+									    <td><%= listagem[i].email %></td>
+									    <td><%= listagem[i].telefone %></td>
+									    <td><%= listagem[i].cep %></td>
+									    <td><%= listagem[i].endereco %></td>
+									    <td><%= listagem[i].sexo %></td>
+									    <td><%= listagem[i].situacao %></td>
+									   	
+									    <td>
+									    	<a href="/editar?id=<%=listagem[i].id%>&tablename=<%=listagem[0].tipo%>" class="btn btn-primary">editar</a>
+									    </td>
+									    <td>
+									    	<a href="/remover?id=<%=listagem[i].id%>&tablename=<%=listagem[0].tipo%>" class="btn btn-primary"><span class="glyphicon glyphicon-trash"></span></a>
+									    </td>
+									</tr>
+									
+								<%}%>
+								<input type="hidden" name="statuscheckbox" id="idStatuscheckbox" >
+								<input type="hidden" name="idtable" id="idtable" >
+								<input type="hidden" name="idevento" id="idevento" >
+								<input type="hidden" name="idlinha" id="idlinha" >
 							</form>
 						</tbody>
 					</table>

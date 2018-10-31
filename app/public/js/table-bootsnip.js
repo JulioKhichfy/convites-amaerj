@@ -21,35 +21,23 @@ $(document).ready(function(){
     $("[data-toggle=tooltip]").tooltip();
 
 
-    $("#mytable_body .checkthis").click(function () {
+    $("#mytable_body input[type=checkbox]").click(function () {
 
         if ($(this).is(':checked')) 
         {
             $(this).prop("checked", true);
-            $(this).parent('td').addClass('fica_verde');
+            //$(this).parent('td').addClass('fica_verde');
             $("#idlinha").val($(this).val());
-            
+            $("#idStatuscheckbox").val("true");
             $( "#formconvidados" ).submit();
-            //incluir-convidado
-            /*$.ajax({
-                url: '/incluir-convidado', 
-                type: 'POST', 
-                contentType: 'application/json', 
-                data: JSON.stringify({"idConvidado": $(this).val(), "idTable" : $("#idtable").val(), "idEvento" : $("#idEvento").val() })}
-            )*/
         }
         else 
         {
             $(this).prop("checked", false);
-            $(this).parent('td').removeClass('fica_verde');
+            //$(this).parent('td').removeClass('fica_verde');
             $("#idlinha").val($(this).val());
-            /*$.ajax({
-                url: '/excluir-convidado', 
-                type: 'POST', 
-                contentType: 'application/json', 
-                data: JSON.stringify({"idConvidado": $(this).val(), "idTable" : $("#idtable").val(), "idEvento" : $("#idEvento").val() })}
-            )*/
-            
+            $("#idStatuscheckbox").val("false");
+            $( "#formconvidados" ).submit();
         }
     });
 
@@ -63,11 +51,16 @@ $(document).ready(function(){
 
     $('#meusEventos').change(function(){ 
         var value = $(this).val();
-        $("#idEvento").prop("value",value);
+        $("#idevento").prop("value",value);
     });
 
-    $('#tables').change(function(){ 
-        var value = $(this).val();
-        $("#idtable").prop("value",value);
+    $("#tables").change(function(){ 
+        var tbn = $('#tables').find(":selected").text();
+        $("#idtable").prop("value",tbn);
     });
 });
+
+//<input type="hidden" name="statuscheckbox" id="statuscheckbox">
+//<input type="hidden" name="idtable" id="idtable">
+//<input type="hidden" name="idevento" id="idevento">
+//<input type="hidden" name="idlinha" id="idlinha">
