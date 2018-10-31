@@ -55,5 +55,14 @@ module.exports = function(application){
 	application.post('/selecionar', function(req, res){
 		application.app.controllers.home.selecionar2evento(application, req, res);
 	});
+
+	application.post('/convidados', function(req, res){
+		console.log("alouuuuuu");
+		application.app.controllers.home.incluirconvidado(application, req, res);
+	});
+
+	application.post('/excluir-convidado', function(req, res){
+		application.app.controllers.home.excluirconvidado(application, req, res);
+	});
 	
 }

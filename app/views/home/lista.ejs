@@ -44,8 +44,8 @@
 			<div class="row">
 				<div class="col-md-6">
 					<form action="/filtrar" method="post">
-						<select name="tables">
-							<option selected="selected" disabled="true">Selecione</option>		
+						<select id="tables" name="tables">
+							<option selected="selected" disabled="true" value="-1">Selecione</option>		
 							<% for(var k = 0; k < tables.length; k++) {%>
 								<option value='<%= tables[k] %>'><%= tables[k] %></option>		
 							<% } %>
@@ -81,7 +81,7 @@
 	    			<div class="col-md-6">
 		        		PESQUISAR:<input type="text" id="myInput" style="max-width:200px" />
 		        	</div>
-		        	<div class="col-md-6">
+		        	<!--<div class="col-md-6">
 		        		<form action="/selecionar" method="post">
 				    		<input type="hidden" name="alinha" id="idlinha">
 				    		<input type="hidden" name="oevento" id="idEvento">
@@ -91,7 +91,7 @@
 					    	</button>
 						</form>
 		        		
-		        	</div>
+		        	</div>-->
 	    		</div>
 		        <div class="table-responsive">
 	      			<table id="mytable" class="table table-bordred table-striped">
@@ -110,10 +110,10 @@
 	                       	<th>Remover</th>
 	           			</thead>
 						<tbody id="mytable_body">
+							<form action="/convidados" method="post" id="formconvidados">
 							<% for(var i = 0; i < listagem.length; i++) {%>
 								<tr>
-
-									<td><input value="<%= listagem[i].id %>" type="checkbox" class="checkthis" name="selecionados" /></td>
+									<td><input value="<%= listagem[i].id %>" type="checkbox" class="checkthis" name="selecionado"/></td>
 								    <td><%= listagem[i].tratamento %></td>
 								    <td><%= listagem[i].nome %></td>
 								    <td><%= listagem[i].cargo %></td>
@@ -123,9 +123,13 @@
 								    <td><%= listagem[i].endereco %></td>
 								    <td><%= listagem[i].sexo %></td>
 								    <td><%= listagem[i].situacao %></td>
+								    <input type="hidden" name="id2conv" value="<%=listagem[i].id%>">
+								    <input type="hidden" name="tipo2conv" value="<%=listagem[i].tipo%>">
+								    <input type="hidden" name="evento2conv" id="idEvento">
 								    <td>
 								    	<a href="/editar?id=<%=listagem[i].id%>&tablename=<%=listagem[0].tipo%>" class="btn btn-primary">editar</a>
 								    </td>
+
 								    <td>
 								    	<form action="/remover" method="post">
 								    		<input type="hidden" name="id" value="<%=listagem[i].id%>">
@@ -137,6 +141,7 @@
 								    </td>
 								</tr>
 							<%}%>
+							</form>
 						</tbody>
 					</table>
 				</div>

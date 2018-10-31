@@ -217,3 +217,13 @@ module.exports.selecionar2evento = function(application, req, res){
 	});*/
 	res.send(selecionado2evento);
 }
+
+module.exports.incluirconvidado = function(application, req, res){
+	var connection = application.config.dbConnection();
+	var eventosModel = new application.app.models.DadosDAO(connection);
+	var linha = req.body;
+	/*eventosModel.removerevento(evento["id"], function(error, result){
+		res.redirect("/eventos");
+	});*/
+	res.send(linha);
+}
