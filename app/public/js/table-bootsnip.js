@@ -26,18 +26,18 @@ $(document).ready(function(){
         if ($(this).is(':checked')) 
         {
             $(this).prop("checked", true);
-            //$(this).parent('td').addClass('fica_verde');
-            $("#idlinha").val($(this).val());
+            $(this).parent('td').addClass('fica_verde');
+            //$("#idlinha").val($(this).val());
             $("#idStatuscheckbox").val("true");
-            $( "#formconvidados" ).submit();
+            //$( "#formconvidados" ).submit();
         }
         else 
         {
             $(this).prop("checked", false);
-            //$(this).parent('td').removeClass('fica_verde');
-            $("#idlinha").val($(this).val());
+            $(this).parent('td').removeClass('fica_verde');
+            //$("#idlinha").val($(this).val());
             $("#idStatuscheckbox").val("false");
-            $( "#formconvidados" ).submit();
+            //$( "#formconvidados" ).submit();
         }
     });
 
@@ -52,12 +52,14 @@ $(document).ready(function(){
     $('#meusEventos').change(function(){ 
         var value = $(this).val();
         $("#idevento").prop("value",value);
+        $("#submitselecionaveis").prop("disabled", false);
     });
 
     $("#tables").change(function(){ 
         var tbn = $('#tables').find(":selected").text();
         $("#idtable").prop("value",tbn);
     });
+
 });
 
 //<input type="hidden" name="statuscheckbox" id="statuscheckbox">

@@ -52,6 +52,8 @@ DadosDAO.prototype.eventos = function(callback){
 }
 
 DadosDAO.prototype.salvarevento = function(evento, callback){
+	console.log("evento: "+ evento);
+	console.log(typeof(evento));
 	this._connection.query('insert into EVENTOS set ? ', evento, callback);
 }
 
@@ -69,16 +71,30 @@ DadosDAO.prototype.buscarevento = function(id, callback){
 	this._connection.query('select * from eventos where id= ? ', id, callback);
 }
 
-DadosDAO.prototype.selecionar2evento = function(selecionado, callback){
-	this._connection.query('insert into selecionaveis set ?', selecionado, callback);
+DadosDAO.prototype.criarlistaconvidados2evento = function(dados, callback){
+	
+	var s = dados["selecionados"];
+	var tablename = "'"+dados["idtable"]+"'";
+	var idevento = dados["idevento"];
+	var linhas="";
+	for(var i = 0 ; i < s.length ; i++){
+		if(i==s.length-1)
+			linhas+="("+s[i]+","+idevento+","+tablename+","+0+","+0+");";
+		else
+			linhas += "("+s[i]+","+idevento+","+tablename+","+0+","+0+"),";
+	}
+	this._connection.query('insert into SELECIONADOS_EVENTOS (idselecionado,idevento,tablename,enviado,confirmado) values '+linhas, callback);
 }
 
-DadosDAO.prototype.getSelecionaveisFromTbn = function(selecionado, callback){
+/*DadosDAO.prototype.getSelecionaveis = function(selecionado, callback){
 	var sql= 'select * from selecionaveis where id_evento='+selecionado["idEvento"]+' and id_pessoa='+selecionado["idPessoa"]+' and tipo_tbn=\''+selecionado["tablename"]+'\'' ;
 	console.log("GET SELECIONAVEIS ", sql);
 	this._connection.query(sql, callback);
-}
+}*/
 
+/*DadosDAO.prototype.selecionar2evento = function(selecionado, callback){
+	this._connection.query('insert into selecionaveis set ?', selecionado, callback);
+}
 
 
 
@@ -98,3 +114,5 @@ NoticiasDAO.prototype.get5UltimasNoticias = function(callback){
 module.exports = function(){
 	return DadosDAO;
 }
+
+

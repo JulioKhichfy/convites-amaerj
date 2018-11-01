@@ -215,50 +215,28 @@ module.exports.editarevento = function(application, req, res){
 		res.render("home/eventos/novo",{evento:result});
 	});
 }
+/*module.exports.detalhesevento = function(application, req, res){
+	var connection = application.config.dbConnection();
+	var eventosModel = new application.app.models.DadosDAO(connection);
 
-module.exports.selecionar2evento = function(application, req, res){
-	//var connection = application.config.dbConnection();
-	//var eventosModel = new application.app.models.DadosDAO(connection);
-	var selecionado2evento = req.body;
-	/*eventosModel.selecionar2evento(selecionado2evento, function(error, result){
-		//res.send(selecionado2evento);
-		//res.render("home/lista",{evento:result});
-		res.redirect('/filtrar?idEvento='+selecionado2evento["idEvento"]+'&idPessoa='+selecionado2evento["idPessoa"]+'&tbn='+selecionado2evento["tablename"]);
-	});*/
-	res.send(selecionado2evento);
-}
+	eventosModel.getlistaconvidados2evento(dados_selecionados,function(error,result){
+		console.log("callback do criarlistaconvidados2evento ERROR " + error);
+		console.log("callback do criarlistaconvidados2evento RESULT " + result);
+		res.render("home/eventos/detalhes");
+	});
+	
+}*/
 
 module.exports.gerenciarconvidado = function(application, req, res){
 	var connection = application.config.dbConnection();
 	var eventosModel = new application.app.models.DadosDAO(connection);
-	var selecionado = req.body;
 	
-	var tipos;
-	eventosModel.getTipos(function(error,result){
-		tipos=parser_table_name(result);
+	var dados_selecionados = req.body;
+		
+	eventosModel.criarlistaconvidados2evento(dados_selecionados,function(error,result){
+		console.log("callback do criarlistaconvidados2evento ERROR " + error);
+		console.log("callback do criarlistaconvidados2evento RESULT " + result);
+		res.redirect("/eventos");
 	});
-
-	var eventoscadastrados;
-	eventosModel.eventos(function(error,result){
-		eventoscadastrados = result;
-	});
-
-	if(selecionado["statuscheckbox"]==="true"){
-		console.log("inserir convidado em :", selecionado);
-	}else{
-		console.log("remover convidado de :", selecionado);
-	}
-
-	/*var selecionaveis;
-	dadosModel.getSelecionaveisFromTbn(tbn, function(error,result){
-		selecionaveis = result;
-	});*/
-	
-	/*dadosModel.getTable(tbn, function(error, result){
-		res.render("home/lista", {listagem : result, tables : tipos, eventoscadastrados : eventoscadastrados});
-		//res.send(result);
-	});*/
-
-
-	res.send(selecionado);
+	//Error: ER_DUP_ENTRY: Duplicate entry '51-1-ASSOCIACOES' for key 'PRIMARY'
 }

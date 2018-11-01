@@ -57,12 +57,16 @@ module.exports = function(application){
 	});
 
 	application.post('/convidados', function(req, res){
-		console.log("alouuuuuu");
 		application.app.controllers.home.gerenciarconvidado(application, req, res);
 	});
 
 	application.post('/excluir-convidado', function(req, res){
 		application.app.controllers.home.excluirconvidado(application, req, res);
 	});
+
+	/*application.get('/eventos/detalhes', function(req, res){
+		application.app.controllers.home.detalhesevento(application, req, res);
+	});
+	*/	
 	
 }
