@@ -77,7 +77,7 @@
     						<tbody id="mytable_body">
 								<% for(var i = 0; i < listagem.length; i++) {%>
 									<tr>
-									    <td><%= listagem[i].nome %></td>
+									    <td><a href="/eventos/detalhes?idevento=<%= listagem[i].id %>"><%= listagem[i].nome %></a></td>
 									    <td><%= listagem[i].data %></td>
 									    <td><%= listagem[i].hora %></td>
 									    <td><%= listagem[i].endereco %></td>

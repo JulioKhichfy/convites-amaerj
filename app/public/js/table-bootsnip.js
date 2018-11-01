@@ -23,6 +23,7 @@ $(document).ready(function(){
 
     $("#mytable_body input[type=checkbox]").click(function () {
 
+        
         if ($(this).is(':checked')) 
         {
             $(this).prop("checked", true);

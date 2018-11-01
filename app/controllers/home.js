@@ -4,8 +4,6 @@ module.exports.filtrar = function(application, req, res){
 	var dadosModel = new application.app.models.DadosDAO(connection);
 
 	var tbn = req.body['tables'];
-	console.log(">>>>>>>>>>>>>" + tbn);
-	
 	
 	if(tbn===undefined){
 		return res.redirect('/show');
@@ -86,7 +84,7 @@ module.exports.update = function(application, req, res){
 
 	dadosModel.update(tupla, function(error,result){
 		console.log("callback do update ERROR " + error);
-		console.log("callback do update RESULT " + result);
+		//console.log("callback do update RESULT " + result);
 	});
 
 	dadosModel.getTable(tupla["tablename"], function(error, result){
@@ -108,7 +106,7 @@ module.exports.salvar = function(application, req, res){
 
 	dadosModel.salvar(form, function(error, result){
 		console.log("callback do update ERROR " + error);
-		console.log("callback do update RESULT " + result);
+		//console.log("callback do update RESULT " + result);
 	});
 	dadosModel.getTable(form["tipo"], function(error, result){
 		dados=result;
@@ -137,7 +135,7 @@ module.exports.remover = function(application, req, res){
 
 	dadosModel.remover(id, tablename, function(error, result){
 		console.log("callback do update ERROR " + error);
-		console.log("callback do update RESULT " + result);
+		//console.log("callback do update RESULT " + result);
 	});
 
 	dadosModel.getTable(tablename, function(error, result){
@@ -159,7 +157,6 @@ module.exports.eventos = function(application, req, res){
 	var connection = application.config.dbConnection();
 	var eventosModel = new application.app.models.DadosDAO(connection);
 	eventosModel.eventos(function(error, result){
-		console.log(">>>> result ", result);
 		res.render("home/eventos/lista", {listagem:result});
 	});
 
@@ -183,7 +180,6 @@ module.exports.salvarevento = function(application, req, res){
 	var eventosModel = new application.app.models.DadosDAO(connection);
 	var evento = req.body;
 	if(evento["id"] === undefined){
-		console.log("salvando evento ", evento);
 		eventosModel.salvarevento(evento, function(error, result){
 			res.redirect("/eventos");
 		});	
@@ -215,17 +211,39 @@ module.exports.editarevento = function(application, req, res){
 		res.render("home/eventos/novo",{evento:result});
 	});
 }
-/*module.exports.detalhesevento = function(application, req, res){
+
+module.exports.detalhesevento = function(application, req, res){
 	var connection = application.config.dbConnection();
 	var eventosModel = new application.app.models.DadosDAO(connection);
 
-	eventosModel.getlistaconvidados2evento(dados_selecionados,function(error,result){
-		console.log("callback do criarlistaconvidados2evento ERROR " + error);
-		console.log("callback do criarlistaconvidados2evento RESULT " + result);
-		res.render("home/eventos/detalhes");
-	});
+	var idevento = req.query["idevento"];
 	
-}*/
+	//var sel = new Array() ;
+	eventosModel.getlistaconvidados2evento(idevento,function(error,result){
+		for(var i = 0; i < result.length; i++ ){
+		console.log("------------");
+		console.log(result[i].idevento);
+		console.log(result[i].idselecionado);
+		console.log(result[i].tablename);
+		console.log("------------");
+	}
+	});
+
+	
+	
+	eventosModel.buscarevento(idevento, function(error, result){
+		res.render("home/eventos/detalhes",{"evento":result});
+	});
+
+	
+	
+	
+	//console.log("selecionaveis " + selecionaveis);
+
+	
+	//res.render("home/eventos/detalhes",{"evento":evento, "selecionaveis":result});
+	
+}
 
 module.exports.gerenciarconvidado = function(application, req, res){
 	var connection = application.config.dbConnection();
@@ -235,8 +253,9 @@ module.exports.gerenciarconvidado = function(application, req, res){
 		
 	eventosModel.criarlistaconvidados2evento(dados_selecionados,function(error,result){
 		console.log("callback do criarlistaconvidados2evento ERROR " + error);
-		console.log("callback do criarlistaconvidados2evento RESULT " + result);
+		//console.log("callback do criarlistaconvidados2evento RESULT " + result);
 		res.redirect("/eventos");
 	});
 	//Error: ER_DUP_ENTRY: Duplicate entry '51-1-ASSOCIACOES' for key 'PRIMARY'
+	//res.send(dados_selecionados);
 }

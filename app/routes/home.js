@@ -40,6 +40,10 @@ module.exports = function(application){
 		application.app.controllers.home.novoevento(application, req, res);
 	});
 
+	application.get('/eventos/detalhes', function(req, res){
+		application.app.controllers.home.detalhesevento(application, req, res);
+	});
+
 	application.post('/eventos/salvar', function(req, res){
 		application.app.controllers.home.salvarevento(application, req, res);
 	});

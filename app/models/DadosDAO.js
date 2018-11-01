@@ -52,14 +52,11 @@ DadosDAO.prototype.eventos = function(callback){
 }
 
 DadosDAO.prototype.salvarevento = function(evento, callback){
-	console.log("evento: "+ evento);
-	console.log(typeof(evento));
 	this._connection.query('insert into EVENTOS set ? ', evento, callback);
 }
 
 DadosDAO.prototype.alterarevento = function(evento, callback){
 	var sql = 'UPDATE eventos SET nome =\''+evento["nome"]+'\', data = \''+evento["data"]+'\',hora=\''+evento["hora"]+'\',endereco=\''+evento["endereco"]+'\' WHERE id = '+evento["id"];
-	console.log(">>>> sql ", sql);
 	this._connection.query(sql, callback);
 }
 
@@ -68,15 +65,17 @@ DadosDAO.prototype.removerevento = function(id, callback){
 }
 
 DadosDAO.prototype.buscarevento = function(id, callback){
-	this._connection.query('select * from eventos where id= ? ', id, callback);
+	console.log("buscando evento com id " + id);
+	var sql = 'SELECT * FROM EVENTOS WHERE id='+id;
+	this._connection.query(sql, callback);
 }
 
 DadosDAO.prototype.criarlistaconvidados2evento = function(dados, callback){
-	
 	var s = dados["selecionados"];
 	var tablename = "'"+dados["idtable"]+"'";
 	var idevento = dados["idevento"];
 	var linhas="";
+	
 	for(var i = 0 ; i < s.length ; i++){
 		if(i==s.length-1)
 			linhas+="("+s[i]+","+idevento+","+tablename+","+0+","+0+");";
@@ -86,30 +85,11 @@ DadosDAO.prototype.criarlistaconvidados2evento = function(dados, callback){
 	this._connection.query('insert into SELECIONADOS_EVENTOS (idselecionado,idevento,tablename,enviado,confirmado) values '+linhas, callback);
 }
 
-/*DadosDAO.prototype.getSelecionaveis = function(selecionado, callback){
-	var sql= 'select * from selecionaveis where id_evento='+selecionado["idEvento"]+' and id_pessoa='+selecionado["idPessoa"]+' and tipo_tbn=\''+selecionado["tablename"]+'\'' ;
-	console.log("GET SELECIONAVEIS ", sql);
-	this._connection.query(sql, callback);
-}*/
+DadosDAO.prototype.getlistaconvidados2evento = function(id, callback){
 
-/*DadosDAO.prototype.selecionar2evento = function(selecionado, callback){
-	this._connection.query('insert into selecionaveis set ?', selecionado, callback);
+	this._connection.query('SELECT * FROM selecionados_eventos WHERE idevento= ? ' ,id, callback);
 }
 
-
-
-/*NoticiasDAO.prototype.getNoticia = function(id_noticia, callback){
-	console.log(id_noticia.id_noticia);
-	this._connection.query('select * from noticias where id_noticia = ' + id_noticia.id_noticia, callback);
-}
-
-NoticiasDAO.prototype.salvarNoticia = function(noticia, callback){
-	this._connection.query('insert into noticias set ? ', noticia, callback)
-}
-
-NoticiasDAO.prototype.get5UltimasNoticias = function(callback){
-	this._connection.query('select * from noticias order by data_criacao desc limit 5', callback);
-}*/
 
 module.exports = function(){
 	return DadosDAO;

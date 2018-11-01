@@ -15,112 +15,75 @@
 	<link rel="shortcut icon" href="images/favicon.ico" />
 </head>
 
-	<body>
-		<nav class="navbar navbar-default navbar-static-top">
-			<div class="container">
-				<div class="navbar-header">
-					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-						<span class="sr-only">Toggle navigation</span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-					</button>
-					
-					<img src="../images/logo.png" />
-				</div>
-
-				<div id="navbar" class="navbar-collapse collapse">
-					<ul class="nav navbar-nav navbar-right">
-						<li><a href="/show">BASE DE DADOS</a></li>
-						<li><a href="/eventos">EVENTOS</a></li>
-						<li><a href="/eventos">LISTAS DE CONVIDADOS</a></li>
-						<li><a href="/eventos">AGENDA PRESIDENTE</a></li>
-					</ul>
-				</div>
-			</div>
-		</nav>
-
+<body>
+	<nav class="navbar navbar-default navbar-static-top">
 		<div class="container">
-			<h1>EVENTO</h1>
-			<div class="row">
-				<%if(listagem.length > 0){%>
-        		<div class="col-md-12">
-        			<div class="jumbotron jumbotron-fluid">
-  						<div class="container">
-    						<div class="row">
-					        	<div class="col-md-9">
-					        		<h4>Número de eventos cadastrados <%= listagem.length %></h4>
-					        	</div>
-					        	<div class="col-md-3">
-					        		<a href="/eventos/novo" class="btn btn-primary">INSERIR NOVO +</a>
-					        	</div>
-			        		</div>
-			        		<div class="w-100"></div>
-			        		<div class="w-100"></div>
-			        		<div class="row">
-					        	Pesquisar<input type="text" id="myInput" style="max-width:200px" />
-			        		</div>
-  						</div>
-					</div>
-			        		
-			        <hr>
-			        <div class="table-responsive">
-              			<table id="mytable" class="table table-bordred table-striped">
-                   			<thead>
-			                    <th>Nome</th>
-		                     	<th>Data</th>
-		                     	<th>Hora</th>
-		                     	<th>Endereço</th>
-		                      	<th>Editar</th>
-		                       	<th>Remover</th>
-                   			</thead>
-    						<tbody id="mytable_body">
-								<% for(var i = 0; i < listagem.length; i++) {%>
-									<tr>
-									    <td><%= listagem[i].nome %></td>
-									    <td><%= listagem[i].data %></td>
-									    <td><%= listagem[i].hora %></td>
-									    <td><%= listagem[i].endereco %></td>
-									    <td>
-									    	<form action="/eventos/editar" method="post">
-									    		<input type="hidden" name="id" value="<%=listagem[i].id%>">
-										    	<button type="submit" class="btn btn-primary">
-										    		Editar
-										    	</button>
-									    	</form>
-									    </td>
-									    <td>
-									    	<form action="/eventos/remover" method="post">
-									    		<input type="hidden" name="id" value="<%=listagem[i].id%>">
-										    	<button type="submit" class="btn btn-primary">
-										    		<span class="glyphicon glyphicon-trash"></span>
-										    	</button>
-									    	</form>
-									    </td>
-									</tr>
-								<%}%>
-    						</tbody>
-						</table>
-        			</div>
-    			</div>
-    			<%}else {%>
-    				<div class="jumbotron jumbotron-fluid">
-  						<div class="container">
-  							<h4>Nenhum evento cadastradado, clique para cadastrar</h4>
-    						<div class="col-md-3">
-								<a href="/eventos/novo"  class="btn btn-primary">NOVO EVENTO</a>
-							</div>
-    					</div>
-    				</div>
-    			<%}%>
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				
+				<img src="../images/logo.png" />
+			</div>
+
+			<div id="navbar" class="navbar-collapse collapse">
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="/show">BASE DE DADOS</a></li>
+					<li><a href="/eventos">EVENTOS</a></li>
+					<li><a href="/eventos">LISTAS DE CONVIDADOS</a></li>
+					<li><a href="/eventos">AGENDA PRESIDENTE</a></li>
+				</ul>
 			</div>
 		</div>
+	</nav>
 
+	<div class="container">
+		<h1>Realizar Convite</h1>
+		<div class="row">
+       		<div class="col-md-12">
+    			<div class="jumbotron jumbotron-fluid">
+					<div class="container">
+						<div class="row">
+							<div class="col-md-6">
+							Pesquisar<input type="text" id="myInput" style="max-width:200px" />
+							</div>
+				        	<div class="col-md-6">
+				        		<h4><%= evento[0].nome %></h4>
+				        	</div>
+		        		</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+	        <hr>
+	        <div class="table-responsive">
+      			<table id="mytable" class="table table-bordred table-striped">
+           			<thead>
+                     	<th>Data</th>
+                     	<th>Hora</th>
+                     	<th>Endereço</th>
+           			</thead>
+					<tbody id="mytable_body">
+						<tr>
+						    <td><%= evento[0].data %></td>
+						    <td><%= evento[0].hora %></td>
+						    <td><%= evento[0].endereco %></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+		
 	    
 <!-- JQuery -->
 <script src="../js/jquery-2.2.1.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 <script src="../js/table-bootsnip.js"></script>
 	
-	</body>
+</body>
 </html>
