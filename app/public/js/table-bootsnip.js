@@ -54,12 +54,17 @@ $(document).ready(function(){
         var value = $(this).val();
         $("#idevento").prop("value",value);
         $("#submitselecionaveis").prop("disabled", false);
+        //alert( $("#idtable").val());
+       $.post( "/convidados2evento", { tbn: $("#idtable").val() , evento: value } );
     });
 
     $("#tables").change(function(){ 
         var tbn = $('#tables').find(":selected").text();
         $("#idtable").prop("value",tbn);
+        $("#formlistagem").submit();
     });
+
+
 
 });
 

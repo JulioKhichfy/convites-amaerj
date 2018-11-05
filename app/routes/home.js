@@ -1,36 +1,40 @@
 module.exports = function(application){
 
+	application.get('/show', function(req, res){
+		application.app.controllers.home.show(application, req, res);
+	});
+
+	application.get('/editar', function(req, res){
+		application.app.controllers.home.mostrarTelaParaEdicaoDePessoa(application, req, res);
+	});
+
 	application.post('/update', function(req, res){
 		application.app.controllers.home.update(application, req, res);
 	});
 
-	application.get('/show', function(req, res){
-		application.app.controllers.home.show(application, req, res);
+	application.get('/novo', function(req, res){
+		application.app.controllers.home.mostrarTelaParaNovaPessoa(application, req, res);
+	});
+
+	application.post('/salvar', function(req, res){
+		application.app.controllers.home.salvarPessoa(application, req, res);
+	});
+	
+	application.get('/remover', function(req, res){
+		application.app.controllers.home.remover(application, req, res);
 	});
 
 	application.post('/filtrar', function(req, res){
 		application.app.controllers.home.filtrar(application, req, res);
 	});
 
-	application.get('/filtrar', function(req, res){
+	/*application.get('/filtrar', function(req, res){
 		application.app.controllers.home.filtrar(application, req, res);
-	});
+	});*/
 
-	application.get('/editar', function(req, res){
-		application.app.controllers.home.editar(application, req, res);
-	});
 	
-	application.get('/novo', function(req, res){
-		application.app.controllers.home.novo(application, req, res);
-	});
-	
-	application.post('/salvar', function(req, res){
-		application.app.controllers.home.salvar(application, req, res);
-	});
-	
-	application.get('/remover', function(req, res){
-		application.app.controllers.home.remover(application, req, res);
-	});
+
+	/***EVENTOS***/
 
 	application.get('/eventos', function(req, res){
 		application.app.controllers.home.eventos(application, req, res);
@@ -56,6 +60,9 @@ module.exports = function(application){
 		application.app.controllers.home.novoevento(application, req, res);
 	});
 
+
+	
+
 	application.post('/selecionar', function(req, res){
 		application.app.controllers.home.selecionar2evento(application, req, res);
 	});
@@ -67,6 +74,11 @@ module.exports = function(application){
 	application.post('/excluir-convidado', function(req, res){
 		application.app.controllers.home.excluirconvidado(application, req, res);
 	});
+
+	application.post('/convidados2evento', function(req, res){
+		application.app.controllers.home.getConvidadosFromSelectEventos(application, req, res);
+	});
+
 
 	/*application.get('/eventos/detalhes', function(req, res){
 		application.app.controllers.home.detalhesevento(application, req, res);
