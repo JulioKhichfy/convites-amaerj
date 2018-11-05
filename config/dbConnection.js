@@ -4,7 +4,7 @@ var connMySQL = function(){
 	return mysql.createConnection({
 		host : 'localhost',
 		user : 'root',
-		password : 'admin',
+		password : 'root',
 		database : 'premiopatrici'
 	});
 }

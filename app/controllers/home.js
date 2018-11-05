@@ -212,34 +212,41 @@ module.exports.editarevento = function(application, req, res){
 	});
 }
 
+
+
+function addValueToList(key, value) {
+    //if the list is already created for the "key", then uses it
+    //else creates new list for the "key" to store multiple values in it.
+    map[key] = map[key] || [];
+    map[key].push(value);
+}
+
 module.exports.detalhesevento = function(application, req, res){
 	var connection = application.config.dbConnection();
 	var eventosModel = new application.app.models.DadosDAO(connection);
 
 	var idevento = req.query["idevento"];
 	
-	//var sel = new Array() ;
+	var ids = new Array();
+	var tablesname = new Array();
+	var map = {};
+
 	eventosModel.getlistaconvidados2evento(idevento,function(error,result){
-		for(var i = 0; i < result.length; i++ ){
-		console.log("------------");
-		console.log(result[i].idevento);
-		console.log(result[i].idselecionado);
-		console.log(result[i].tablename);
-		console.log("------------");
-	}
+		if(result.length > 0){
+			for(var i = 0; i < result.length; i++ ){
+				 map[result[i].tablename] = map[result[i].tablename] || [];
+    			 map[result[i].tablename].push(result[i].idselecionado);
+			}
+			console.log("map ", map);
+			res.send(map);
+		}else{
+			res.render("home/eventos/detalhes",{"evento":result});
+		}
 	});
-
 	
-	
-	eventosModel.buscarevento(idevento, function(error, result){
+	/*eventosModel.buscarevento(idevento, function(error, result){
 		res.render("home/eventos/detalhes",{"evento":result});
-	});
-
-	
-	
-	
-	//console.log("selecionaveis " + selecionaveis);
-
+	});*/
 	
 	//res.render("home/eventos/detalhes",{"evento":evento, "selecionaveis":result});
 	

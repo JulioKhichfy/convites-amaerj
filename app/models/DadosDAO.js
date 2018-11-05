@@ -17,6 +17,10 @@ DadosDAO.prototype.getTupla = function(id, tablename, callback){
 	this._connection.query("select id, tratamento, nome, cargo, email, telefone, cep, endereco, sexo, situacao from "+ tablename +" where id = " + id , callback);
 }
 
+DadosDAO.prototype.getConvidados = function(ids, tablename, callback){
+	this._connection.query("select id, tratamento, nome, cargo, email, telefone, cep, endereco, sexo, situacao from "+ tablename +" where id in ?",id , callback);
+}
+
 
 DadosDAO.prototype.getTipos = function(callback){
 	this._connection.query('SELECT distinct tipo FROM ASSOCIACOES UNION SELECT distinct tipo FROM AUTORIDADES_ESPECIAIS', callback);
@@ -87,7 +91,7 @@ DadosDAO.prototype.criarlistaconvidados2evento = function(dados, callback){
 
 DadosDAO.prototype.getlistaconvidados2evento = function(id, callback){
 
-	this._connection.query('SELECT * FROM selecionados_eventos WHERE idevento= ? ' ,id, callback);
+	this._connection.query("SELECT * FROM SELECIONADOS_EVENTOS WHERE idevento = ?",id, callback);
 }
 
 
