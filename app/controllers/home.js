@@ -353,16 +353,18 @@ module.exports.gerenciarconvidado = function(application, req, res){
 	var tablename = "'"+dados["idtable"]+"'";
 	var idevento = dados["idevento"];
 	var linhas="";
-	var ja_existe;
+	var ja_existe=new Array();
 	
 	if(s instanceof Array)
 	{
 		for(var i = 0 ; i < s.length ; i++)
 		{
-			eventosModel.getTupla(s[i],dados["idtable"],function(error,result){
+			eventosModel.getSelecionaveis(idevento,tablename,s[i],function(error,result){
 				console.log("result varios>>>>>>>> ", result);
-				ja_existe=result;
+				ja_existe.push(result);
 			});
+
+			console.log("ja_existe varios>>>>>>>> ", ja_existe);
 
 			if(ja_existe.length == 0)
 			{
@@ -371,14 +373,17 @@ module.exports.gerenciarconvidado = function(application, req, res){
 				else
 					linhas += "("+s[i]+","+idevento+","+tablename+","+0+","+0+"),";
 			}
+			ja_existe=new Array();
 		}
 	}
 	else
 	{
-		eventosModel.getTupla(s,dados["idtable"],function(error,result){
-				console.log("result um>>>>>>>> ", result);
+		eventosModel.getSelecionaveis(idevento,tablename,s,function(error,result){
 				ja_existe=result;
 		});
+
+		console.log("result um>>>>>>>> ", ja_existe);
+
 		if(ja_existe.length == 0)
 		{
 			linhas= "("+s+","+idevento+","+tablename+","+0+","+0+");";

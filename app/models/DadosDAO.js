@@ -18,6 +18,13 @@ DadosDAO.prototype.getTupla = function(id, tablename, callback){
 	this._connection.query("select id, tratamento, nome, cargo, email, telefone, cep, endereco, sexo, situacao from "+ tablename +" where id = " + id , callback);
 }
 
+DadosDAO.prototype.getSelecionaveis = function(id, tablename, idselecionado, callback){
+	console.log("no dao getSelecionaveis ", id, tablename, idselecionado);
+	var sql = "select * from SELECIONADOS_EVENTOS where idevento = "+id+" and tablename like "+tablename+" and idselecionado = "+idselecionado ;
+	console.log("no dao getSelecionaveis sql", sql);
+	this._connection.query(sql , callback);
+}
+
 DadosDAO.prototype.getConvidados = function(ids, tablename, callback){
 	this._connection.query("select id, tratamento, nome, cargo, email, telefone, cep, endereco, sexo, situacao from "+ tablename +" where id in ?",id , callback);
 }
@@ -76,6 +83,7 @@ DadosDAO.prototype.buscarevento = function(id, callback){
 
 DadosDAO.prototype.criarlistaconvidados2evento = function(linhas, callback){
 
+	console.log("linhas" + linhas);
 	this._connection.query('insert into SELECIONADOS_EVENTOS (idselecionado,idevento,tablename,enviado,confirmado) values '+linhas, callback);
 }
 
