@@ -75,6 +75,9 @@ DadosDAO.prototype.buscarevento = function(id, callback){
 
 DadosDAO.prototype.criarlistaconvidados2evento = function(dados, callback){
 	var s = dados["selecionados"];
+	if (typeof s == "string") 
+		s = new Array(dados["selecionados"]);
+	console.log("criarlistaconvidados2evento", typeof(s), s);
 	var tablename = "'"+dados["idtable"]+"'";
 	var idevento = dados["idevento"];
 	var linhas="";
@@ -84,7 +87,9 @@ DadosDAO.prototype.criarlistaconvidados2evento = function(dados, callback){
 			linhas+="("+s[i]+","+idevento+","+tablename+","+0+","+0+");";
 		else
 			linhas += "("+s[i]+","+idevento+","+tablename+","+0+","+0+"),";
+		console.log("linha>>>>> ", linhas);
 	}
+
 	this._connection.query('insert into SELECIONADOS_EVENTOS (idselecionado,idevento,tablename,enviado,confirmado) values '+linhas, callback);
 }
 

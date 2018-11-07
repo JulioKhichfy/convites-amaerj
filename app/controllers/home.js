@@ -327,7 +327,12 @@ module.exports.detalhesevento = function(application, req, res){
 
 		if(result.length > 0){
 			for(var i = 0; i < result.length; i++ ){
+				console.log("id selecionado ", result[i].idselecionado);
 				 map[result[i].tablename] = map[result[i].tablename] || [];
+				 /*if (map[result[i].tablename] != nul)
+				 	map[result[i].tablename] = map[result[i].tablename];
+				 else
+				 	map[result[i].tablename] = [];*/
     			 map[result[i].tablename].push(result[i].idselecionado);
 			}
 			res.send(map);
@@ -348,8 +353,13 @@ module.exports.gerenciarconvidado = function(application, req, res){
 	var eventosModel = new application.app.models.DadosDAO(connection);
 	
 	var dados_selecionados = req.body;
-		
+	//res.send(dados_selecionados)	;
 	eventosModel.criarlistaconvidados2evento(dados_selecionados,function(error,result){
+		if(error){
+			connection.end();
+	 		throw error;
+
+		}
 		console.log("callback do criarlistaconvidados2evento ERROR " + error);
 		//console.log("callback do criarlistaconvidados2evento RESULT " + result);
 		res.redirect("/eventos");
