@@ -329,10 +329,6 @@ module.exports.detalhesevento = function(application, req, res){
 			for(var i = 0; i < result.length; i++ ){
 				console.log("id selecionado ", result[i].idselecionado);
 				 map[result[i].tablename] = map[result[i].tablename] || [];
-				 /*if (map[result[i].tablename] != nul)
-				 	map[result[i].tablename] = map[result[i].tablename];
-				 else
-				 	map[result[i].tablename] = [];*/
     			 map[result[i].tablename].push(result[i].idselecionado);
 			}
 			res.send(map);
@@ -352,20 +348,52 @@ module.exports.gerenciarconvidado = function(application, req, res){
 	var connection = application.config.dbConnection();
 	var eventosModel = new application.app.models.DadosDAO(connection);
 	
-	var dados_selecionados = req.body;
-	//res.send(dados_selecionados)	;
-	eventosModel.criarlistaconvidados2evento(dados_selecionados,function(error,result){
-		if(error){
-			connection.end();
-	 		throw error;
+	var dados = req.body;
+	var s = dados["selecionados"];
+	var tablename = "'"+dados["idtable"]+"'";
+	var idevento = dados["idevento"];
+	var linhas="";
+	var ja_existe;
+	
+	if(s instanceof Array)
+	{
+		for(var i = 0 ; i < s.length ; i++)
+		{
+			eventosModel.getTupla(s[i],dados["idtable"],function(error,result){
+				console.log("result varios>>>>>>>> ", result);
+				ja_existe=result;
+			});
 
+			if(ja_existe.length == 0)
+			{
+				if(i==s.length-1)
+					linhas+="("+s[i]+","+idevento+","+tablename+","+0+","+0+");";
+				else
+					linhas += "("+s[i]+","+idevento+","+tablename+","+0+","+0+"),";
+			}
 		}
-		console.log("callback do criarlistaconvidados2evento ERROR " + error);
-		//console.log("callback do criarlistaconvidados2evento RESULT " + result);
+	}
+	else
+	{
+		eventosModel.getTupla(s,dados["idtable"],function(error,result){
+				console.log("result um>>>>>>>> ", result);
+				ja_existe=result;
+		});
+		if(ja_existe.length == 0)
+		{
+			linhas= "("+s+","+idevento+","+tablename+","+0+","+0+");";
+		}
+	}
+	
+	eventosModel.criarlistaconvidados2evento(linhas,function(error,result){
+		if(error){
+			if(error.code == 'ER_DUP_ENTRY' || error.errno == 1062){
+				console.log("tentativa de inserir duplicado no BD");
+			}
+		}
+		connection.end();
 		res.redirect("/eventos");
 	});
-	//Error: ER_DUP_ENTRY: Duplicate entry '51-1-ASSOCIACOES' for key 'PRIMARY'
-	//res.send(dados_selecionados);
 }
 
 module.exports.getConvidadosFromSelectEventos = function(application, req, res){
