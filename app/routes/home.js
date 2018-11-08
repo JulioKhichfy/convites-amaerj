@@ -76,6 +76,7 @@ module.exports = function(application){
 	});
 
 	application.post('/convidados2evento', function(req, res){
+		console.log("convidados2evento alvo");
 		application.app.controllers.home.getConvidadosFromSelectEventos(application, req, res);
 	});
 

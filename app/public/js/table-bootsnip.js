@@ -55,7 +55,16 @@ $(document).ready(function(){
         $("#idevento").prop("value",value);
         $("#submitselecionaveis").prop("disabled", false);
         //alert( $("#idtable").val());
-       $.post( "/convidados2evento", { tbn: $("#idtable").val() , evento: value } );
+       $.post( "/convidados2evento", { tbn: $("#idtable").val() , evento: value },
+            function(data,status){
+                var convidados;
+                if(data instanceof Array){
+                    alert("sou um array");
+
+                }else{
+                    alert("NAO sou um array");    
+                }
+            });
     });
 
     $("#tables").change(function(){ 
@@ -63,8 +72,6 @@ $(document).ready(function(){
         $("#idtable").prop("value",tbn);
         $("#formlistagem").submit();
     });
-
-
 
 });
 

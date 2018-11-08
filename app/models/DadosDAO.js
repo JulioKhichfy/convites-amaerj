@@ -77,8 +77,9 @@ DadosDAO.prototype.removerevento = function(id, callback){
 }
 
 DadosDAO.prototype.buscarevento = function(id, callback){
+	console.log("id evento", id);
 	
-	this._connection.query("SELECT * FROM EVENTOS WHERE id="+id, callback);
+	this._connection.query('SELECT * FROM EVENTOS WHERE id='+id, callback);
 }
 
 DadosDAO.prototype.criarlistaconvidados2evento = function(linhas, callback){
@@ -92,10 +93,11 @@ DadosDAO.prototype.getlistaconvidados2evento = function(id, callback){
 	this._connection.query("SELECT * FROM SELECIONADOS_EVENTOS WHERE idevento = ?",id, callback);
 }
 
-DadosDAO.prototype.getTodosSelecionadosEvento = function(map, callback){
-
-	console.log("no DAO ", map);
-	//this._connection.query("SELECT * FROM SELECIONADOS_EVENTOS WHERE idevento = ?",id, callback);
+DadosDAO.prototype.getTodosSelecionaveisByEventoId = function(idevento, tablename, callback){
+	
+	console.log("idevento ", idevento);
+	console.log("tablename ", tablename);
+	this._connection.query("SELECT idselecionado FROM SELECIONADOS_EVENTOS WHERE idevento ="+idevento+" and tablename like ?",tablename,callback);
 }
 
 

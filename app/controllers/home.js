@@ -226,6 +226,7 @@ module.exports.eventos = function(application, req, res){
 			connection.end();
 		 	throw error;
 		}
+		//console.log("EVENTOS ",result);
 		res.render("home/eventos/lista", {listagem:result});
 	});
 
@@ -306,42 +307,34 @@ module.exports.detalhesevento = function(application, req, res){
 	var idevento = req.query["idevento"];
 	
 	var map = {};
-	var evento;
-
-	eventosModel.buscarevento(idevento,function(error,result){
-		if(error){
-			console.log("ERROR ", error);
-			connection.end();
-	 		throw error;
-		}
-		evento=result;
-	});	
-
-	console.log("EVENTO: "+evento);
 
 	eventosModel.getlistaconvidados2evento(idevento,function(error,result){
 		if(error){
-			connection.end();
+			//connection.end();
 	 		throw error;
 		}
-
 		if(result.length > 0){
 			for(var i = 0; i < result.length; i++ ){
 				console.log("id selecionado ", result[i].idselecionado);
 				 map[result[i].tablename] = map[result[i].tablename] || [];
     			 map[result[i].tablename].push(result[i].idselecionado);
 			}
-			res.send(map);
-		}else{
-			res.render("home/eventos/detalhes",{evento:result});
-			//res.send(evento);
 		}
+		myMap.forEach(function(value, key) {
+		  console.log(key + " = " + value);
+		}, myMap);
+		
+		eventosModel.buscarevento(idevento,function(error,result){
+			if(error){
+				console.log("ERROR ", error);
+				//connection.end();
+		 		throw error;
+			}
+			
+			res.render("home/eventos/detalhes",{evento:result[0], selecionaveis:map});
+		});	
+
 	});
-
-	/*eventosModel.getTodosSelecionadosEvento(map,function(error,result){
-
-	});*/
-	
 }
 
 module.exports.gerenciarconvidado = function(application, req, res){
@@ -353,7 +346,7 @@ module.exports.gerenciarconvidado = function(application, req, res){
 	var tablename = "'"+dados["idtable"]+"'";
 	var idevento = dados["idevento"];
 	var linhas="";
-	var ja_existe=new Array();
+	var ja_existe;
 	
 	if(s instanceof Array)
 	{
@@ -361,7 +354,7 @@ module.exports.gerenciarconvidado = function(application, req, res){
 		{
 			eventosModel.getSelecionaveis(idevento,tablename,s[i],function(error,result){
 				console.log("result varios>>>>>>>> ", result);
-				ja_existe.push(result);
+				ja_existe=result;
 			});
 
 			console.log("ja_existe varios>>>>>>>> ", ja_existe);
@@ -402,8 +395,18 @@ module.exports.gerenciarconvidado = function(application, req, res){
 }
 
 module.exports.getConvidadosFromSelectEventos = function(application, req, res){
-	var dados_selecionados = req.body;
-	res.send(dados_selecionados);
+	
+	var connection = application.config.dbConnection();
+	var eventosModel = new application.app.models.DadosDAO(connection);
+
+	var eventoSelecionado = req.body;
+	var tbn = eventoSelecionado["tbn"];
+	var idevento = eventoSelecionado["evento"];
+
+	eventosModel.getTodosSelecionaveisByEventoId(idevento,tbn,function(error,result){
+		console.log("result ", result);
+		res.send(result);
+	});
 	
 }
 

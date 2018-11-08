@@ -109,7 +109,7 @@
 						<tbody id="mytable_body">
 							<% for(var i = 0; i < listagem.length; i++) {%>
 								<tr>
-									<td><input value="<%= listagem[i].id %>" type="checkbox" class="checkthis" name="selecionados"/></td>
+									<td id="<%= listagem[i].id %>"><input value="<%= listagem[i].id %>" type="checkbox" class="checkthis" name="selecionados"/></td>
 								    <td><%= listagem[i].tratamento %></td>
 								    <td><%= listagem[i].nome %></td>
 								    <td><%= listagem[i].cargo %></td>
