@@ -216,6 +216,8 @@ function parser_table_name(result){
 }
 
 
+
+
 /***EVENTOS****/
 
 module.exports.eventos = function(application, req, res){
@@ -300,14 +302,17 @@ module.exports.editarevento = function(application, req, res){
 	});
 }
 
+
+
 module.exports.detalhesevento = function(application, req, res){
 	var connection = application.config.dbConnection();
 	var eventosModel = new application.app.models.DadosDAO(connection);
 
-	var idevento = req.query["idevento"];
-	
+	var idevento = req.body["ideventoclicado"];
+	//console.log("id evento clicado ",idevento);
+
 	var map_convidados = new Map();
-	var resultTotal = new Array();
+	
 
 	eventosModel.getlistaconvidados2evento(idevento,function(error,result){
 		if(error){
@@ -323,25 +328,47 @@ module.exports.detalhesevento = function(application, req, res){
 			 	map_convidados[result[i].tablename].push(result[i].idselecionado);
 			}
 		}
-		console.log("map_convidados ", map_convidados);
+
+		//console.log("map_convidados ", map_convidados);
 		var tableNames = Object.keys(map_convidados);
-		console.log("tableNames ", tableNames);
+		//console.log("tableNames ", tableNames);
 		
-
-		//for(var i = 0 ; i < tableNames.length ; i++)
-		//{
-			var sql="select * from "+tableNames[0]+" where id in ("+map_convidados[tableNames[0]]+");";
-			eventosModel.buscarTodosConvidados(sql,function(error,result){
-				if(error){
-					connection.end();
-					console.log("erroooooooooooo");
-			 		throw error;
+		var resultTotal = new Array();
+		var sql=[];
+		
+		if(tableNames.length > 0)
+		{
+			for(var i = 0 ; i < tableNames.length ; i++)
+			{
+				if(i == tableNames.length-1){
+					sql.push("select * from "+tableNames[i]+" where id in ("+map_convidados[tableNames[i]]+")" );
+				}else{
+					sql.push("select * from "+tableNames[i]+" where id in ("+map_convidados[tableNames[i]]+") union ");
 				}
-				resultTotal.push(result);
-			});	
-		//}
+			}
+		}
 
-		console.log("resultTotal ", resultTotal.length);
+		var sql_str="";
+		
+		for(var i = 0; i < sql.length ; i ++)
+		{
+			sql_str += sql[i];	
+		}
+		console.log("sql_str ", sql_str);
+		eventosModel.buscarTodosConvidados(sql_str,function(error,result){
+			if(error){
+				connection.end();
+				console.log("erroooooooooooo");
+		 		throw error;
+			}
+			if(result){
+				
+				resultTotal = pegaGeral(result);
+				console.log(">>>>result ", resultTotal);
+			}
+		});	
+
+		//console.log("resultTotal ", resultTotal);
 		eventosModel.buscarevento(idevento,function(error,result){
 			if(error){
 				connection.end();
@@ -353,6 +380,14 @@ module.exports.detalhesevento = function(application, req, res){
 
 	});
 }
+
+
+function pegaGeral(result){
+	var geral = new Array();
+	geral=result;
+	return geral;
+}
+
 
 module.exports.gerenciarconvidado = function(application, req, res){
 	var connection = application.config.dbConnection();

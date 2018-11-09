@@ -44,7 +44,7 @@ module.exports = function(application){
 		application.app.controllers.home.novoevento(application, req, res);
 	});
 
-	application.get('/eventos/detalhes', function(req, res){
+	application.post('/eventos/detalhes', function(req, res){
 		application.app.controllers.home.detalhesevento(application, req, res);
 	});
 

@@ -75,30 +75,40 @@
 		                       	<th>Remover</th>
                    			</thead>
     						<tbody id="mytable_body">
+    						
 								<% for(var i = 0; i < listagem.length; i++) {%>
 									<tr>
-									    <td><a href="/eventos/detalhes?idevento=<%= listagem[i].id %>"><%= listagem[i].nome %></a></td>
+									    <td>
+									    	<form action="/eventos/detalhes" method="post">	
+									    		<button type="submit" class="btn btn-primary"><%= listagem[i].nome %></button>
+									    		<input type="hidden" name="ideventoclicado" value="<%=listagem[i].id%>">
+									    	<!--<a href="/eventos/detalhes?idevento=<%= listagem[i].id %>"><%= listagem[i].nome %></a>-->
+									    	</form>
+									    </td>
 									    <td><%= listagem[i].data %></td>
 									    <td><%= listagem[i].hora %></td>
 									    <td><%= listagem[i].endereco %></td>
-									    <td>
-									    	<form action="/eventos/editar" method="post">
+									    <td>Editar
+									    	<!--<form action="/eventos/editar" method="post">
 									    		<input type="hidden" name="id" value="<%=listagem[i].id%>">
 										    	<button type="submit" class="btn btn-primary">
 										    		Editar
 										    	</button>
-									    	</form>
+									    	</form>-->
 									    </td>
-									    <td>
-									    	<form action="/eventos/remover" method="post">
+									    <td>Remover
+									    	<!--<form action="/eventos/remover" method="post">
 									    		<input type="hidden" name="id" value="<%=listagem[i].id%>">
 										    	<button type="submit" class="btn btn-primary">
 										    		<span class="glyphicon glyphicon-trash"></span>
 										    	</button>
 									    	</form>
+									    -->
 									    </td>
 									</tr>
 								<%}%>
+
+							
     						</tbody>
 						</table>
         			</div>
