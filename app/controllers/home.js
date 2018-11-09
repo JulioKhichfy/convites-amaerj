@@ -307,6 +307,7 @@ module.exports.detalhesevento = function(application, req, res){
 	var idevento = req.query["idevento"];
 	
 	var map_convidados = new Map();
+	var resultTotal = new Array();
 
 	eventosModel.getlistaconvidados2evento(idevento,function(error,result){
 		if(error){
@@ -318,28 +319,28 @@ module.exports.detalhesevento = function(application, req, res){
 		{
 			for(var i = 0; i < result.length; i++ )
 			{
-				console.log("id selecionado ", result[i].idselecionado);
 			 	map_convidados[result[i].tablename] = map_convidados[result[i].tablename] || [];
 			 	map_convidados[result[i].tablename].push(result[i].idselecionado);
 			}
 		}
-		/*console.log("map_convidados", map_convidados);
-		var json = JSON.stringify(map_convidados);
-		console.log("json", json);*/
+		console.log("map_convidados ", map_convidados);
 		var tableNames = Object.keys(map_convidados);
-		var resultTotal = []
-		for(var i = 0 ; i < tableNames.length ; i++){
-			var sql="select * from "+tableNames[i]+" where id in ("+map_convidados[tableNames[i]]+");";
-			
+		console.log("tableNames ", tableNames);
+		
+
+		//for(var i = 0 ; i < tableNames.length ; i++)
+		//{
+			var sql="select * from "+tableNames[0]+" where id in ("+map_convidados[tableNames[0]]+");";
 			eventosModel.buscarTodosConvidados(sql,function(error,result){
 				if(error){
 					connection.end();
+					console.log("erroooooooooooo");
 			 		throw error;
 				}
-				//console.log(">>>>> result ", result);
 				resultTotal.push(result);
 			});	
-		}
+		//}
+
 		console.log("resultTotal ", resultTotal.length);
 		eventosModel.buscarevento(idevento,function(error,result){
 			if(error){
@@ -400,7 +401,7 @@ module.exports.getConvidadosFromSelectEventos = function(application, req, res){
 	var idevento = eventoSelecionado["evento"];
 
 	eventosModel.getTodosSelecionaveisByEventoId(idevento,tbn,function(error,result){
-		console.log("result ", result);
+		//console.log("result ", result);
 		res.send(result);
 	});
 	
