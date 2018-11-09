@@ -100,6 +100,12 @@ DadosDAO.prototype.getTodosSelecionaveisByEventoId = function(idevento, tablenam
 	this._connection.query("SELECT idselecionado FROM SELECIONADOS_EVENTOS WHERE idevento ="+idevento+" and tablename like ?",tablename,callback);
 }
 
+DadosDAO.prototype.buscarTodosConvidados = function(sql, callback){
+	
+	console.log("sql no dao ", sql);
+	this._connection.query(sql,callback);
+}
+
 
 
 

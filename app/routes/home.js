@@ -60,9 +60,6 @@ module.exports = function(application){
 		application.app.controllers.home.novoevento(application, req, res);
 	});
 
-
-	
-
 	application.post('/selecionar', function(req, res){
 		application.app.controllers.home.selecionar2evento(application, req, res);
 	});

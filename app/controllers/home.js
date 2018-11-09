@@ -306,32 +306,48 @@ module.exports.detalhesevento = function(application, req, res){
 
 	var idevento = req.query["idevento"];
 	
-	var map = {};
+	var map_convidados = new Map();
 
 	eventosModel.getlistaconvidados2evento(idevento,function(error,result){
 		if(error){
-			//connection.end();
+			connection.end();
 	 		throw error;
 		}
-		if(result.length > 0){
-			for(var i = 0; i < result.length; i++ ){
+
+		if(result.length > 0)
+		{
+			for(var i = 0; i < result.length; i++ )
+			{
 				console.log("id selecionado ", result[i].idselecionado);
-				 map[result[i].tablename] = map[result[i].tablename] || [];
-    			 map[result[i].tablename].push(result[i].idselecionado);
+			 	map_convidados[result[i].tablename] = map_convidados[result[i].tablename] || [];
+			 	map_convidados[result[i].tablename].push(result[i].idselecionado);
 			}
 		}
-		myMap.forEach(function(value, key) {
-		  console.log(key + " = " + value);
-		}, myMap);
-		
+		/*console.log("map_convidados", map_convidados);
+		var json = JSON.stringify(map_convidados);
+		console.log("json", json);*/
+		var tableNames = Object.keys(map_convidados);
+		var resultTotal = []
+		for(var i = 0 ; i < tableNames.length ; i++){
+			var sql="select * from "+tableNames[i]+" where id in ("+map_convidados[tableNames[i]]+");";
+			
+			eventosModel.buscarTodosConvidados(sql,function(error,result){
+				if(error){
+					connection.end();
+			 		throw error;
+				}
+				//console.log(">>>>> result ", result);
+				resultTotal.push(result);
+			});	
+		}
+		console.log("resultTotal ", resultTotal.length);
 		eventosModel.buscarevento(idevento,function(error,result){
 			if(error){
-				console.log("ERROR ", error);
-				//connection.end();
+				connection.end();
 		 		throw error;
 			}
 			
-			res.render("home/eventos/detalhes",{evento:result[0], selecionaveis:map});
+			res.render("home/eventos/detalhes",{evento:result[0], selecionaveis:resultTotal});
 		});	
 
 	});
@@ -346,41 +362,21 @@ module.exports.gerenciarconvidado = function(application, req, res){
 	var tablename = "'"+dados["idtable"]+"'";
 	var idevento = dados["idevento"];
 	var linhas="";
-	var ja_existe;
-	
+		
 	if(s instanceof Array)
 	{
 		for(var i = 0 ; i < s.length ; i++)
 		{
-			eventosModel.getSelecionaveis(idevento,tablename,s[i],function(error,result){
-				console.log("result varios>>>>>>>> ", result);
-				ja_existe=result;
-			});
-
-			console.log("ja_existe varios>>>>>>>> ", ja_existe);
-
-			if(ja_existe.length == 0)
-			{
-				if(i==s.length-1)
-					linhas+="("+s[i]+","+idevento+","+tablename+","+0+","+0+");";
-				else
-					linhas += "("+s[i]+","+idevento+","+tablename+","+0+","+0+"),";
-			}
-			ja_existe=new Array();
+			if(i==s.length-1)
+				linhas+="("+s[i]+","+idevento+","+tablename+","+0+","+0+");";
+			else
+				linhas += "("+s[i]+","+idevento+","+tablename+","+0+","+0+"),";
 		}
 	}
 	else
 	{
-		eventosModel.getSelecionaveis(idevento,tablename,s,function(error,result){
-				ja_existe=result;
-		});
-
-		console.log("result um>>>>>>>> ", ja_existe);
-
-		if(ja_existe.length == 0)
-		{
-			linhas= "("+s+","+idevento+","+tablename+","+0+","+0+");";
-		}
+		linhas= "("+s+","+idevento+","+tablename+","+0+","+0+");";
+		
 	}
 	
 	eventosModel.criarlistaconvidados2evento(linhas,function(error,result){
@@ -389,7 +385,7 @@ module.exports.gerenciarconvidado = function(application, req, res){
 				console.log("tentativa de inserir duplicado no BD");
 			}
 		}
-		connection.end();
+		//connection.end();
 		res.redirect("/eventos");
 	});
 }

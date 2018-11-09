@@ -55,14 +55,48 @@ $(document).ready(function(){
         $("#idevento").prop("value",value);
         $("#submitselecionaveis").prop("disabled", false);
         //alert( $("#idtable").val());
-       $.post( "/convidados2evento", { tbn: $("#idtable").val() , evento: value },
-            function(data,status){
+        $.post( "/convidados2evento", { tbn: $("#idtable").val() , evento: value },
+            function(data,status)
+            {
                 var convidados;
-                if(data instanceof Array){
-                    alert("sou um array");
-
-                }else{
-                    alert("NAO sou um array");    
+                console.log("data>>> ", data);
+                if(data instanceof Array)
+                {
+                    $("#mytable input[type=checkbox]").each(function () {
+                            $(this).prop("checked", false);
+                            $(this).parent('td').removeClass('fica_verde');
+                            $(this).prop("checked", false);
+                            $(this).prop("disabled", false);
+                    });
+                    if(data.length > 0)
+                    {
+                        for(var i=0 ; i<data.length ; i++)
+                        {
+                            var td_id = "#idtd"+data[i].idselecionado;
+                            $(td_id).addClass('fica_verde');
+                            $(td_id).find( "input" ).prop("checked", true);
+                            $(td_id).find( "input" ).prop("disabled", true);
+                        }
+                    }
+                    else
+                    {   
+                        $("#mytable input[type=checkbox]").each(function () {
+                            $(this).prop("checked", false);
+                            $(this).parent('td').removeClass('fica_verde');
+                            $(this).prop("checked", false);
+                            $(this).prop("disabled", false);
+                        });
+                    }
+                }
+                else
+                {
+                    alert("NAO sou um array");
+                    $("#mytable input[type=checkbox]").each(function () {
+                        $(this).prop("checked", false);
+                        $(this).parent('td').removeClass('fica_verde');
+                        $(this).prop("checked", false);
+                        $(this).prop("disabled", false);
+                    });    
                 }
             });
     });
