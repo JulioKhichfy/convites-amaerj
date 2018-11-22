@@ -364,7 +364,7 @@ module.exports.detalhesevento = function(application, req, res){
 			if(result){
 				
 				resultTotal = pegaGeral(result);
-				console.log(">>>>result ", resultTotal);
+				
 			}
 		});	
 
@@ -374,8 +374,9 @@ module.exports.detalhesevento = function(application, req, res){
 				connection.end();
 		 		throw error;
 			}
-			
-			res.render("home/eventos/detalhes",{evento:result[0], selecionaveis:resultTotal});
+			console.log(">>>>result ", resultTotal);
+			res.send(resultTotal);
+			//res.render("home/eventos/detalhes",{evento:result[0], selecionaveis:resultTotal});
 		});	
 
 	});
