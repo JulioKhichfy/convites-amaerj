@@ -307,12 +307,8 @@ module.exports.editarevento = function(application, req, res){
 module.exports.detalhesevento = function(application, req, res){
 	var connection = application.config.dbConnection();
 	var eventosModel = new application.app.models.DadosDAO(connection);
-
 	var idevento = req.body["ideventoclicado"];
-	//console.log("id evento clicado ",idevento);
-
 	var map_convidados = new Map();
-	
 
 	eventosModel.getlistaconvidados2evento(idevento,function(error,result){
 		if(error){
@@ -329,10 +325,7 @@ module.exports.detalhesevento = function(application, req, res){
 			}
 		}
 
-		//console.log("map_convidados ", map_convidados);
 		var tableNames = Object.keys(map_convidados);
-		//console.log("tableNames ", tableNames);
-		
 		var resultTotal = new Array();
 		var sql=[];
 		
@@ -349,25 +342,25 @@ module.exports.detalhesevento = function(application, req, res){
 		}
 
 		var sql_str="";
-		
 		for(var i = 0; i < sql.length ; i ++)
 		{
 			sql_str += sql[i];	
 		}
-		console.log("sql_str ", sql_str);
-		eventosModel.buscarTodosConvidados(sql_str,function(error,result){
-			if(error){
-				connection.end();
-				console.log("erroooooooooooo");
-		 		throw error;
-			}
-			if(result){
-				
-				resultTotal = pegaGeral(result);
-				
-			}
-		});	
+		if(sql_str!=""){
 
+			eventosModel.buscarTodosConvidados(sql_str,function(error,result){
+				if(error){
+					connection.end();
+					console.log("erroooooooooooo");
+			 		throw error;
+				}
+				if(result){
+					
+					resultTotal = result;//pegaGeral(result);
+					
+				}
+			});	
+		}	
 		//console.log("resultTotal ", resultTotal);
 		eventosModel.buscarevento(idevento,function(error,result){
 			if(error){
@@ -375,19 +368,19 @@ module.exports.detalhesevento = function(application, req, res){
 		 		throw error;
 			}
 			console.log(">>>>result ", resultTotal);
-			res.send(resultTotal);
-			//res.render("home/eventos/detalhes",{evento:result[0], selecionaveis:resultTotal});
-		});	
+			//res.send(resultTotal);
+			res.render("home/eventos/detalhes",{evento:result[0], selecionaveis:resultTotal});
+		});
 
 	});
 }
 
 
-function pegaGeral(result){
+/*function pegaGeral(result){
 	var geral = new Array();
 	geral=result;
 	return geral;
-}
+}*/
 
 
 module.exports.gerenciarconvidado = function(application, req, res){

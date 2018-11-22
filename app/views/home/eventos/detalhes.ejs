@@ -41,42 +41,67 @@
 	</nav>
 
 	<div class="container">
-		<h1>Realizar Convite</h1>
+		<h2>Detalhes do Evento : <%= evento["nome"] %></h2>
 		<div class="row">
        		<div class="col-md-12">
     			<div class="jumbotron jumbotron-fluid">
-					<div class="container">
-						<div class="row">
-							<div class="col-md-6">
-							Pesquisar<input type="text" id="myInput" style="max-width:200px" />
-							</div>
-				        	<div class="col-md-6">
-				        		<h4><%= evento["nome"] %></h4>
-				        	</div>
-		        		</div>
-					</div>
+					<div class="row">
+						<label>Pesquisar</label><input type="text" id="myInput" style="max-width:200px" />
+	        		</div>
 				</div>
 			</div>
 		</div>
+
 		<div class="row">
-	        <hr>
-	        <div class="table-responsive">
-      			<table id="mytable" class="table table-bordred table-striped">
-           			<thead>
-                     	<th>Data</th>
-                     	<th>Hora</th>
-                     	<th>Endereço</th>
-           			</thead>
-					<tbody id="mytable_body">
-						<tr>
-						    <td><%= evento["data"] %></td>
-						    <td><%= evento["hora"] %></td>
-						    <td><%= evento["endereco"] %></td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
+       		<fieldset>
+		        <div class="table-responsive">
+	      			<table id="mytable" class="table table-bordred table-striped">
+	           			<thead>
+	                     	<th>Data</th>
+	                     	<th>Hora</th>
+	                     	<th>Endereço</th>
+	           			</thead>
+						<tbody id="mytable_body">
+							<tr>
+							    <td><%= evento["data"] %></td>
+							    <td><%= evento["hora"] %></td>
+							    <td><%= evento["endereco"] %></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</fieldset>
 		</div>
+		<div class="row">
+
+		</div>	
+
+		<div class="row">
+			<table class="table table-sm">
+			  <thead>
+			    <tr>
+			      <th scope="col">Tratamento</th>
+			      <th scope="col">Nome</th>
+			      <th scope="col">Email</th>
+			      <th scope="col">Cargo</th>
+			      <th scope="col">Situação</th>
+			      <th scope="col">Remover</th>
+			    </tr>
+			  </thead>
+			  <tbody>
+			  	<% for(var i = 0; i < selecionaveis.length; i++) {%>
+			    <tr>
+			      <td><%= selecionaveis[i].tratamento %></td>
+			      <td><%= selecionaveis[i].nome %></td>
+			      <td><%= selecionaveis[i].email %></td>
+			      <td><%= selecionaveis[i].cargo %></td>
+			      <td><%= selecionaveis[i].situacao %></td>
+			      <td>remover</td>
+			    </tr>
+			    <% } %>
+			  </tbody>
+			</table>
+		</div>	
 	</div>
 		
 	    
