@@ -56,11 +56,13 @@ DadosDAO.prototype.salvar = function(form, callback){
 }
 
 DadosDAO.prototype.remover = function(id, tablename, callback){
-	this._connection.query('delete from '+tablename+' where id='+id, callback)
+	this._connection.query('delete from '+tablename+' where id='+id, callback);
+
 }
 
 DadosDAO.prototype.eventos = function(callback){
-	this._connection.query('SELECT * FROM EVENTOS', callback);
+	
+	this._connection.query('SELECT * FROM EVENTOS',callback);
 }
 
 DadosDAO.prototype.salvarevento = function(evento, callback){
