@@ -1,12 +1,12 @@
 {
-  "name": "portal_noticias",
+  "name": "gerencia_eventos",
   "version": "1.0.0",
-  "description": "Site de noticias",
-  "main": "noticias.js",
+  "description": "Cadastro de eventos e gerencia de convites",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Jorge",
+  "author": "Julio Cesar Khichfy",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.15.2",
