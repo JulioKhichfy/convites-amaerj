@@ -1,10 +1,11 @@
 
 module.exports.show = function(application, req, res){
-	var listagem=null;
+	
 	var connection = application.config.dbConnection();
 	var dadosModel = new application.app.models.DadosDAO(connection);
 	var eventoscadastrados;
-	
+	var listagem=null;
+
 	dadosModel.eventos(function(error,result){
 		if(error){
 			connection.end();
@@ -18,6 +19,7 @@ module.exports.show = function(application, req, res){
 			connection.end();
 		 	throw error;	
 		}
+		console.log("eventoscadastrados ",eventoscadastrados);
 		res.render("home/lista", {listagem:listagem, tables:parser_table_name(result),eventoscadastrados:eventoscadastrados, tbn:null});
 	});
 }
