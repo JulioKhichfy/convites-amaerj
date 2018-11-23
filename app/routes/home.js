@@ -52,7 +52,7 @@ module.exports = function(application){
 		application.app.controllers.home.salvarevento(application, req, res);
 	});
 
-	application.post('/eventos/remover', function(req, res){
+	application.get('/eventos/remover', function(req, res){
 		application.app.controllers.home.removerevento(application, req, res);
 	});
 

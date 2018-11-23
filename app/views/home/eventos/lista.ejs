@@ -88,22 +88,13 @@
 									    <td><%= listagem[i].data %></td>
 									    <td><%= listagem[i].hora %></td>
 									    <td><%= listagem[i].endereco %></td>
-									    <td>Editar
-									    	<!--<form action="/eventos/editar" method="post">
-									    		<input type="hidden" name="id" value="<%=listagem[i].id%>">
-										    	<button type="submit" class="btn btn-primary">
-										    		Editar
-										    	</button>
-									    	</form>-->
+									    <td>
+									    	<a href="/eventos/novo?id=<%=listagem[i].id%>" class="btn btn-primary">Editar</a>
 									    </td>
-									    <td>Remover
-									    	<!--<form action="/eventos/remover" method="post">
-									    		<input type="hidden" name="id" value="<%=listagem[i].id%>">
-										    	<button type="submit" class="btn btn-primary">
-										    		<span class="glyphicon glyphicon-trash"></span>
-										    	</button>
-									    	</form>
-									    -->
+									    <td>
+									    	<a href="/eventos/remover?id=<%=listagem[i].id%>" >
+									    		<span class="glyphicon glyphicon-trash"></span>
+									    	</a>
 									    </td>
 									</tr>
 								<%}%>

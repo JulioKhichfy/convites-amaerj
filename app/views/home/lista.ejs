@@ -53,8 +53,6 @@
 						<%}else{%>
 							<option selected="selected" disabled="false" value="<%= tbn %>"><%= tbn %></option>
 							<% for(var k = 0; k < tables.length; k++) {%>
-								<%console.log("tables ", tables[k]);%>
-								<%console.log("tbn ", tbn);%>
 								<%if(tables[k]!=tbn){%>
 									<option value='<%= tables[k] %>'><%= tables[k] %></option>		
 								<%}%>

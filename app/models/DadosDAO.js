@@ -66,27 +66,24 @@ DadosDAO.prototype.eventos = function(callback){
 }
 
 DadosDAO.prototype.salvarevento = function(evento, callback){
+	
 	this._connection.query('insert into EVENTOS set ? ', evento, callback);
 }
 
 DadosDAO.prototype.alterarevento = function(evento, callback){
-	var sql = 'UPDATE eventos SET nome =\''+evento["nome"]+'\', data = \''+evento["data"]+'\',hora=\''+evento["hora"]+'\',endereco=\''+evento["endereco"]+'\' WHERE id = '+evento["id"];
+	var sql = 'UPDATE EVENTOS SET nome =\''+evento["nome"]+'\', data = \''+evento["data"]+'\',hora=\''+evento["hora"]+'\',endereco=\''+evento["endereco"]+'\' WHERE id = '+evento["id"];
 	this._connection.query(sql, callback);
 }
 
 DadosDAO.prototype.removerevento = function(id, callback){
-	this._connection.query('delete from eventos where id= ? ', id, callback)
+	this._connection.query('delete from EVENTOS where id= ? ', id, callback)
 }
 
 DadosDAO.prototype.buscarevento = function(id, callback){
-	console.log("id evento", id);
-	
 	this._connection.query('SELECT * FROM EVENTOS WHERE id='+id, callback);
 }
 
 DadosDAO.prototype.criarlistaconvidados2evento = function(linhas, callback){
-
-	console.log("linhas" + linhas);
 	this._connection.query('insert into SELECIONADOS_EVENTOS (idselecionado,idevento,tablename,enviado,confirmado) values '+linhas, callback);
 }
 

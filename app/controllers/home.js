@@ -1,26 +1,68 @@
 
+/*BASE DE DADOS*/
+
 module.exports.show = function(application, req, res){
-	
 	var connection = application.config.dbConnection();
 	var dadosModel = new application.app.models.DadosDAO(connection);
+
 	var eventoscadastrados;
 	var listagem=null;
-
+	
 	dadosModel.eventos(function(error,result){
 		if(error){
 			connection.end();
 		 	throw error;	
 		}
+		//aninhando callbacks
 		eventoscadastrados = result;
-	});
+		dadosModel.getTipos(function(error,result){
+			if(error){
+				connection.end();
+			 	throw error;	
+			}
 
+			res.render("home/lista", {listagem:listagem, tables:parser_table_name(result),eventoscadastrados:eventoscadastrados, tbn:null});
+		});
+	});
+}
+
+module.exports.filtrar = function(application, req, res){
+	var connection = application.config.dbConnection();
+	var dadosModel = new application.app.models.DadosDAO(connection);
+
+	var tbn = req.body['tables'];
+	
+	if(tbn===undefined){
+		return res.redirect('/show');
+	}
+
+	var tbn_selecionada = tbn;
+	tbn = tbn.replace(" ","_");
+
+	var tipos;
 	dadosModel.getTipos(function(error,result){
 		if(error){
 			connection.end();
-		 	throw error;	
+		 	throw error;
 		}
-		console.log("eventoscadastrados ",eventoscadastrados);
-		res.render("home/lista", {listagem:listagem, tables:parser_table_name(result),eventoscadastrados:eventoscadastrados, tbn:null});
+		tipos=parser_table_name(result);
+
+		var eventoscadastrados;
+		dadosModel.eventos(function(error,result){
+			if(error){
+				connection.end();
+			 	throw error;
+			}
+			
+			eventoscadastrados = result;
+			dadosModel.getTable(tbn, function(error, result){
+				if(error){
+					connection.end();
+				 	throw error;
+				}
+				res.render("home/lista", {listagem : result, tables : tipos, eventoscadastrados : eventoscadastrados, tbn:tbn_selecionada});
+			});
+		});
 	});
 }
 
@@ -52,35 +94,36 @@ module.exports.update = function(application, req, res){
 			connection.end();
 		 	throw error;	
 		}
-	});
 
-	//pega as linhas(pessoas) de determinada tabela
-	dadosModel.getTable(tupla["tablename"], function(error, result){
-		if(error){
-			connection.end();
-		 	throw error;
-		}
-		dadosByTableName=result;
-	});
+		//pega as linhas(pessoas) de determinada tabela
+		dadosModel.getTable(tupla["tablename"], function(error, result){
+			if(error){
+				connection.end();
+			 	throw error;
+			}
+			dadosByTableName=result;
 
-	var eventoscadastrados;
-	dadosModel.eventos(function(error,result){
-		if(error){
-			connection.end();
-		 	throw error;
-		}
-		eventoscadastrados = result;
-	});
+			var eventoscadastrados;
+			dadosModel.eventos(function(error,result){
+				if(error){
+					connection.end();
+				 	throw error;
+				}
+				eventoscadastrados = result;
 
-	dadosModel.getTipos(function(error,result){
-		if(error){
-			connection.end();
-			throw error;
-		}
-		tipos=parser_table_name(result);
-		connection.end();
-		res.render("home/lista", {listagem:dadosByTableName, tables:tipos, eventoscadastrados : eventoscadastrados, tbn:tupla["tablename"]});
+				dadosModel.getTipos(function(error,result){
+					if(error){
+						connection.end();
+						throw error;
+					}
+					tipos=parser_table_name(result);
+					connection.end();
+					res.render("home/lista", {listagem:dadosByTableName, tables:tipos, eventoscadastrados : eventoscadastrados, tbn:tupla["tablename"]});
+				});
+			});
+		});
 	});
+	
 }
 
 module.exports.mostrarTelaParaNovaPessoa = function(application, req, res){
@@ -99,30 +142,28 @@ module.exports.salvarPessoa = function(application, req, res){
 			connection.end();
 		 	throw error;
 		}
+		dadosModel.getTable(form["tipo"], function(error, result){
+			if(error){
+				connection.end();
+			 	throw error;
+			}
+			dadosByTableName=result;
+			var eventoscadastrados;
+			dadosModel.eventos(function(error,result){
+				if(error){
+					connection.end();
+				 	throw error;
+				}
+				eventoscadastrados = result;
+				var tbn = form["tipo"].replace("_", " "); 
+				dadosModel.getTipos(function(error,result){
+					tipos=parser_table_name(result);
+					connection.end();
+					res.render("home/lista", {listagem:dadosByTableName, tables:tipos, eventoscadastrados:eventoscadastrados, tbn:tbn});
+				});	
+			});
+		});
 	});
-	dadosModel.getTable(form["tipo"], function(error, result){
-		if(error){
-			connection.end();
-		 	throw error;
-		}
-		dadosByTableName=result;
-	});
-
-	var eventoscadastrados;
-	dadosModel.eventos(function(error,result){
-		if(error){
-			connection.end();
-		 	throw error;
-		}
-		eventoscadastrados = result;
-	});
-
-	var tbn = form["tipo"].replace("_", " "); 
-	dadosModel.getTipos(function(error,result){
-		tipos=parser_table_name(result);
-		connection.end();
-		res.render("home/lista", {listagem:dadosByTableName, tables:tipos, eventoscadastrados:eventoscadastrados, tbn:tbn});
-	});	
 }
 
 module.exports.remover = function(application, req, res){
@@ -140,72 +181,31 @@ module.exports.remover = function(application, req, res){
 			connection.end();
 		 	throw error;
 		}
-	});
+		dadosModel.getTable(tablename, function(error, result){
+			if(error){
+				connection.end();
+			 	throw error;
+			}
+			dados=result;
 
-	dadosModel.getTable(tablename, function(error, result){
-		if(error){
-			connection.end();
-		 	throw error;
-		}
-		dados=result;
-	});
+			var eventoscadastrados;
+			dadosModel.eventos(function(error,result){
+				if(error){
+					connection.end();
+				 	throw error;
+				}
+				eventoscadastrados = result;
 
-	var eventoscadastrados;
-	dadosModel.eventos(function(error,result){
-		if(error){
-			connection.end();
-		 	throw error;
-		}
-		eventoscadastrados = result;
-	});
-
-	dadosModel.getTipos(function(error,result){
-		if(error){
-			connection.end();
-		 	throw error;
-		}
-		tipos=parser_table_name(result);
-		res.render("home/lista", {listagem:dados, tables:tipos, eventoscadastrados:eventoscadastrados,tbn:tablename});
-	});
-}
-
-module.exports.filtrar = function(application, req, res){
-	var connection = application.config.dbConnection();
-	var dadosModel = new application.app.models.DadosDAO(connection);
-
-	var tbn = req.body['tables'];
-
-
-	if(tbn===undefined){
-		return res.redirect('/show');
-	}
-	var tbn_selecionada = tbn;
-	tbn = tbn.replace(" ","_");
-
-	var tipos;
-	dadosModel.getTipos(function(error,result){
-		if(error){
-			connection.end();
-		 	throw error;
-		}
-		tipos=parser_table_name(result);
-	});
-
-	var eventoscadastrados;
-	dadosModel.eventos(function(error,result){
-		if(error){
-			connection.end();
-		 	throw error;
-		}
-		eventoscadastrados = result;
-	});
-	
-	dadosModel.getTable(tbn, function(error, result){
-		if(error){
-			connection.end();
-		 	throw error;
-		}
-		res.render("home/lista", {listagem : result, tables : tipos, eventoscadastrados : eventoscadastrados, tbn:tbn_selecionada});
+				dadosModel.getTipos(function(error,result){
+					if(error){
+						connection.end();
+					 	throw error;
+					}
+					tipos=parser_table_name(result);
+					res.render("home/lista", {listagem:dados, tables:tipos, eventoscadastrados:eventoscadastrados,tbn:tablename});
+				});
+			});
+		});
 	});
 }
 
@@ -216,9 +216,6 @@ function parser_table_name(result){
 	}
 	return to_select;
 }
-
-
-
 
 /***EVENTOS****/
 
@@ -237,7 +234,8 @@ module.exports.eventos = function(application, req, res){
 }
 
 module.exports.novoevento = function(application, req, res){
-	var id = req.body["id"];
+	var id = req.query["id"];
+	console.log(">>>id",id);
 	if(id===undefined){
 		res.render("home/eventos/novo",{evento:[]});
 	}else{
@@ -257,6 +255,7 @@ module.exports.salvarevento = function(application, req, res){
 	var connection = application.config.dbConnection();
 	var eventosModel = new application.app.models.DadosDAO(connection);
 	var evento = req.body;
+	console.log("evento",evento);
 	if(evento["id"] === undefined){
 		eventosModel.salvarevento(evento, function(error, result){
 			if(error){
@@ -266,6 +265,7 @@ module.exports.salvarevento = function(application, req, res){
 			res.redirect("/eventos");
 		});	
 	}else{
+		console.log("alterando");
 		eventosModel.alterarevento(evento, function(error, result){
 			if(error){
 				connection.end();
@@ -281,8 +281,9 @@ module.exports.salvarevento = function(application, req, res){
 module.exports.removerevento = function(application, req, res){
 	var connection = application.config.dbConnection();
 	var eventosModel = new application.app.models.DadosDAO(connection);
-	var evento = req.body;
-	eventosModel.removerevento(evento["id"], function(error, result){
+	var eventoId = req.query["id"];
+	console.log("eventoId",eventoId);
+	eventosModel.removerevento(eventoId, function(error, result){
 		if(error){
 			connection.end();
 	 		throw error;
@@ -290,21 +291,6 @@ module.exports.removerevento = function(application, req, res){
 		res.redirect("/eventos");
 	});
 }
-
-module.exports.editarevento = function(application, req, res){
-	var connection = application.config.dbConnection();
-	var eventosModel = new application.app.models.DadosDAO(connection);
-	var evento = req.body;
-	eventosModel.buscarevento(evento["id"], function(error, result){
-		if(error){
-			connection.end();
-	 		throw error;
-		}
-		res.render("home/eventos/novo",{evento:result});
-	});
-}
-
-
 
 module.exports.detalhesevento = function(application, req, res){
 	var connection = application.config.dbConnection();
@@ -348,41 +334,25 @@ module.exports.detalhesevento = function(application, req, res){
 		{
 			sql_str += sql[i];	
 		}
-		if(sql_str!=""){
-
-			eventosModel.buscarTodosConvidados(sql_str,function(error,result){
-				if(error){
-					connection.end();
-					console.log("erroooooooooooo");
-			 		throw error;
-				}
-				if(result){
-					
-					resultTotal = result;//pegaGeral(result);
-					
-				}
-			});	
-		}	
-		//console.log("resultTotal ", resultTotal);
-		eventosModel.buscarevento(idevento,function(error,result){
+		eventosModel.buscarTodosConvidados(sql_str,function(error,result){
 			if(error){
 				connection.end();
+				console.log("erroooooooooooo");
 		 		throw error;
 			}
-			console.log(">>>>result ", resultTotal);
-			//res.send(resultTotal);
-			res.render("home/eventos/detalhes",{evento:result[0], selecionaveis:resultTotal});
-		});
+			resultTotal = result;
+			eventosModel.buscarevento(idevento,function(error,result){
+				if(error){
+					connection.end();
+			 		throw error;
+				}
+				res.render("home/eventos/detalhes",{evento:result[0], selecionaveis:resultTotal});
+			});
+				
+		});	
 
 	});
 }
-
-
-/*function pegaGeral(result){
-	var geral = new Array();
-	geral=result;
-	return geral;
-}*/
 
 
 module.exports.gerenciarconvidado = function(application, req, res){
