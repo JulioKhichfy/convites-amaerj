@@ -101,12 +101,17 @@ DadosDAO.prototype.getTodosSelecionaveisByEventoId = function(idevento, tablenam
 
 DadosDAO.prototype.buscarTodosConvidados = function(sql, callback){
 	
-	console.log("sql no dao ", sql);
+	console.log("buscarTodosConvidados ", sql);
 	this._connection.query(sql,callback);
 }
 
-
-
+DadosDAO.prototype.removerConvidado = function(id_pessoa,id_evento, tbn, callback){
+	console.log("removerConvidado ");
+	var sql = "delete from SELECIONADOS_EVENTOS where idselecionado="+id_pessoa+" and idevento="+id_evento+" and tablename='"+tbn+"'";
+	console.log("sql",sql);
+	this._connection.query(sql, callback);
+	
+}
 
 module.exports = function(){
 	return DadosDAO;

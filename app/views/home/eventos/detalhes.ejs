@@ -96,7 +96,11 @@
 			      <td><%= selecionaveis[i].email %></td>
 			      <td><%= selecionaveis[i].cargo %></td>
 			      <td><%= selecionaveis[i].situacao %></td>
-			      <td>remover</td>
+			      <td>
+			      	<a href="/eventos/removerdalista?id_pessoa=<%=selecionaveis[i].id%>&id_evento=<%=evento['id']%>&tbn=<%=selecionaveis[i].tipo%>" >
+		    			<span id class="glyphicon glyphicon-trash"></span>
+		    		</a>
+		    	  </td>
 			    </tr>
 			    <% } %>
 			  </tbody>

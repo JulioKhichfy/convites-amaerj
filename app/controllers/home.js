@@ -1,5 +1,8 @@
 
 /*BASE DE DADOS*/
+var hasValue = require('has-values');
+var HashTable = require('hashtable');
+//var Map = require('hashtable/es6-map');
 
 module.exports.show = function(application, req, res){
 	var connection = application.config.dbConnection();
@@ -291,69 +294,81 @@ module.exports.removerevento = function(application, req, res){
 		res.redirect("/eventos");
 	});
 }
+function populaListaConvidadosMap(convidados){
+	var map_convidados = new Map();
+	for(var i = 0; i < convidados.length; i++ )
+	{
+	 	map_convidados[convidados[i].tablename] = map_convidados[convidados[i].tablename] || [];
+	 	map_convidados[convidados[i].tablename].push(convidados[i].idselecionado);
+	}
+	return map_convidados;
+}
+
+function construirQueryByConvidadosMap(convidados_map){
+	var tableNames = Object.keys(convidados_map);
+	var resultTotal = new Array();
+	var sql=[];
+	
+	if(tableNames.length > 0)
+	{
+		for(var i = 0 ; i < tableNames.length ; i++)
+		{
+			if(i == tableNames.length-1){
+				sql.push("select * from "+tableNames[i]+" where id in ("+convidados_map[tableNames[i]]+")" );
+			}else{
+				sql.push("select * from "+tableNames[i]+" where id in ("+convidados_map[tableNames[i]]+") union ");
+			}
+		}
+	}
+	var sql_str="";
+	for(var i = 0; i < sql.length ; i ++)
+	{
+		sql_str += sql[i];	
+	}
+	return sql_str;
+}
 
 module.exports.detalhesevento = function(application, req, res){
 	var connection = application.config.dbConnection();
 	var eventosModel = new application.app.models.DadosDAO(connection);
 	var idevento = req.body["ideventoclicado"];
-	var map_convidados = new Map();
 
 	eventosModel.getlistaconvidados2evento(idevento,function(error,result){
 		if(error){
 			connection.end();
 	 		throw error;
 		}
-
-		if(result.length > 0)
-		{
-			for(var i = 0; i < result.length; i++ )
-			{
-			 	map_convidados[result[i].tablename] = map_convidados[result[i].tablename] || [];
-			 	map_convidados[result[i].tablename].push(result[i].idselecionado);
-			}
-		}
-
-		var tableNames = Object.keys(map_convidados);
-		var resultTotal = new Array();
-		var sql=[];
-		
-		if(tableNames.length > 0)
-		{
-			for(var i = 0 ; i < tableNames.length ; i++)
-			{
-				if(i == tableNames.length-1){
-					sql.push("select * from "+tableNames[i]+" where id in ("+map_convidados[tableNames[i]]+")" );
-				}else{
-					sql.push("select * from "+tableNames[i]+" where id in ("+map_convidados[tableNames[i]]+") union ");
+		var map_convidados =  populaListaConvidadosMap(result);
+		var sql_str = construirQueryByConvidadosMap(map_convidados);
+		if(sql_str!=""){
+			eventosModel.buscarTodosConvidados(sql_str,function(error,result){
+				if(error){
+					connection.end();
+			 		throw error;
 				}
-			}
+				var convidados = result;
+				eventosModel.buscarevento(idevento,function(error,result){
+					if(error){
+						connection.end();
+				 		throw error;
+					}
+					res.render("home/eventos/detalhes",{evento:result[0], selecionaveis:convidados});
+				});
+			});	
 		}
-
-		var sql_str="";
-		for(var i = 0; i < sql.length ; i ++)
+		else
 		{
-			sql_str += sql[i];	
-		}
-		eventosModel.buscarTodosConvidados(sql_str,function(error,result){
-			if(error){
-				connection.end();
-				console.log("erroooooooooooo");
-		 		throw error;
-			}
-			resultTotal = result;
+			console.log("sem convidados");
 			eventosModel.buscarevento(idevento,function(error,result){
 				if(error){
 					connection.end();
 			 		throw error;
 				}
-				res.render("home/eventos/detalhes",{evento:result[0], selecionaveis:resultTotal});
+				res.render("home/eventos/detalhes",{evento:result[0], selecionaveis:[] });
 			});
-				
-		});	
-
+		}
 	});
 }
-
 
 module.exports.gerenciarconvidado = function(application, req, res){
 	var connection = application.config.dbConnection();
@@ -380,23 +395,21 @@ module.exports.gerenciarconvidado = function(application, req, res){
 		linhas= "("+s+","+idevento+","+tablename+","+0+","+0+");";
 		
 	}
-	
 	eventosModel.criarlistaconvidados2evento(linhas,function(error,result){
 		if(error){
 			if(error.code == 'ER_DUP_ENTRY' || error.errno == 1062){
 				console.log("tentativa de inserir duplicado no BD");
 			}
+			connection.end();
+			throw error;
 		}
-		//connection.end();
 		res.redirect("/eventos");
 	});
 }
 
 module.exports.getConvidadosFromSelectEventos = function(application, req, res){
-	
 	var connection = application.config.dbConnection();
 	var eventosModel = new application.app.models.DadosDAO(connection);
-
 	var eventoSelecionado = req.body;
 	var tbn = eventoSelecionado["tbn"];
 	var idevento = eventoSelecionado["evento"];
@@ -405,6 +418,58 @@ module.exports.getConvidadosFromSelectEventos = function(application, req, res){
 		//console.log("result ", result);
 		res.send(result);
 	});
-	
 }
+
+module.exports.removerdalista = function(application, req, res){
+	var connection = application.config.dbConnection();
+	var eventosModel = new application.app.models.DadosDAO(connection);
+
+	var idselecionado = req.query["id_pessoa"];
+	var idevento = req.query["id_evento"];
+	var tbn = req.query["tbn"];
+	
+	eventosModel.removerConvidado(idselecionado,idevento,tbn,function(error,result){		
+		if(error){
+			connection.end();
+	 		throw error;
+		}
+		eventosModel.getlistaconvidados2evento(idevento,function(error,result){
+			if(error){
+				connection.end();
+	 			throw error;
+			}
+			var map_convidados =  populaListaConvidadosMap(result);
+			var sql_str = construirQueryByConvidadosMap(map_convidados);
+
+			if(sql_str!=""){
+				eventosModel.buscarTodosConvidados(sql_str,function(error,result){
+					if(error){
+						connection.end();
+				 		throw error;
+					}
+					var convidados = result;
+					eventosModel.buscarevento(idevento,function(error,result){
+						if(error){
+							connection.end();
+					 		throw error;
+						}
+						res.render("home/eventos/detalhes",{evento:result[0], selecionaveis:convidados});
+					});
+				});	
+			}
+			else
+			{
+				console.log("sem convidados");
+				eventosModel.buscarevento(idevento,function(error,result){
+					if(error){
+						connection.end();
+				 		throw error;
+					}
+					res.render("home/eventos/detalhes",{evento:result[0], selecionaveis:[] });
+				});
+			}
+		});
+	});
+}
+
 
