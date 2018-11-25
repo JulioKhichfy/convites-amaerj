@@ -106,10 +106,17 @@ $(document).ready(function(){
         $("#idtable").prop("value",tbn);
         $("#formlistagem").submit();
     });
-
 });
 
-//<input type="hidden" name="statuscheckbox" id="statuscheckbox">
-//<input type="hidden" name="idtable" id="idtable">
-//<input type="hidden" name="idevento" id="idevento">
-//<input type="hidden" name="idlinha" id="idlinha">
+function esconderConvidado(event,idselecionado,idevento,tbn){
+   var id=event.id;
+     $.get( '/eventos/removerdalista', { id_pessoa: idselecionado , id_evento: idevento, tbn:tbn }, 
+        function(data,status){
+            if(status=='success'){
+                $("#"+id).addClass('esconder');
+            }
+            else{
+                alert("Erro ao excluir convidado.");
+            }
+    });
+}

@@ -4,7 +4,15 @@ body{
 
 a:hover{
 	text-decoration: none;
-	color:#000;
+	color:blue;
+}
+
+.fica_verde{
+	background-color:green;
+}
+
+.esconder{
+	display:none;
 }
 
 /*.dados_wrapper{
@@ -47,6 +55,4 @@ a:hover{
 	padding:20px;
 }*/
 
-.fica_verde{
-	background-color:green;
-}
+

@@ -433,42 +433,7 @@ module.exports.removerdalista = function(application, req, res){
 			connection.end();
 	 		throw error;
 		}
-		eventosModel.getlistaconvidados2evento(idevento,function(error,result){
-			if(error){
-				connection.end();
-	 			throw error;
-			}
-			var map_convidados =  populaListaConvidadosMap(result);
-			var sql_str = construirQueryByConvidadosMap(map_convidados);
-
-			if(sql_str!=""){
-				eventosModel.buscarTodosConvidados(sql_str,function(error,result){
-					if(error){
-						connection.end();
-				 		throw error;
-					}
-					var convidados = result;
-					eventosModel.buscarevento(idevento,function(error,result){
-						if(error){
-							connection.end();
-					 		throw error;
-						}
-						res.render("home/eventos/detalhes",{evento:result[0], selecionaveis:convidados});
-					});
-				});	
-			}
-			else
-			{
-				console.log("sem convidados");
-				eventosModel.buscarevento(idevento,function(error,result){
-					if(error){
-						connection.end();
-				 		throw error;
-					}
-					res.render("home/eventos/detalhes",{evento:result[0], selecionaveis:[] });
-				});
-			}
-		});
+		res.send("removido");
 	});
 }
 

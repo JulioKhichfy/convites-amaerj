@@ -4,15 +4,13 @@
 <meta charset="UTF-8">
 
 <title>Gerência de eventos e convites</title>
-
-<!-- bootstrap - link cdn -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-
-<!-- incluindo css -->
-<link href="css/style.css" rel="stylesheet">
-
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+<link rel="stylesheet" href="/css/style.css" >
 <!-- favicon -->
-<link rel="shortcut icon" href="images/logo.png" />
+<link rel="shortcut icon" href="images/favicon.ico" />
+<!-- favicon -->
+<link rel="shortcut icon" class="fas fa-balance-scale">
+
 </head>
 <body>
 	<nav class="navbar navbar-default navbar-static-top">
@@ -97,10 +95,10 @@
 	                     	<th>Cargo</th>
 	                     	<th>Email</th>
 	                     	<th>Telefone</th>
-	                     	<th>CEP</th>
-	                     	<th>Endereço</th>
-	                     	<th>Sexo</th>
-	                     	<th>Situação</th>
+	                     	<!--<th>CEP</th>-->
+	                     	<!--<th>Endereço</th>-->
+	                     	<!--<th>Sexo</th>-->
+	                     	<!--<th>Situação</th>-->
 	                      	<th>Editar</th>
 	                       	<th>Remover</th>
 	           			</thead>
@@ -113,15 +111,17 @@
 								    <td><%= listagem[i].cargo %></td>
 								    <td><%= listagem[i].email %></td>
 								    <td><%= listagem[i].telefone %></td>
-								    <td><%= listagem[i].cep %></td>
-								    <td><%= listagem[i].endereco %></td>
-								    <td><%= listagem[i].sexo %></td>
-								    <td><%= listagem[i].situacao %></td>
+								    <!--<td><%= listagem[i].cep %></td>-->
+								    <!--<td><%= listagem[i].endereco %></td>-->
+								    <!--<td><%= listagem[i].sexo %></td>-->
+								    <!--<td><%= listagem[i].situacao %></td>-->
 								    <td>
 								    	<a href="/editar?id=<%=listagem[i].id%>&tablename=<%=listagem[0].tipo%>" class="btn btn-primary">editar</a>
 								    </td>
 								    <td>
-								    	<a href="/remover?id=<%=listagem[i].id%>&tablename=<%=listagem[0].tipo%>" class="btn btn-primary"><span class="glyphicon glyphicon-trash"></span></a>
+								    	<a href="/remover?id=<%=listagem[i].id%>&tablename=<%=listagem[0].tipo%>">
+								    		<span class="glyphicon glyphicon-star"></span>
+								    	</a>
 								    </td>
 								</tr>
 								
@@ -137,8 +137,8 @@
 		</form>
 	</div>
 	<!-- JQuery -->
-	<script src="js/jquery-2.2.1.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+	<script src="/js/jquery.min.js"></script>
+	<script src="/js/bootstrap.min.js"></script>
 	<script src="js/table-bootsnip.js"></script>
 </body>
 </html>
