@@ -2,40 +2,15 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-
-<title>Gerência de eventos e convites</title>
-<link rel="stylesheet" href="/css/bootstrap.min.css">
-<link rel="stylesheet" href="/css/style.css" >
-<!-- favicon -->
-<link rel="shortcut icon" href="images/favicon.ico" />
-<!-- favicon -->
-<link rel="shortcut icon" class="fas fa-balance-scale">
-
+	<title>Gerência de eventos e convites</title>
+	<link rel="stylesheet" href="/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/css/style.css" >
+	<link rel="stylesheet" href="/css/all.css" >
+	<!-- favicon -->
+	<link rel="shortcut icon" href="images/favicon.ico" />
 </head>
 <body>
-	<nav class="navbar navbar-default navbar-static-top">
-		<div class="container">
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-					<span class="sr-only">Toggle navigation</span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</button>
-				
-				<img src="images/logo.png" />
-			</div>
-
-			<div id="navbar" class="navbar-collapse collapse">
-				<ul class="nav navbar-nav navbar-right">
-					<li><a href="/show">BASE DE DADOS</a></li>
-					<li><a href="/eventos">EVENTOS</a></li>
-					<li><a href="/eventos">LISTAS DE CONVIDADOS</a></li>
-					<li><a href="/eventos">AGENDA PRESIDENTE</a></li>
-				</ul>
-			</div>
-		</div>
-	</nav>
+	<% include menu.ejs%>
 
 	<div class="container">
 		<div class="row">
@@ -116,11 +91,13 @@
 								    <!--<td><%= listagem[i].sexo %></td>-->
 								    <!--<td><%= listagem[i].situacao %></td>-->
 								    <td>
-								    	<a href="/editar?id=<%=listagem[i].id%>&tablename=<%=listagem[0].tipo%>" class="btn btn-primary">editar</a>
+								    	<a href="/editar?id=<%=listagem[i].id%>&tablename=<%=listagem[0].tipo%>">
+								    		<span class="fas fa-edit" style="cursor: pointer;"></span>
+								    	</a>
 								    </td>
 								    <td>
 								    	<a href="/remover?id=<%=listagem[i].id%>&tablename=<%=listagem[0].tipo%>">
-								    		<span class="glyphicon glyphicon-star"></span>
+								    		<span class="fas fa-trash" style="cursor: pointer; color:red">
 								    	</a>
 								    </td>
 								</tr>
@@ -136,9 +113,9 @@
 			<%}%>
 		</form>
 	</div>
-	<!-- JQuery -->
 	<script src="/js/jquery.min.js"></script>
-	<script src="/js/bootstrap.min.js"></script>
-	<script src="js/table-bootsnip.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/all.js"></script>
+<script src="/js/table-bootsnip.js"></script>
 </body>
 </html>

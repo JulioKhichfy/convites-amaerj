@@ -2,7 +2,6 @@
 <html lang="pt-br">
 <head>
 	<meta charset="UTF-8">
-
 	<title>Gerência de eventos e convites</title>
 	<link rel="stylesheet" href="/css/bootstrap.min.css">
 	<link rel="stylesheet" href="/css/style.css" >
@@ -11,15 +10,9 @@
 	<link rel="shortcut icon" href="images/favicon.ico" />
 </head>
 <body>
-		<!-- Image and text -->
+	<% include ../menu.ejs%>
 	<div class="container">
-		<nav class="navbar navbar-light bg-light">
-			<a class="navbar-brand" href="#">
-				<span class="fas fa-balance-scale d-inline-block align-top" width="30" height="30"></span>
-				AMAERJ
-			</a>
-		</nav>
-		<h2>EVENTOS</h2>
+		<h3 class="text-primary">EVENTOS</h3>
 		<div class="row">
 			<%if(listagem.length > 0){%>
     		<div class="col-md-12">
@@ -64,12 +57,12 @@
 							    <td><%= listagem[i].endereco %></td>
 							    <td>
 							    	<a href="/eventos/novo?id=<%=listagem[i].id%>">
-							    		<span class="fas fa-edit"></span>
+							    		<span class="fas fa-edit" style="cursor: pointer;"></span>
 							    	</a>
 							    </td>
 							    <td>
 							    	<a href="/eventos/remover?id=<%=listagem[i].id%>" >
-							    		<span class="fas fa-trash"></span>
+							    		<span class="fas fa-trash" style="cursor: pointer; color:red"></span>
 							    	</a>
 							    </td>
 							</tr>

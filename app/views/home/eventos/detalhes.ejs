@@ -2,46 +2,16 @@
 <html lang="pt-br">
 <head>
 	<meta charset="UTF-8">
-
 	<title>Gerência de eventos e convites</title>
-
 	<link rel="stylesheet" href="/css/bootstrap.min.css">
-	
-
-	<!-- incluindo css -->
 	<link rel="stylesheet" href="/css/style.css" >
-
+	<link rel="stylesheet" href="/css/all.css" >
 	<!-- favicon -->
 	<link rel="shortcut icon" href="images/favicon.ico" />
-
-	
-
 </head>
 
 <body>
-
- <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-      <a class="navbar-brand" href="/index">AMAERJ</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample03" aria-controls="navbarsExample03" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="collapse navbar-collapse" id="navbarsExample03">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="/show">Base de Dados <span class="sr-only">(current)</span></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/eventos">Eventos</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/ajuda">Ajuda</a>
-          </li>
-         
-        </ul>
-      </div>
-    </nav>
-
+	<% include ../menu.ejs%>
 	<div class="container">
 		<div class="jumbotron">
 		  	<div class="row">
@@ -95,7 +65,7 @@
 			      <td><%= selecionaveis[i].cargo %></td>
 			      <!--<td><%= selecionaveis[i].situacao %></td>-->
 			      <td>
-			      	<span class="glyphicon glyphicon-trash" style="cursor: pointer; color:red" id="<%=data%>"onclick="esconderConvidado(this,'<%=selecionaveis[i].id%>','<%= eventoid %>','<%=selecionaveis[i].tipo%>');"></span>
+			      	<span class="fas fa-trash" style="cursor: pointer; color:red" id="<%=data%>"onclick="esconderConvidado(this,'<%=selecionaveis[i].id%>','<%= eventoid %>','<%=selecionaveis[i].tipo%>');"></span>
 		    	  </td>
 			    </tr>
 			    <% } %>
@@ -106,6 +76,8 @@
 	    
 <script src="/js/jquery.min.js"></script>
 <script src="/js/bootstrap.min.js"></script>
+<script src="/js/all.js"></script>
+<script src="/js/table-bootsnip.js"></script>
 	
 </body>
 </html>

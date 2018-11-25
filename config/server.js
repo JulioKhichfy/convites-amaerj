@@ -15,6 +15,8 @@ app.use('/js' , express.static('./node_modules/jquery/dist')); // redirect JS jQ
 app.use('/css', express.static('./node_modules/bootstrap/dist/css')); // redirect CSS bootstrap
 app.use('/css', express.static('./node_modules/@fortawesome/fontawesome-free/css'));
 app.use('/js', express.static('./node_modules/@fortawesome/fontawesome-free/js'));
+app.use('/svgs', express.static('./node_modules/@fortawesome/fontawesome-free/svgs'));
+app.use('/webfonts', express.static('./node_modules/@fortawesome/fontawesome-free/webfonts'));
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(expressValidator());
