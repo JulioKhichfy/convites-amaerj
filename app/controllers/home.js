@@ -178,38 +178,16 @@ module.exports.remover = function(application, req, res){
 	
 	var id = req.query['id'];
 	var tablename = req.query['tablename'];
-
+	console.log("id",id);
+	console.log("tablename",tablename);
 	dadosModel.remover(id, tablename, function(error, result){
 		if(error){
-			connection.end();
+		 	connection.end();
 		 	throw error;
 		}
-		dadosModel.getTable(tablename, function(error, result){
-			if(error){
-				connection.end();
-			 	throw error;
-			}
-			dados=result;
-
-			var eventoscadastrados;
-			dadosModel.eventos(function(error,result){
-				if(error){
-					connection.end();
-				 	throw error;
-				}
-				eventoscadastrados = result;
-
-				dadosModel.getTipos(function(error,result){
-					if(error){
-						connection.end();
-					 	throw error;
-					}
-					tipos=parser_table_name(result);
-					res.render("home/lista", {listagem:dados, tables:tipos, eventoscadastrados:eventoscadastrados,tbn:tablename});
-				});
-			});
-		});
+		res.send("removido");
 	});
+	
 }
 
 function parser_table_name(result){

@@ -78,8 +78,8 @@
 	                       	<th>Remover</th>
 	           			</thead>
 						<tbody id="mytable_body">
-							<% for(var i = 0; i < listagem.length; i++) {%>
-								<tr>
+							<% for(var i = 0; i < listagem.length; i++) {var data="pessoa"+i;%>
+								<tr id="<%=data%>">
 									<td id="idtd<%= listagem[i].id %>"><input value="<%= listagem[i].id %>" type="checkbox" class="checkthis" name="selecionados"/></td>
 								    <td><%= listagem[i].tratamento %></td>
 								    <td><%= listagem[i].nome %></td>
@@ -96,10 +96,7 @@
 								    	</a>
 								    </td>
 								    <td>
-								    	<a href="/remover?id=<%=listagem[i].id%>&tablename=<%=listagem[0].tipo%>">
-								    		<span class="fas fa-trash" style="cursor: pointer; color:red">
-								    	</a>
-								    </td>
+								    	<span class="fas fa-trash" style="cursor: pointer; color:red" id="<%=data%>"onclick="esconderPessoa(this,'<%=listagem[i].id%>','<%=listagem[0].tipo%>');"></span>
 								</tr>
 								
 							<%}%>

@@ -120,3 +120,17 @@ function esconderConvidado(event,idselecionado,idevento,tbn){
             }
     });
 }
+
+function esconderPessoa(event,idselecionado,tbn){
+   var id=event.id;
+     $.get( '/remover', { id: idselecionado , tablename:tbn }, 
+        function(data,status){
+            if(status=='success'){
+                $("#"+id).addClass('esconder');
+            }
+            else{
+                alert("Erro ao excluir pessoa.");
+            }
+    });
+}
+
