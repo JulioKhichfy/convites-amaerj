@@ -90,7 +90,9 @@ DadosDAO.prototype.buscarevento = function(id, callback){
 }
 
 DadosDAO.prototype.criarlistaconvidados2evento = function(linhas, callback){
-	this._connection.query('insert into SELECIONADOS_EVENTOS (idselecionado,idevento,tablename,enviado,confirmado) values '+linhas, callback);
+	var sql = "INSERT INTO SELECIONADOS_EVENTOS (idselecionado,idevento,tablename,enviado,confirmado) values "+linhas;
+	console.log("sql",sql);
+	this._connection.query(sql, callback);
 }
 
 DadosDAO.prototype.getlistaconvidados2evento = function(id, callback){

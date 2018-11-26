@@ -371,6 +371,7 @@ module.exports.detalhesevento = function(application, req, res){
 }
 
 module.exports.gerenciarconvidado = function(application, req, res){
+	console.log("inicio de gerencia de convidado");
 	var connection = application.config.dbConnection();
 	var eventosModel = new application.app.models.DadosDAO(connection);
 	
@@ -379,6 +380,8 @@ module.exports.gerenciarconvidado = function(application, req, res){
 	var tablename = "'"+dados["idtable"]+"'";
 	var idevento = dados["idevento"];
 	var linhas="";
+
+	console.log("dados",dados);
 		
 	if(s instanceof Array)
 	{
