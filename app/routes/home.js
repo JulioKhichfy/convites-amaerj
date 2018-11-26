@@ -48,6 +48,10 @@ module.exports = function(application){
 		application.app.controllers.home.detalhesevento(application, req, res);
 	});
 
+	application.post('/eventos/detalhes/salvar-observacao', function(req, res){
+		application.app.controllers.home.salvarObservacaoDetalhesEvento(application, req, res);
+	});
+
 	application.post('/eventos/salvar', function(req, res){
 		application.app.controllers.home.salvarevento(application, req, res);
 	});
@@ -73,7 +77,6 @@ module.exports = function(application){
 	});
 
 	application.post('/convidados2evento', function(req, res){
-		console.log("convidados2evento alvo");
 		application.app.controllers.home.getConvidadosFromSelectEventos(application, req, res);
 	});
 

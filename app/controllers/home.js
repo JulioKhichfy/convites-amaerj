@@ -1,7 +1,7 @@
 
 /*BASE DE DADOS*/
 var hasValue = require('has-values');
-var HashTable = require('hashtable');
+//var HashTable = require('hashtable');
 //var Map = require('hashtable/es6-map');
 
 module.exports.show = function(application, req, res){
@@ -304,6 +304,28 @@ function construirQueryByConvidadosMap(convidados_map){
 		sql_str += sql[i];	
 	}
 	return sql_str;
+}
+
+
+module.exports.salvarObservacaoDetalhesEvento = function(application, req, res){
+
+	var connection = application.config.dbConnection();
+	var eventosModel = new application.app.models.DadosDAO(connection);
+	var idevento = req.body["idevento"];
+	var observacao = req.body["observacao"];
+
+	eventosModel.salvarObservacaoDetalhesEvento(idevento,observacao,function(error,result)
+	{
+		if(error)
+		{
+	 		res.send("Erro ao salvar observação");
+		}
+		else
+		{
+			res.send("Observação Salva com sucesso");
+		}
+	});
+
 }
 
 module.exports.detalhesevento = function(application, req, res){

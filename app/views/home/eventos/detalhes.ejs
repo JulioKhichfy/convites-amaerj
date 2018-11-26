@@ -12,6 +12,7 @@
 
 <body>
 	<% include ../menu.ejs%>
+	<%var eventoid = evento['id']%>
 	<div class="container">
 		<div class="jumbotron">
 		  	<div class="row">
@@ -27,20 +28,16 @@
 		  			<!--Textarea with icon prefix-->
 					<div class="md-form">
 			  			<i class="fa fa-pencil prefix"></i>
-			  			<textarea type="text" name="obsevacoesEventos" class="md-textarea form-control" rows="15"></textarea>
-			  			<label for="form10">Anotações</label>
+			  			<textarea id="<%= eventoid %>" type="text" name="obsevacoesEventos" class="md-textarea form-control" rows="15"><%=evento["observacao"]%></textarea>
+			  			<label>Anotações</label>
+			  			<span class="fas fa-save" style="cursor: pointer; color:red" id="<%= eventoid %>" onclick="salvarObservacaoEvento(this);"></span>
 					</div>
 		  		</div>		
 		  	</div>
 		</div>
 		<div class="row">
-       		<div class="col-md-12">
-    			<div class="jumbotron jumbotron-fluid">
-					<div class="row">
-						<label>Pesquisar</label><input type="text" id="myInput" style="max-width:200px" />
-	        		</div>
-				</div>
-			</div>
+			<span class="fas fa-search"></span>
+			<input type="text" id="myInput" style="max-width:200px" />
 		</div>
 
 		<div class="row">
@@ -56,7 +53,7 @@
 			    </tr>
 			  </thead>
 			  <tbody id="mytable_body">
-			  	<%var eventoid = evento['id']%>
+			  	
 			  	<% for(var i = 0; i < selecionaveis.length; i++) { var data="convidado"+i; %>
 			    <tr id="<%=data%>">
 			      <td><%= selecionaveis[i].tratamento %></td>

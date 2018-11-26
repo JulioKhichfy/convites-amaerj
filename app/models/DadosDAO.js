@@ -70,6 +70,12 @@ DadosDAO.prototype.salvarevento = function(evento, callback){
 	this._connection.query('insert into EVENTOS set ? ', evento, callback);
 }
 
+
+DadosDAO.prototype.salvarObservacaoDetalhesEvento = function(eventoId, obs, callback){
+	var sql = 'UPDATE EVENTOS SET observacao =\''+obs+'\'  WHERE id = '+eventoId;
+	this._connection.query(sql, callback);
+}
+
 DadosDAO.prototype.alterarevento = function(evento, callback){
 	var sql = 'UPDATE EVENTOS SET nome =\''+evento["nome"]+'\', data = \''+evento["data"]+'\',hora=\''+evento["hora"]+'\',endereco=\''+evento["endereco"]+'\' WHERE id = '+evento["id"];
 	this._connection.query(sql, callback);

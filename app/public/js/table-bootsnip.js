@@ -134,3 +134,18 @@ function esconderPessoa(event,idselecionado,tbn){
     });
 }
 
+function salvarObservacaoEvento(event){
+    var id=event.id;
+    var obs = $("#"+id).val();
+     $.post( '/eventos/detalhes/salvar-observacao', { observacao: obs , idevento:id }, 
+        function(data,status){
+            if(status=='success'){
+                alert(data);
+            }
+            else{
+                alert(data);
+            }
+    });
+}
+
+
