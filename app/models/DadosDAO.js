@@ -120,6 +120,16 @@ DadosDAO.prototype.removerConvidado = function(id_pessoa,id_evento, tbn, callbac
 	this._connection.query(sql, callback);
 	
 }
+DadosDAO.prototype.saveDocumento = function(nomeoriginal,idevento,nomegerado,caminho,callback){
+	var json={"nomeoriginal":nomeoriginal, "idevento":idevento, "nomegerado":nomegerado, "caminho":caminho};
+	console.log("json",json);
+	this._connection.query("INSERT INTO DOCUMENTOS set ?",json, callback);
+}
+//(nomeoriginal,idevento,nomegerado,caminho) values
+DadosDAO.prototype.buscardocumentos = function(idevento,callback){
+	this._connection.query("SELECT * FROM DOCUMENTOS WHERE idevento = ?",idevento, callback);
+}
+
 
 module.exports = function(){
 	return DadosDAO;

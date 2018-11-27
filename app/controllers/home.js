@@ -198,6 +198,67 @@ function parser_table_name(result){
 	return to_select;
 }
 
+module.exports.administrar = function(application, req, res){
+	res.render("admin/importar");
+}
+
+module.exports.upload = function(application, req, res){
+	console.log("upload",req.body);
+	
+	var connection = application.config.dbConnection();
+	var eventosModel = new application.app.models.DadosDAO(connection);
+
+	var idevento = req.body["eventoid"];
+	var nomeoriginal = req.file["originalname"];
+	var nomegerado = req.file["filename"];
+	var caminho = req.file["path"];
+
+	console.log("idevento",idevento);
+	console.log("nomeoriginal",nomeoriginal);
+	console.log("nomegerado",nomegerado);
+	console.log("caminho",caminho);
+	
+	eventosModel.saveDocumento(nomeoriginal,idevento,nomegerado,caminho,function(error, result){
+		if(error){
+			connection.end();
+		 	throw error;
+		}
+
+		eventosModel.getlistaconvidados2evento(idevento,function(error,result){
+			if(error){
+				connection.end();
+		 		throw error;
+			}
+			var map_convidados =  populaListaConvidadosMap(result);
+			var sql_str = construirQueryByConvidadosMap(map_convidados);
+			
+			eventosModel.buscarTodosConvidados(sql_str,function(error,result){
+				if(error){
+					connection.end();
+			 		throw error;
+				}
+				var convidados = result;
+				eventosModel.buscarevento(idevento,function(error,result){
+					if(error){
+						connection.end();
+				 		throw error;
+					}
+					var evento=result;
+					eventosModel.buscardocumentos(idevento,function(error,result){
+						if(error){
+							connection.end();
+				 			throw error;
+						}
+						res.render("home/eventos/detalhes",{evento:evento[0], selecionaveis:convidados, arquivos:result});
+					});
+				});
+			});	
+			
+		});
+		
+	});
+}
+
 /***EVENTOS****/
 
 module.exports.eventos = function(application, req, res){
@@ -352,7 +413,15 @@ module.exports.detalhesevento = function(application, req, res){
 						connection.end();
 				 		throw error;
 					}
-					res.render("home/eventos/detalhes",{evento:result[0], selecionaveis:convidados});
+					var evento=result;
+					eventosModel.buscardocumentos(idevento,function(error,result){
+						if(error){
+							connection.end();
+				 			throw error;
+						}
+						console.log("arquivos-result",result);
+						res.render("home/eventos/detalhes",{evento:evento[0], selecionaveis:convidados, arquivos:result});
+					});
 				});
 			});	
 		}

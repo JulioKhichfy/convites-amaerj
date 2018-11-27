@@ -25,7 +25,7 @@
 		  			<p class="lead">Endereço: <%= evento["endereco"] %></p>
 		  			<hr class="my-4">
 		  		</div>
-		  		<div class="col-md-9">
+		  		<div class="col-md-6">
 		  			<!--Textarea with icon prefix-->
 					<div class="md-form">
 			  			<i class="fa fa-pencil prefix"></i>
@@ -33,7 +33,40 @@
 			  			<label>Anotações</label>
 			  			<span class="fas fa-save" style="cursor: pointer; color:red" id="<%= eventoid %>" onclick="salvarObservacaoEvento(this);"></span>
 					</div>
-		  		</div>		
+		  		</div>
+		  		<div class="col-md-6">
+		  			<div class="row">
+		  				<div class="col-md-12">
+				  			<form action="/upload" method="post" enctype="multipart/form-data">
+		  						<input type="file" name="avatar" />
+		  						<input type="hidden" name="eventoid" value="<%=evento['id']%>" />
+		  						<input type="submit" name="btn-upload" value="OK" />
+							</form>
+						</div>
+					</div>
+					<div class="row">
+					  	<div class="table-responsive-sm">
+					  		<table class="table table-bordred table-striped" >
+					  			<thead>
+				    				<tr>
+				      					<th scope="col">Arquivo</th>
+				      					<th scope="col">Remover</th>
+				      				</tr>
+				      			</thead>
+				      			<%if(arquivos.length > 0){%>
+							  		<% for(var i = 0; i < arquivos.length; i++) { %>
+					  				<div class="col-md-12">
+						  				<tr>
+						  					<td><a href="/download?path=<%=arquivos[i].caminho%>"><%=arquivos[i].nomeoriginal%></a></td>
+						  					<td>Remover</td>
+						  				</tr>	
+									</div>
+									<%}%>
+								<%}%>  
+							</table>
+						</div>
+					</div>
+				</div>		
 		  	</div>
 		</div>
 		<div class="row">
@@ -42,33 +75,35 @@
 		</div>
 
 		<div class="row">
-			<table id="mytable" class="table table-bordred table-striped" >
-			  <thead>
-			    <tr>
-			      <th scope="col">Tratamento</th>
-			      <th scope="col">Nome</th>
-			      <th scope="col">Email</th>
-			      <th scope="col">Cargo</th>
-			      <!--th scope="col">Situação</th>-->
-			      <th scope="col">Remover</th>
-			    </tr>
-			  </thead>
-			  <tbody id="mytable_body">
-			  	
-			  	<% for(var i = 0; i < selecionaveis.length; i++) { var data="convidado"+i; %>
-			    <tr id="<%=data%>">
-			      <td><%= selecionaveis[i].tratamento %></td>
-			      <td><%= selecionaveis[i].nome %></td>
-			      <td><%= selecionaveis[i].email %></td>
-			      <td><%= selecionaveis[i].cargo %></td>
-			      <!--<td><%= selecionaveis[i].situacao %></td>-->
-			      <td>
-			      	<span class="fas fa-trash" style="cursor: pointer; color:red" id="<%=data%>"onclick="esconderConvidado(this,'<%=selecionaveis[i].id%>','<%= eventoid %>','<%=selecionaveis[i].tipo%>');"></span>
-		    	  </td>
-			    </tr>
-			    <% } %>
-			  </tbody>
-			</table>
+	  		<div class="table-responsive-sm">
+				<table id="mytable" class="table table-bordred table-striped" >
+				  <thead>
+				    <tr>
+				      <th scope="col">Tratamento</th>
+				      <th scope="col">Nome</th>
+				      <th scope="col">Email</th>
+				      <th scope="col">Cargo</th>
+				      <!--th scope="col">Situação</th>-->
+				      <th scope="col">Remover</th>
+				    </tr>
+				  </thead>
+				  <tbody id="mytable_body">
+				  	
+				  	<% for(var i = 0; i < selecionaveis.length; i++) { var data="convidado"+i; %>
+				    <tr id="<%=data%>">
+				      <td><%= selecionaveis[i].tratamento %></td>
+				      <td><%= selecionaveis[i].nome %></td>
+				      <td><%= selecionaveis[i].email %></td>
+				      <td><%= selecionaveis[i].cargo %></td>
+				      <!--<td><%= selecionaveis[i].situacao %></td>-->
+				      <td>
+				      	<span class="fas fa-trash" style="cursor: pointer; color:red" id="<%=data%>"onclick="esconderConvidado(this,'<%=selecionaveis[i].id%>','<%= eventoid %>','<%=selecionaveis[i].tipo%>');"></span>
+			    	  </td>
+				    </tr>
+				    <% } %>
+				  </tbody>
+				</table>
+			</div>
 		</div>	
 	</div>
 	    

@@ -1,0 +1,34 @@
+<!DOCTYPE HTML>
+<html lang="pt-br">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Administração - Gerência de eventos e convites</title>
+	<link rel="stylesheet" href="/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/css/style.css" >
+	<link rel="stylesheet" href="/css/all.css" >
+	<!-- favicon -->
+	<link rel="shortcut icon" href="images/logo-amaerj.jpg" />
+</head>
+
+<body>
+	<% include ../home/menu.ejs%>
+
+	<div class="container">
+
+		<form action="/upload" method="post" enctype="multipart/form-data">
+  			<input type="file" name="avatar" />
+  			<input type="submit" name="btn-upload" value="OK" />
+		</form>
+
+		
+	</div>
+
+	    
+<script src="/js/jquery.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/all.js"></script>
+<script src="/js/table-bootsnip.js"></script>
+	
+</body>
+</html>
