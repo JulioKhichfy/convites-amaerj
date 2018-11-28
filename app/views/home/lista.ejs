@@ -11,8 +11,10 @@
 	<link rel="shortcut icon" href="images/logo-amaerj.jpg" />
 </head>
 <body>
+	
 	<% include menu.ejs%>
-
+	
+	<div class="row">
 	<div class="container">
 		<div class="row">
 			<div class="col-md-6">
@@ -98,7 +100,7 @@
 								    	</a>
 								    </td>
 								    <td>
-								    	<span class="fas fa-trash" style="cursor: pointer; color:red" id="<%=data%>"onclick="esconderPessoa(this,'<%=listagem[i].id%>','<%=listagem[0].tipo%>');"></span>
+								    	<span class="fas fa-trash" style="cursor: pointer; color:red" id="<%=data%>"onclick="esconderPessoa(this,'<%=listagem[i].id%>','<%=listagem[0].tipo%>');"></span></td>
 								</tr>
 								
 							<%}%>
@@ -112,7 +114,8 @@
 			<%}%>
 		</form>
 	</div>
-	<script src="/js/jquery.min.js"></script>
+	<% include footer.ejs%>
+<script src="/js/jquery.min.js"></script>
 <script src="/js/bootstrap.min.js"></script>
 <script src="/js/all.js"></script>
 <script src="/js/table-bootsnip.js"></script>

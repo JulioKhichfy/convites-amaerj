@@ -3,6 +3,10 @@ module.exports = function(application){
 	//var multer  = require('multer');
 	//var upload = multer({ dest: './app/uploads'});
 
+	application.get('/index', function(req, res){
+		application.app.controllers.home.index(application, req, res);
+	});
+
 	application.get('/show', function(req, res){
 		application.app.controllers.home.show(application, req, res);
 	});
@@ -58,7 +62,7 @@ module.exports = function(application){
 		application.app.controllers.home.novoevento(application, req, res);
 	});
 
-	application.post('/eventos/detalhes', function(req, res){
+	application.get('/eventos/detalhes', function(req, res){
 		application.app.controllers.home.detalhesevento(application, req, res);
 	});
 

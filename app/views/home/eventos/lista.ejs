@@ -14,65 +14,63 @@
 	<% include ../menu.ejs%>
 	<div class="container">
 		<h3 class="text-primary">EVENTOS</h3>
-		<div class="row">
-			<%if(listagem.length > 0){%>
-    		<div class="col-md-12">
-    			<div class="jumbotron ">
-					<div class="row">
-			        	<div class="col-md-9">
-			        		<h4>Número de eventos cadastrados <%= listagem.length %></h4>
-			        	</div>
-			        	<div class="col-md-3">
-			        		<a href="/eventos/novo" class="btn btn-primary">INSERIR NOVO +</a>
-			        	</div>
-	        		</div>
-				</div>
-		    </div>
-		</div>    
-		<div class="row">
-        	<span class="fas fa-search"></span>
-        	<input type="text" id="myInput" style="max-width:200px" />
-		</div>
-		<div class="row">
-	        <div class="table-responsive">
-      			<table id="mytable" class="table table-bordred table-striped">
-           			<thead>
-	                    <th>Nome</th>
-                     	<th>Data</th>
-                     	<th>Hora</th>
-                     	<th>Endereço</th>
-                      	<th>Editar</th>
-                       	<th>Remover</th>
-           			</thead>
-					<tbody id="mytable_body">
-						<% for(var i = 0; i < listagem.length; i++) {%>
-							<tr>
-							    <td>
-							    	<form action="/eventos/detalhes" method="post">	
-							    		<button type="submit" class="btn btn-primary"><%= listagem[i].nome %></button>
-							    		<input type="hidden" name="ideventoclicado" value="<%=listagem[i].id%>">
-							    	</form>
-							    </td>
-							    <td><%= listagem[i].data %></td>
-							    <td><%= listagem[i].hora %></td>
-							    <td><%= listagem[i].endereco %></td>
-							    <td>
-							    	<a href="/eventos/novo?id=<%=listagem[i].id%>">
-							    		<span class="fas fa-edit" style="cursor: pointer;"></span>
-							    	</a>
-							    </td>
-							    <td>
-							    	<a href="/eventos/remover?id=<%=listagem[i].id%>" >
-							    		<span class="fas fa-trash" style="cursor: pointer; color:red"></span>
-							    	</a>
-							    </td>
-							</tr>
-						<%}%>
-					</tbody>
-				</table>
+		<%if(listagem.length > 0){%>
+			<div class="row">
+	    		<div class="col-md-12">
+	    			<div class="jumbotron ">
+						<div class="row">
+				        	<div class="col-md-9">
+				        		<h4>Número de eventos cadastrados <%= listagem.length %></h4>
+				        	</div>
+				        	<div class="col-md-3">
+				        		<a href="/eventos/novo" class="btn btn-primary">INSERIR NOVO +</a>
+				        	</div>
+		        		</div>
+					</div>
+			    </div>
+			</div>    
+			<div class="row">
+	        	<span class="fas fa-search"></span>
+	        	<input type="text" id="myInput" style="max-width:200px" />
 			</div>
-		</div>
-		</div>
+			<div class="row">
+		        <div class="table-responsive p-4 mb-5">
+	      			<table id="mytable" class="table table-bordred table-striped">
+	           			<thead>
+		                    <th>Nome</th>
+	                     	<th>Data</th>
+	                     	<th>Hora</th>
+	                     	<th>Endereço</th>
+	                      	<th>Editar</th>
+	                       	<th>Remover</th>
+	           			</thead>
+						<tbody id="mytable_body">
+							<% for(var i = 0; i < listagem.length; i++) {%>
+								<tr>
+								    <td>
+								    	<a href="/eventos/detalhes?ideventoclicado=<%=listagem[i].id%>" >
+								    		<span class="btn btn-primary" style="cursor: pointer; color:white"><%=listagem[i].nome%></span>
+								    	</a>
+								    </td>
+								    <td><%= listagem[i].data %></td>
+								    <td><%= listagem[i].hora %></td>
+								    <td><%= listagem[i].endereco %></td>
+								    <td>
+								    	<a href="/eventos/novo?id=<%=listagem[i].id%>">
+								    		<span class="fas fa-edit" style="cursor: pointer;"></span>
+								    	</a>
+								    </td>
+								    <td>
+								    	<a href="/eventos/remover?id=<%=listagem[i].id%>" >
+								    		<span class="fas fa-trash" style="cursor: pointer; color:red"></span>
+								    	</a>
+								    </td>
+								</tr>
+							<%}%>
+						</tbody>
+					</table>
+				</div>
+			</div>
 		<%}else {%>
 			<div class="jumbotron jumbotron-fluid">
 					<div class="container">
@@ -84,7 +82,7 @@
 			</div>
 		<%}%>
 	</div>
-</div>
+<% include ../footer.ejs%>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/bootstrap.min.js"></script>
 <script src="/js/all.js"></script>
