@@ -1,12 +1,15 @@
 var express = require('express');
-
+var fileUpload = require('express-fileupload');
 var consign = require('consign');
 var bodyParser = require('body-parser');
 var expressValidator = require('express-validator');
 
 var app = express();
+
 app.set('view engine', 'ejs');
 app.set('views', './app/views');
+
+app.use(fileUpload());
 
 app.use('/images', express.static('./app/public/images'));
 app.use('/css', express.static('./app/public/css'));

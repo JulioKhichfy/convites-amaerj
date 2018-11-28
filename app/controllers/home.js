@@ -203,59 +203,26 @@ module.exports.administrar = function(application, req, res){
 }
 
 module.exports.upload = function(application, req, res){
-	console.log("upload",req.body);
-	
-	var connection = application.config.dbConnection();
-	var eventosModel = new application.app.models.DadosDAO(connection);
 
+	console.log(req.body);
+	if (Object.keys(req.files).length == 0) {
+		return res.status(400).send('No files were uploaded.');
+	}
 	var idevento = req.body["eventoid"];
-	var nomeoriginal = req.file["originalname"];
-	var nomegerado = req.file["filename"];
-	var caminho = req.file["path"];
 
-	console.log("idevento",idevento);
-	console.log("nomeoriginal",nomeoriginal);
-	console.log("nomegerado",nomegerado);
-	console.log("caminho",caminho);
-	
-	eventosModel.saveDocumento(nomeoriginal,idevento,nomegerado,caminho,function(error, result){
-		if(error){
-			connection.end();
-		 	throw error;
-		}
-
-		eventosModel.getlistaconvidados2evento(idevento,function(error,result){
-			if(error){
-				connection.end();
-		 		throw error;
-			}
-			var map_convidados =  populaListaConvidadosMap(result);
-			var sql_str = construirQueryByConvidadosMap(map_convidados);
-			
-			eventosModel.buscarTodosConvidados(sql_str,function(error,result){
-				if(error){
-					connection.end();
-			 		throw error;
-				}
-				var convidados = result;
-				eventosModel.buscarevento(idevento,function(error,result){
-					if(error){
-						connection.end();
-				 		throw error;
-					}
-					var evento=result;
-					eventosModel.buscardocumentos(idevento,function(error,result){
-						if(error){
-							connection.end();
-				 			throw error;
-						}
-						res.render("home/eventos/detalhes",{evento:evento[0], selecionaveis:convidados, arquivos:result});
-					});
-				});
-			});	
-			
+	// The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
+	let sampleFile = req.files.sampleFile;
+	console.log("sampleFile",sampleFile["name"]);
+	// Use the mv() method to place the file somewhere on your server
+	sampleFile.mv('./app/uploads/'+"evento_"+idevento+"_"+sampleFile["name"], function(err) {
+		if (err)
+			return res.status(500).send(err);
+		var connection = application.config.dbConnection();
+		var eventosModel = new application.app.models.DadosDAO(connection);
+		eventosModel.saveDocumento(sampleFile["name"],idevento,"evento_"+idevento+"_"+sampleFile["name"],"./app/uploads/",function(error, result){
+			if(error) throw error;
+			res.send('File uploaded!');
 		});
-		
 	});
 }
 
@@ -393,50 +360,47 @@ module.exports.detalhesevento = function(application, req, res){
 	var connection = application.config.dbConnection();
 	var eventosModel = new application.app.models.DadosDAO(connection);
 	var idevento = req.body["ideventoclicado"];
+	var evento;
 
-	eventosModel.getlistaconvidados2evento(idevento,function(error,result){
-		if(error){
-			connection.end();
-	 		throw error;
-		}
-		var map_convidados =  populaListaConvidadosMap(result);
-		var sql_str = construirQueryByConvidadosMap(map_convidados);
-		if(sql_str!=""){
-			eventosModel.buscarTodosConvidados(sql_str,function(error,result){
-				if(error){
-					connection.end();
-			 		throw error;
-				}
-				var convidados = result;
-				eventosModel.buscarevento(idevento,function(error,result){
-					if(error){
-						connection.end();
-				 		throw error;
-					}
-					var evento=result;
-					eventosModel.buscardocumentos(idevento,function(error,result){
-						if(error){
-							connection.end();
-				 			throw error;
-						}
-						console.log("arquivos-result",result);
-						res.render("home/eventos/detalhes",{evento:evento[0], selecionaveis:convidados, arquivos:result});
+	eventosModel.buscarevento(idevento,function(error,result){
+		if(error) throw error;
+	 	
+	 	evento=result;
+	 	
+	 	eventosModel.getlistaconvidados2evento(idevento,function(error,result){
+			if(error) throw error;
+			
+			if(result.length > 0){
+				var map_convidados =  populaListaConvidadosMap(result);
+				var sql_str = construirQueryByConvidadosMap(map_convidados);
+
+				eventosModel.buscarTodosConvidados(sql_str,function(error,result){
+					if(error) throw error;
+			 		var convidados = result;
+			 		eventosModel.buscardocumentos(idevento,function(error,result){
+						if(error) throw error;
+						if(result.length > 0)
+							res.render("home/eventos/detalhes",{evento:evento[0], selecionaveis:convidados, arquivos:result});
+						else
+							res.render("home/eventos/detalhes",{evento:evento[0], selecionaveis:convidados, arquivos:[]});
 					});
+			 	});
+				
+			
+			}else{
+				map_convidados = new Map();
+				eventosModel.buscardocumentos(idevento,function(error,result){
+					if(error) throw error;
+					if(result.length > 0)
+						res.render("home/eventos/detalhes",{evento:evento[0], selecionaveis:[], arquivos:result});
+					else
+						res.render("home/eventos/detalhes",{evento:evento[0], selecionaveis:[], arquivos:[]});
 				});
-			});	
-		}
-		else
-		{
-			console.log("sem convidados");
-			eventosModel.buscarevento(idevento,function(error,result){
-				if(error){
-					connection.end();
-			 		throw error;
-				}
-				res.render("home/eventos/detalhes",{evento:result[0], selecionaveis:[] });
-			});
-		}
+				
+			}
+		});
 	});
+	
 }
 
 module.exports.gerenciarconvidado = function(application, req, res){

@@ -1,7 +1,7 @@
 module.exports = function(application){
 
-	var multer  = require('multer');
-	var upload = multer({ dest: './app/uploads'});
+	//var multer  = require('multer');
+	//var upload = multer({ dest: './app/uploads'});
 
 	application.get('/show', function(req, res){
 		application.app.controllers.home.show(application, req, res);
@@ -35,9 +35,12 @@ module.exports = function(application){
 		application.app.controllers.home.administrar(application, req, res);
 	});
 
-	application.post('/upload',  upload.single('avatar'), function (req, res, next) {
+	/*application.post('/upload',  upload.single('avatar'), function (req, res, next) {
 		application.app.controllers.home.upload(application, req, res);
-	});
+	});*/
+	application.post('/upload', function(req, res) {
+		application.app.controllers.home.upload(application, req, res);
+  	});
 	
 	application.get('/download', function(req, res){
 		var path_and_file = req.query["path"];

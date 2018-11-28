@@ -108,8 +108,6 @@ DadosDAO.prototype.getTodosSelecionaveisByEventoId = function(idevento, tablenam
 }
 
 DadosDAO.prototype.buscarTodosConvidados = function(sql, callback){
-	
-	console.log("buscarTodosConvidados ", sql);
 	this._connection.query(sql,callback);
 }
 
