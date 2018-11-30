@@ -70,7 +70,10 @@
 				  				<div class="col-md-12">
 					  				<tr>
 					  					<td><a href="/download?path=<%=arquivos[i].caminho%><%=arquivos[i].nomegerado%>"><%=arquivos[i].nomeoriginal%></a></td>
-					  					<td>Remover</td>
+					  					<td><a href="/remover-arquivo?path=<%=arquivos[i].caminho%><%=arquivos[i].nomegerado%>&id=<%=eventoid%>&nomegerado=<%=arquivos[i].nomegerado%>">
+					  						<span class="fas fa-trash" style="cursor: pointer; color:red"></span>
+					  					</a></td>
+					  					
 					  				</tr>	
 								</div>
 								<%}%>  

@@ -42,6 +42,12 @@ module.exports = function(application){
 	/*application.post('/upload',  upload.single('avatar'), function (req, res, next) {
 		application.app.controllers.home.upload(application, req, res);
 	});*/
+
+
+	application.get('/remover-arquivo', function(req, res){
+		application.app.controllers.home.removerArquivo(application, req, res);
+	});
+
 	application.post('/upload', function(req, res) {
 		application.app.controllers.home.upload(application, req, res);
   	});

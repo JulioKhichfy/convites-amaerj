@@ -164,6 +164,34 @@ module.exports.upload = function(application, req, res){
 	});
 }
 
+module.exports.removerArquivo = function(application, req, res){
+	var path = req.query["path"];
+	var id = req.query["id"];
+	var nomeGerado = req.query["nomegerado"];
+	console.log("path",path);
+	console.log("id",id);
+	console.log("nomegerado",nomeGerado);
+
+	const fs = require('fs');
+	const filePath = path;
+		fs.access(filePath, error => {
+		    if (!error) {
+		        fs.unlinkSync(filePath);
+		        var connection = application.config.dbConnection();
+				var eventosModel = new application.app.models.DadosDAO(connection);
+		        eventosModel.removerDocumento(nomeGerado,id,function(error, result){
+					if(error) throw error;
+					res.redirect("eventos/detalhes?ideventoclicado="+id);
+				});
+		    } else {
+		        console.log(error);
+		        res.redirect("eventos/detalhes?ideventoclicado="+id+"&erros=O arquivo não foi Excluído. Entrar em contato com o programador");
+		    }
+		});
+
+}
+
+
 /***EVENTOS****/
 
 module.exports.eventos = function(application, req, res){

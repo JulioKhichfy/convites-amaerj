@@ -123,6 +123,14 @@ DadosDAO.prototype.saveDocumento = function(nomeoriginal,idevento,nomegerado,cam
 	console.log("json",json);
 	this._connection.query("INSERT INTO DOCUMENTOS set ?",json, callback);
 }
+
+DadosDAO.prototype.removerDocumento = function(nomeGerado,idEvento,callback){
+	var sql="DELETE FROM DOCUMENTOS WHERE idevento ="+idEvento+" AND nomegerado like '"+nomeGerado+"'";
+	console.log("sql",sql);
+	this._connection.query(sql,callback);
+}
+
+
 //(nomeoriginal,idevento,nomegerado,caminho) values
 DadosDAO.prototype.buscardocumentos = function(idevento,callback){
 	this._connection.query("SELECT * FROM DOCUMENTOS WHERE idevento = ?",idevento, callback);
