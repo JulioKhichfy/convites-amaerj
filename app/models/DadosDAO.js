@@ -62,7 +62,7 @@ DadosDAO.prototype.remover = function(id, tablename, callback){
 
 DadosDAO.prototype.eventos = function(callback){
 	
-	this._connection.query('SELECT * FROM EVENTOS',callback);
+	this._connection.query('SELECT id, nome, data, hora, endereco FROM EVENTOS ORDER BY DATE(data) ASC ',callback);
 }
 
 DadosDAO.prototype.salvarevento = function(evento, callback){

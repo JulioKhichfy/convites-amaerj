@@ -38,8 +38,8 @@
 	      			<table id="mytable" class="table table-bordred table-striped">
 	           			<thead>
 		                    <th>Nome</th>
-	                     	<th>Data</th>
-	                     	<th>Hora</th>
+	                     	<th><label for="date">Data</label></th>
+	                     	<th><label for="hora">Hora</label></th>
 	                     	<th>Endereço</th>
 	                      	<th>Editar</th>
 	                       	<th>Remover</th>
@@ -52,8 +52,8 @@
 								    		<span class="btn btn-primary" style="cursor: pointer; color:white"><%=listagem[i].nome%></span>
 								    	</a>
 								    </td>
-								    <td><%= listagem[i].data %></td>
-								    <td><%= listagem[i].hora %></td>
+			              			<td><input id="date" type="date"  name ="data" value="<%= listagem[i].data %>" readonly></td>
+									<td><input type="time" id="hora" name="hora" value="<%= listagem[i].hora %>" readonly></td>
 								    <td><%= listagem[i].endereco %></td>
 								    <td>
 								    	<a href="/eventos/novo?id=<%=listagem[i].id%>">

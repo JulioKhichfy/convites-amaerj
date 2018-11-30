@@ -15,44 +15,55 @@
 		<% include ../menu.ejs%>
 		<div class="container">
 			<div class="row">
-        		<div class="col-md-12">
+        		<div class="col-md-6">
               		<form action="/eventos/salvar" method="post" name="formsalvar">
-              			<div class="row">
+              			<fieldset>
+              			<!--<div class="row">-->
 	              			<div class="form-group">
 	    						
 	              				<%if(evento.length > 0){%>
-	              					<h2>Editar Evento</h2>
-	              					<br>
+	              					<legend>Editar Evento</legend>
+	              					<p>
 	              					<label for="evento_nome">Nome</label>
 		              				<input class="form-control form-control-lg" type="text" name ="nome" id="evento_nome" value="<%= evento[0].nome %>">
+			              			</p>
+			              			<p>
+			              			<label for="date">Data</label>
+			              			<input id="date" type="date"  name ="data" value="<%= evento[0].data %>">
+			              			</p>
+			              			<p>
+			              			<label for="hora">Hora</label>
+									<input type="time" id="hora" name="hora" value="<%= evento[0].hora %>">
+									</p>
 			              			
-			              			<label for="evento_data">Data</label>
-			              			<input class="form-control form-control-lg" type="text" name ="data" id="evento_data" value="<%= evento[0].data %>">
-			              			
-			              			<label for="evento_hora">Hora</label>
-			              			<input class="form-control form-control-lg" type="text" name ="hora" id="evento_hora" value="<%= evento[0].hora %>">
-			              			
+			              			<p>
 			              			<label for="evento_endereco">Endereço</label>
 			              			<input class="form-control form-control-lg" type="text" name ="endereco" id="evento_endereco" value="<%= evento[0].endereco %>">
+			              			</p>
 			              			<input type="hidden" name="id" value="<%= evento[0].id %>">
 	              				<%} else{%>
-	              					<h2>Novo Evento</h2>
-	              					<br>
+	              					<legend>Novo Evento</legend>
+	              					<p>
 	              					<label for="evento_nome">Nome</label>
 		              				<input class="form-control form-control-lg" type="text" name ="nome" id="evento_nome">
-			              			
-			              			<label for="evento_data">Data</label>
-			              			<input class="form-control form-control-lg" type="text" name ="data" id="evento_data">
-			              			
-			              			<label for="evento_hora">Hora</label>
-			              			<input class="form-control form-control-lg" type="text" name ="hora" id="evento_hora">
-			              			
+			              			</p>
+			              			<p>
+		              				<label for="date">Data</label>
+			              			<input id="date" type="date"  name ="data">
+			              			</p>
+			              			<p>
+			              			<label for="appt">Hora</label>
+									<input type="time" id="appt" name="hora">
+									</p>
+			              			<p>
 			              			<label for="evento_endereco">Endereço</label>
+			              			</p>
 			              			<input class="form-control form-control-lg" type="text" name ="endereco" id="evento_endereco">
 	              				<%}%>
 		              			<br>
 							</div>
-						</div>
+						</fieldset>
+						<!--</div>-->
 						<div class="row">
 							<div class="col-md-3">
 								<a href="javascript:history.back()"  class="btn btn-primary">CANCELAR</a>
@@ -65,7 +76,7 @@
     			</div>
 			</div>
 		</div>
-		
+
 <script src="/js/jquery.min.js"></script>
 <script src="/js/bootstrap.min.js"></script>
 <script src="/js/all.js"></script>

@@ -20,8 +20,8 @@
 		  		<div class="col-md-4">
 		  			<h1 class="display-4"><%= evento["nome"] %></h1>
 		  			<hr class="my-4">
-		  			<p class="lead">Data: <%= evento["data"] %></p>
-		  			<p class="lead">Hora: <%= evento["hora"] %></p>
+		  			<p class="lead">Data:<input id="date" type="date"  name ="data" value="<%= evento['data'] %>" readonly></o>
+					<p class="lead">Hora:<input type="time" id="hora" name="hora" value="<%= evento['hora'] %>" readonly></p>
 		  			<p class="lead">Endereço: <%= evento["endereco"] %></p>
 		  			<hr class="my-4">
 		  		</div>

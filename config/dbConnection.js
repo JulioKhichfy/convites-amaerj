@@ -2,12 +2,12 @@ var mysql = require('mysql');
 
 var connMySQL = function(){
 	return mysql.createConnection({
-		//host : 'localhost',
-		host : 'mysql.premio-patricia-acioli.kinghost.net',
-		//user : 'root',
-		user : 'premiopatrici',
-		//password : 'admin',
-		password : 'kkjj00kkjj00',
+		host : 'localhost',
+		//host : 'mysql.premio-patricia-acioli.kinghost.net',
+		user : 'root',
+		//user : 'premiopatrici',
+		password : 'admin',
+		//password : 'kkjj00kkjj00',
 		database : 'premiopatrici'
 	});
 }
