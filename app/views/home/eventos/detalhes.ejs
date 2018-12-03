@@ -20,7 +20,7 @@
 		  		<div class="col-md-4">
 		  			<h1 class="display-4"><%= evento["nome"] %></h1>
 		  			<hr class="my-4">
-		  			<p class="lead">Data:<input id="date" type="date"  name ="data" value="<%= evento['data'] %>" readonly></o>
+		  			<p class="lead">Data:<input id="date" type="date"  name ="data" value="<%= evento['data'] %>" readonly></p>
 					<p class="lead">Hora:<input type="time" id="hora" name="hora" value="<%= evento['hora'] %>" readonly></p>
 		  			<p class="lead">Endereço: <%= evento["endereco"] %></p>
 		  			<hr class="my-4">
@@ -96,7 +96,7 @@
 				<input type="submit" class="btn btn-primary" value="Imprimir" id="printConvidados">
 			</div>
 			<div class="col-md-3">
-				<a href="#" class="btn btn-primary">Gerar Etiquetas</a>
+				<input type="submit" class="btn btn-primary" value="Gerar Etiquetas" id="gerarEtiquetas">
 			</div>
 		</div>
 		<hr class="my-4">
@@ -136,7 +136,31 @@
 				</div>
 			</div>
 		</div>	
+		
 	</div>
+	<div id="printEtiquetasId" style="display: none">
+		<%var tam = selecionaveis.length; %>	
+		<table border ="1">
+		<% for(var i = 0; i < selecionaveis.length; i++) {%>
+			<tr style="height: 30px, width: 100px;" >	
+			    <td>
+			      <%= selecionaveis[i].tratamento %>
+					<%= selecionaveis[i].nome %>
+					<%= selecionaveis[i].endereco %>
+					<%= selecionaveis[i].cep %>
+			    </td>
+			    
+			    <td>
+			      <%= selecionaveis[i].tratamento %>
+					<%= selecionaveis[i].nome %>
+					<%= selecionaveis[i].endereco %>
+					<%= selecionaveis[i].cep %>
+			    </td>
+		  	</tr>
+	  	<% } %>
+	  	</table>
+	</div>
+	
 	    
 <script src="/js/jquery.min.js"></script>
 <script src="/js/bootstrap.min.js"></script>

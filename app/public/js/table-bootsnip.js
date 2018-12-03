@@ -108,7 +108,10 @@ $(document).ready(function(){
     });
 
     $('#printConvidados').on('click',function(){
-        printData();
+        printConvidados();
+    })
+     $('#gerarEtiquetas').on('click',function(){
+        printEtiquetas();
     })
 });
 
@@ -152,8 +155,7 @@ function salvarObservacaoEvento(event){
     });
 }
 
-
-function printData()
+function printConvidados()
 {
    var divToPrint=document.getElementById("mytable");
    $(".print-conv").css( "display", "none" );    
@@ -162,6 +164,18 @@ function printData()
    newWin.print();
    newWin.close();
    $(".print-conv").css( "display", "inline"); 
+}
+
+function printEtiquetas()
+{
+   
+   var divToPrint=document.getElementById("printEtiquetasId");
+   $("#printEtiquetasId").css( "display", "inline");
+   newWin= window.open("");
+   newWin.document.write(divToPrint.outerHTML);
+   newWin.print();
+   newWin.close();
+   $("#printEtiquetasId").css( "display", "none");
 }
 
 
