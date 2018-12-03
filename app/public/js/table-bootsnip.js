@@ -106,6 +106,10 @@ $(document).ready(function(){
         $("#idtable").prop("value",tbn);
         $("#formlistagem").submit();
     });
+
+    $('#printConvidados').on('click',function(){
+        printData();
+    })
 });
 
 function esconderConvidado(event,idselecionado,idevento,tbn){
@@ -149,5 +153,15 @@ function salvarObservacaoEvento(event){
 }
 
 
+function printData()
+{
+   var divToPrint=document.getElementById("mytable");
+   $(".print-conv").css( "display", "none" );    
+   newWin= window.open("");
+   newWin.document.write(divToPrint.outerHTML);
+   newWin.print();
+   newWin.close();
+   $(".print-conv").css( "display", "inline"); 
+}
 
 

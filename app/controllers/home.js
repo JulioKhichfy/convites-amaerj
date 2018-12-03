@@ -371,6 +371,7 @@ module.exports.removerdalista = function(application, req, res){
 	});
 }
 
+
 function populaListaConvidadosMap(convidados){
 	var map_convidados = new Map();
 	for(var i = 0; i < convidados.length; i++ )

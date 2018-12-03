@@ -15,6 +15,9 @@ a:hover{
 	display:none;
 }
 
+.remover-print{
+	display:none;
+}
 /*.dados_wrapper{
 	background-color: #FFF;
 	padding:15px;
