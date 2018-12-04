@@ -139,6 +139,88 @@ module.exports.administrar = function(application, req, res){
 	res.render("admin/importar");
 }
 
+module.exports.importarTodaBaseDados = function(application, req, res){
+	
+	var removeAccents = require('remover-acentos');
+	var Excel = require('exceljs');
+	Excel.config.setValue('promise', require('bluebird'));
+
+	if (Object.keys(req.files).length == 0) {
+		res.render("admin/importar");
+	}
+	
+	let filexlxs = req.files.base;
+	
+	var TRATAMENTO;
+	var  NOME;
+	var  SEXO;
+	var  CARGO;
+	var  EMAIL;
+	var  TELEFONE;
+	var  ENDERECO;
+	var  CEP;
+
+	filexlxs.mv('./app/uploads/'+filexlxs["name"], function(err) {
+		if (err){
+			res.render("admin/importar");
+		}
+
+		var workbook = new Excel.Workbook();
+		var tbn=[];
+		workbook.xlsx.readFile('./app/uploads/'+filexlxs["name"])
+	    .then(function() {
+	        	workbook.eachSheet(function(worksheet, sheetId) {
+	        		var tbn_temp = removeAccents((worksheet["name"].toUpperCase()).replace(" ", "_"));
+	        		tbn.push(tbn_temp);
+			        console.log("tbn_temp", tbn_temp);
+			        worksheet.eachRow({ includeEmpty: false }, function(row, rowNumber) 
+			        {
+			        	row.eachCell({ includeEmpty: false }, function(cell, colNumber) 
+			        	{
+			        			if(rowNumber==1){
+				        			var c = removeAccents((((cell.value).toUpperCase()).replace("-", "")).trim());
+				        			console.log("nome da coluna",c);
+				        			switch(c) {
+									    case "TRATAMENTO":
+									        TRATAMENTO=colNumber;
+									        break;
+									    case "NOME":
+									       	NOME=colNumber;
+									        break;
+									    case "SEXO":
+									        SEXO=colNumber;
+									        break;
+									    case "CARGO":
+									        CARGO=colNumber;
+									        break;
+									    case "EMAIL":
+									        EMAIL=colNumber;
+									        break;
+									    case "TELEFONE":
+									        TELEFONE=colNumber;
+									        break;
+									    case "ENDERECO":
+									        ENDERECO=colNumber;
+									        break;
+									    case "CEP":
+									        CEP=colNumber;
+									        break;                        
+									    default:
+									        console.log("lixo", c);
+									}
+								}else{
+									console.log(row.getCell(NOME).value);
+								}
+						});
+					});
+				});
+	        	res.send(tbn);
+	    	});
+		
+	});
+}
+
+
 module.exports.upload = function(application, req, res){
 	var idevento = req.body["eventoid"];
 	if (Object.keys(req.files).length == 0) {

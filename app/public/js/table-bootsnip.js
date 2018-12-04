@@ -177,5 +177,3 @@ function printEtiquetas()
    newWin.close();
    $("#printEtiquetasId").css( "display", "none");
 }
-
-

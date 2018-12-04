@@ -15,18 +15,15 @@
 	<% include ../home/menu.ejs%>
 
 	<p>Importação de dados</p>
-	<p>Em construção</p>
+
 	<div class="container">
 
-		<form action="#" method="post" enctype="multipart/form-data">
-  			<input type="file" name="avatar" />
-  			<input type="submit" name="btn-upload" value="OK" />
+		<form action="/administrar/bd" method="post" enctype="multipart/form-data" id="formImportBase">
+  			<input id="arquivoexcel" type="file" name="base" />
+  			<input type="submit" name="btn-upload" value="Importar TODA base de dados" />
 		</form>
-
-		
 	</div>
 
-	    
 <script src="/js/jquery.min.js"></script>
 <script src="/js/bootstrap.min.js"></script>
 <script src="/js/all.js"></script>

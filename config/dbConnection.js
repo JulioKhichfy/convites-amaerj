@@ -6,7 +6,7 @@ var connMySQL = function(){
 		//host : 'mysql.premio-patricia-acioli.kinghost.net',
 		user : 'root',
 		//user : 'premiopatrici',
-		password : 'root',
+		password : 'admin',
 		//password : 'kkjj00kkjj00',
 		database : 'premiopatrici'
 	});

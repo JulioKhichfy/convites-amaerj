@@ -58,6 +58,13 @@ module.exports = function(application){
   		res.download(file); // Set disposition and send it.
 	});
 
+	
+	application.post('/administrar/bd', function(req, res) {
+		application.app.controllers.home.importarTodaBaseDados(application, req, res);
+  	});
+
+	
+
 	/***EVENTOS***/
 
 	application.get('/eventos', function(req, res){
