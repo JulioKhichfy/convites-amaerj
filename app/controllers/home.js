@@ -255,7 +255,7 @@ module.exports.importarTodaBaseDados = function(application, req, res){
     				//console.log("GERAL>>>>>",valuesGeneral[i]);
     			}
     			//dadosModel.values_to_insert(values_to_insert, function(error, result){
-
+				// olha isso:connection.destroy();
     			res.send(valuesGeneral);
     			//res.send("ok");
 
