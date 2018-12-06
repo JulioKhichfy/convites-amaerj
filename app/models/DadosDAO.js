@@ -2,26 +2,54 @@ function DadosDAO(connection){
 	this._connection = connection;
 }
 
+
+DadosDAO.prototype.createTablesFromExcel = function(tablename, callback){
+	
+	var sql="";
+	console.log("tablenames", tablename);
+	for(var i = 0 ; i < tablename.length ; i ++){
+		console.log("tablename", tablename[i]);
+		sql+=" DROP TABLE IF EXISTS `"+tablename[i]+"`;"+
+			" CREATE TABLE `"+tablename[i]+"`"+
+			"(`id` int(10) NOT NULL AUTO_INCREMENT,"+
+				"`tratamento` varchar(100) NULL,"+
+				"`nome` varchar(150) NULL,"+
+				"`cargo` varchar(100) NULL,"+
+				"`telefone` varchar(50) NULL,"+
+				"`email` varchar(100) NULL,"+
+				"`cep` varchar(30) NULL,"+
+				"`endereco` varchar(500) NULL,"+
+				"`sexo` varchar(10) NULL,"+
+				"`situacao` varchar(100) NULL,"+
+				"`tipo` varchar(255) NULL,"+
+				" PRIMARY KEY (`id`));";
+	}
+	console.log("sql", sql);
+	this._connection.query(sql, callback);
+}
+DadosDAO.prototype.values_to_insert = function(tbn,pessoas,callback){
+	return pessoas;
+
+	//this._connection.query('insert into '+tbn+' set ? ', pessoas, callback)
+	//this._connection.query("select * from "+tablename+" where tipo = ? " + " order by id desc ", tablename, callback);
+}
+
+
 DadosDAO.prototype.getTable = function(tablename, callback){
-	console.log("no model tbn "+ tablename);
 	this._connection.query("select * from "+tablename+" where tipo = ? " + " order by id desc ", tablename, callback);
 }
 
 DadosDAO.prototype.buscar = function(form, callback){
-	
 	this._connection.query("select * from "+form["tipo"]+" where tipo like '%"+form["buscanome"]+"%' order by id desc ", callback);
 }
 
 
 DadosDAO.prototype.getTupla = function(id, tablename, callback){
-	console.log("no dao getTupla ", id, tablename);
 	this._connection.query("select id, tratamento, nome, cargo, email, telefone, cep, endereco, sexo, situacao from "+ tablename +" where id = " + id , callback);
 }
 
 DadosDAO.prototype.getSelecionaveis = function(id, tablename, idselecionado, callback){
-	console.log("no dao getSelecionaveis ", id, tablename, idselecionado);
 	var sql = "select * from SELECIONADOS_EVENTOS where idevento = "+id+" and tablename like "+tablename+" and idselecionado = "+idselecionado ;
-	console.log("no dao getSelecionaveis sql", sql);
 	this._connection.query(sql , callback);
 }
 
@@ -31,7 +59,9 @@ DadosDAO.prototype.getConvidados = function(ids, tablename, callback){
 
 
 DadosDAO.prototype.getTipos = function(callback){
-	this._connection.query('SELECT distinct tipo FROM ASSOCIACOES UNION SELECT distinct tipo FROM AUTORIDADES_ESPECIAIS', callback);
+	var sql = "select TABLE_NAME from information_schema.tables WHERE TABLE_SCHEMA = 'amaerj' and TABLE_NAME not in('DOCUMENTOS','EVENTOS','SELECIONADOS_EVENTOS')";
+	//this._connection.query('SELECT distinct tipo FROM ASSOCIACOES UNION SELECT distinct tipo FROM AUTORIDADES_ESPECIAIS', callback);
+	this._connection.query(sql, callback);
 }
 
 DadosDAO.prototype.update = function(body,callback){

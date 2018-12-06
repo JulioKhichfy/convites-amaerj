@@ -12,16 +12,9 @@ module.exports.show = function(application, req, res){
 	var connection = application.config.dbConnection();
 	var dadosModel = new application.app.models.DadosDAO(connection);
 
-	var eventoscadastrados;
-	var listagem=null;
-	
-	dadosModel.eventos(function(error,result){
+	dadosModel.getTipos(function(error,result){
 		if(error)throw error;	
-		eventoscadastrados = result;
-		dadosModel.getTipos(function(error,result){
-			if(error)throw error;	
-			res.render("home/lista", {listagem:listagem, tables:parser_table_name(result),eventoscadastrados:eventoscadastrados, tbn:null});
-		});
+		res.render("home/lista", {listagem:null, tables:parser_table_name(result),eventoscadastrados:null, tbn:null});
 	});
 }
 
@@ -139,12 +132,15 @@ module.exports.administrar = function(application, req, res){
 	res.render("admin/importar");
 }
 
+
 module.exports.importarTodaBaseDados = function(application, req, res){
 	
 	var removeAccents = require('remover-acentos');
 	var Excel = require('exceljs');
 	Excel.config.setValue('promise', require('bluebird'));
-
+	var connection = application.config.dbConnection();
+	var dadosModel = new application.app.models.DadosDAO(connection);
+	
 	if (Object.keys(req.files).length == 0) {
 		res.render("admin/importar");
 	}
@@ -159,64 +155,113 @@ module.exports.importarTodaBaseDados = function(application, req, res){
 	var  TELEFONE;
 	var  ENDERECO;
 	var  CEP;
+	var  SITUACAO;
 
-	filexlxs.mv('./app/uploads/'+filexlxs["name"], function(err) {
-		if (err){
-			res.render("admin/importar");
+	filexlxs.mv('./app/uploads/'+filexlxs["name"], function(error) 
+	{
+		if (error){
+			console.log("erro no MV do arquivo");
+			throw error;
 		}
-
+		console.log("arquivo gravado em uploads");
 		var workbook = new Excel.Workbook();
-		var tbn=[];
 		workbook.xlsx.readFile('./app/uploads/'+filexlxs["name"])
-	    .then(function() {
-	        	workbook.eachSheet(function(worksheet, sheetId) {
-	        		var tbn_temp = removeAccents((worksheet["name"].toUpperCase()).replace(" ", "_"));
-	        		tbn.push(tbn_temp);
-			        console.log("tbn_temp", tbn_temp);
-			        worksheet.eachRow({ includeEmpty: false }, function(row, rowNumber) 
-			        {
-			        	row.eachCell({ includeEmpty: false }, function(cell, colNumber) 
-			        	{
-			        			if(rowNumber==1){
-				        			var c = removeAccents((((cell.value).toUpperCase()).replace("-", "")).trim());
-				        			console.log("nome da coluna",c);
-				        			switch(c) {
-									    case "TRATAMENTO":
-									        TRATAMENTO=colNumber;
-									        break;
-									    case "NOME":
-									       	NOME=colNumber;
-									        break;
-									    case "SEXO":
-									        SEXO=colNumber;
-									        break;
-									    case "CARGO":
-									        CARGO=colNumber;
-									        break;
-									    case "EMAIL":
-									        EMAIL=colNumber;
-									        break;
-									    case "TELEFONE":
-									        TELEFONE=colNumber;
-									        break;
-									    case "ENDERECO":
-									        ENDERECO=colNumber;
-									        break;
-									    case "CEP":
-									        CEP=colNumber;
-									        break;                        
-									    default:
-									        console.log("lixo", c);
-									}
-								}else{
-									console.log(row.getCell(NOME).value);
-								}
-						});
-					});
-				});
-	        	res.send(tbn);
-	    	});
-		
+	    .then(function() 
+	    {	
+	    	var tbn_temp=[];
+	    	var valuesGeneral=new Map();
+	    	console.log("INICIANDO CAPTURA DOS NOMES DAS SHEETS");
+	    	workbook.eachSheet(function(worksheet, sheetId) 
+	        {
+	        	var tbn_str = removeAccents(((worksheet["name"].toUpperCase()).trim()).replace(new RegExp(" ", 'g'), "_"));
+	        	valuesGeneral[tbn_str] = valuesGeneral[tbn_str] || [];
+
+	        	tbn_temp.push(tbn_str);//nome da tabela
+	        	var valuesToInsertTableSpecific=[];
+		        worksheet.eachRow({ includeEmpty: false }, function(row, rowNumber) 
+		        {
+		        	row.eachCell({ includeEmpty: false }, function(cell, colNumber) 
+		        	{
+	        			if(rowNumber==1)
+	        			{
+		        			var c = removeAccents((((cell.value).toUpperCase()).replace("-", "")).trim());
+		        			console.log("nome da coluna",c);
+		        			switch(c) 
+		        			{
+							    case "TRATAMENTO":
+							        TRATAMENTO=colNumber;
+							        break;
+							    case "NOME":
+							       	NOME=colNumber;
+							        break;
+							    case "SEXO":
+							        SEXO=colNumber;
+							        break;
+							    case "CARGO":
+							        CARGO=colNumber;
+							        break;
+							    case "EMAIL":
+							        EMAIL=colNumber;
+							        break;
+							    case "TELEFONE":
+							        TELEFONE=colNumber;
+							        break;
+							    case "ENDERECO":
+							        ENDERECO=colNumber;
+							        break;
+							    case "CEP":
+							        CEP=colNumber;
+							        break;
+							    case "SITUACAO":
+							        SITUACAO=colNumber;
+							        break;                                
+							    default:
+							        console.log("lixo", c);
+							}
+						}
+	       	 		});
+		        	if(rowNumber>1){
+						var trat_ = (row.getCell(TRATAMENTO).value == null || row.getCell(TRATAMENTO).text == "")?"":row.getCell(TRATAMENTO).text;//.replace(new RegExp(",", 'g'), " ");
+						console.log("trat_",trat_);
+						var nome_ = (row.getCell(NOME).value == null || row.getCell(NOME).text == "")?"":row.getCell(NOME).text;//.replace(new RegExp(",", 'g'), " ");
+						console.log("nome_",nome_);
+						var cargo_ = (row.getCell(CARGO).value == null || row.getCell(CARGO).text == "")?"":row.getCell(CARGO).text;//.replace(new RegExp(",", 'g'), " ");
+						console.log("cargo_",cargo_);
+						var telefone_ = (row.getCell(TELEFONE).value == null || row.getCell(TELEFONE).text == "")?"":row.getCell(TELEFONE).text;//.replace(new RegExp(",", 'g'), " ");
+						console.log("telefone_",telefone_);
+						var email_ = (row.getCell(EMAIL).value == null || row.getCell(EMAIL).text == "")?"":row.getCell(EMAIL).text;//.replace(new RegExp(",", 'g'), " ");
+						console.log("email_",email_);
+						var cep_ = (row.getCell(CEP).value == null || row.getCell(CEP).text == "")?"":row.getCell(CEP).text;//.replace(new RegExp(",", 'g'), " ");
+						console.log("cep_",cep_);
+						var endereco_ = (row.getCell(ENDERECO).value == null || row.getCell(ENDERECO).text == "")?"":(row.getCell(ENDERECO).text).replace(new RegExp(",", 'g'), " ");
+						console.log("endereco_",endereco_);
+						var sexo_ = (row.getCell(SEXO).value == null || row.getCell(SEXO).text == "")?"":row.getCell(SEXO).text;//.replace(new RegExp(",", 'g'), " ");
+						console.log("trat_",trat_);
+						var situacao_ = (row.getCell(SITUACAO).value == null || row.getCell(SITUACAO).text == "")?"":row.getCell(SITUACAO).text;//.replace(new RegExp(",", 'g'), " ");
+						console.log("trat_",trat_);
+						valuesGeneral[tbn_str].push('INSERT INTO '+tbn_str+' VALUES('+trat_+','+nome_+','+cargo_+','+telefone_+','+email_+','+cep_+','+endereco_+','+sexo_+','+situacao_+','+tbn_str+');');
+					}
+	        	});
+	    		
+			});
+			dadosModel.createTablesFromExcel(tbn_temp, function(error, result)
+    		{
+    			if (error){
+					console.log("erro no createTablesFromExcel");
+					throw error;
+				}
+    			console.log("SUCESSO NO CALLBACK PARA CRIAÇÃO DE TABELAS");
+    			for(var i  = 0 ; i < valuesGeneral.length ; i++){
+    				//console.log("GERAL>>>>>",valuesGeneral[i]);
+    			}
+    			//dadosModel.values_to_insert(values_to_insert, function(error, result){
+
+    			res.send(valuesGeneral);
+    			//res.send("ok");
+
+    			//});
+    		});
+		});
 	});
 }
 
@@ -280,7 +325,10 @@ module.exports.eventos = function(application, req, res){
 	var connection = application.config.dbConnection();
 	var eventosModel = new application.app.models.DadosDAO(connection);
 	eventosModel.eventos(function(error, result){
-		if(error)throw error;
+		if(error){
+			//throw error;
+			res.redirect("show");
+		}
 		res.render("home/eventos/lista", {listagem:result});
 	});
 
@@ -489,11 +537,14 @@ function construirQueryByConvidadosMap(convidados_map){
 }
 
 function parser_table_name(result){
+	
+
 	var to_select = new Array();
 	for(var s=0;s<result.length;s++){
-		to_select.push((result[s].tipo).replace("_", " "));
+		to_select.push((result[s].TABLE_NAME).replace("_", " "));
 	}
 	return to_select;
+	//res.send(result);
 }
 
 

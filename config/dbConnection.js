@@ -5,10 +5,11 @@ var connMySQL = function(){
 		host : 'localhost',
 		//host : 'mysql.premio-patricia-acioli.kinghost.net',
 		user : 'root',
+		multipleStatements:true,
 		//user : 'premiopatrici',
-		password : 'admin',
+		password : 'root',
 		//password : 'kkjj00kkjj00',
-		database : 'premiopatrici'
+		database : 'amaerj'
 	});
 }
 
