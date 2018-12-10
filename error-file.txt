@@ -1,0 +1,35 @@
+/home/juliock/Desktop/curso-node/amaerj-restrito/node_modules/mysql/lib/protocol/Parser.js:80
+        throw err; // Rethrow non-MySQL errors
+        ^
+
+Error: ER_TRUNCATED_WRONG_VALUE_FOR_FIELD: Incorrect string value: '\xE2\x80\x90105...' for column 'telefone' at row 1
+    at Query.Sequence._packetToError (/home/juliock/Desktop/curso-node/amaerj-restrito/node_modules/mysql/lib/protocol/sequences/Sequence.js:47:14)
+    at Query.ErrorPacket (/home/juliock/Desktop/curso-node/amaerj-restrito/node_modules/mysql/lib/protocol/sequences/Query.js:77:18)
+    at Protocol._parsePacket (/home/juliock/Desktop/curso-node/amaerj-restrito/node_modules/mysql/lib/protocol/Protocol.js:278:23)
+    at Parser.write (/home/juliock/Desktop/curso-node/amaerj-restrito/node_modules/mysql/lib/protocol/Parser.js:76:12)
+    at Protocol.write (/home/juliock/Desktop/curso-node/amaerj-restrito/node_modules/mysql/lib/protocol/Protocol.js:38:16)
+    at Socket.<anonymous> (/home/juliock/Desktop/curso-node/amaerj-restrito/node_modules/mysql/lib/Connection.js:91:28)
+    at Socket.<anonymous> (/home/juliock/Desktop/curso-node/amaerj-restrito/node_modules/mysql/lib/Connection.js:502:10)
+    at emitOne (events.js:116:13)
+    at Socket.emit (events.js:211:7)
+    at addChunk (_stream_readable.js:263:12)
+    at readableAddChunk (_stream_readable.js:250:11)
+    at Socket.Readable.push (_stream_readable.js:208:10)
+    at TCP.onread (net.js:597:20)
+    --------------------
+    at Protocol._enqueue (/home/juliock/Desktop/curso-node/amaerj-restrito/node_modules/mysql/lib/protocol/Protocol.js:144:48)
+    at Connection.query (/home/juliock/Desktop/curso-node/amaerj-restrito/node_modules/mysql/lib/Connection.js:200:25)
+    at DadosDAO.valuesToInsertFromExcel (/home/juliock/Desktop/curso-node/amaerj-restrito/app/models/DadosDAO.js:37:19)
+    at Query.<anonymous> (/home/juliock/Desktop/curso-node/amaerj-restrito/app/controllers/home.js:246:19)
+    at Query.<anonymous> (/home/juliock/Desktop/curso-node/amaerj-restrito/node_modules/mysql/lib/Connection.js:502:10)
+    at Query._callback (/home/juliock/Desktop/curso-node/amaerj-restrito/node_modules/mysql/lib/Connection.js:468:16)
+    at Query.Sequence.end (/home/juliock/Desktop/curso-node/amaerj-restrito/node_modules/mysql/lib/protocol/sequences/Sequence.js:83:24)
+    at Query._handleFinalResultPacket (/home/juliock/Desktop/curso-node/amaerj-restrito/node_modules/mysql/lib/protocol/sequences/Query.js:139:8)
+    at Query.OkPacket (/home/juliock/Desktop/curso-node/amaerj-restrito/node_modules/mysql/lib/protocol/sequences/Query.js:72:10)
+    at Protocol._parsePacket (/home/juliock/Desktop/curso-node/amaerj-restrito/node_modules/mysql/lib/protocol/Protocol.js:278:23)
+    at Parser.write (/home/juliock/Desktop/curso-node/amaerj-restrito/node_modules/mysql/lib/protocol/Parser.js:76:12)
+    at Protocol.write (/home/juliock/Desktop/curso-node/amaerj-restrito/node_modules/mysql/lib/protocol/Protocol.js:38:16)
+    at Socket.<anonymous> (/home/juliock/Desktop/curso-node/amaerj-restrito/node_modules/mysql/lib/Connection.js:91:28)
+    at Socket.<anonymous> (/home/juliock/Desktop/curso-node/amaerj-restrito/node_modules/mysql/lib/Connection.js:502:10)
+    at emitOne (events.js:116:13)
+    at Socket.emit (events.js:211:7)

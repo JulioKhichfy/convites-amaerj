@@ -3,6 +3,7 @@
 //var hasValue = require('has-values');
 //var HashTable = require('hashtable');
 //var Map = require('hashtable/es6-map');
+var removeAccents = require('remover-acentos');
 
 module.exports.index = function(application, req, res){
 	res.render("home/index");
@@ -11,10 +12,13 @@ module.exports.index = function(application, req, res){
 module.exports.show = function(application, req, res){
 	var connection = application.config.dbConnection();
 	var dadosModel = new application.app.models.DadosDAO(connection);
-
+	var mensagem = req.query["msg"];
+	if(mensagem === undefined){
+		mensagem=null;
+	}
 	dadosModel.getTipos(function(error,result){
 		if(error)throw error;	
-		res.render("home/lista", {listagem:null, tables:parser_table_name(result),eventoscadastrados:null, tbn:null});
+		res.render("home/lista", {listagem:null, tables:parser_table_name(result),eventoscadastrados:null, tbn:null,msg:mensagem});
 	});
 }
 
@@ -23,13 +27,16 @@ module.exports.filtrar = function(application, req, res){
 	var dadosModel = new application.app.models.DadosDAO(connection);
 
 	var tbn = req.body['tables'];
+
 	
 	if(tbn===undefined){
-		return res.redirect('/show');
+		return res.redirect("/show");
 	}
 
 	var tbn_selecionada = tbn;
 	tbn = tbn.replace(" ","_");
+
+
 	var tipos;
 	dadosModel.getTipos(function(error,result){
 		if(error)throw error;
@@ -40,7 +47,11 @@ module.exports.filtrar = function(application, req, res){
 			eventoscadastrados = result;
 			dadosModel.getTable(tbn, function(error, result){
 				if(error)throw error;
-				res.render("home/lista", {listagem : result, tables : tipos, eventoscadastrados : eventoscadastrados, tbn:tbn_selecionada});
+				
+				if(result.length > 0)
+					res.render("home/lista", {listagem : result, tables : tipos, eventoscadastrados : eventoscadastrados, tbn:tbn_selecionada, msg:null});
+				else
+					res.render("home/lista", {listagem : null, tables : tipos, eventoscadastrados : eventoscadastrados, tbn:tbn_selecionada, msg:"Esta tabela está vazia"});
 			});
 		});
 	});
@@ -77,7 +88,7 @@ module.exports.update = function(application, req, res){
 				dadosModel.getTipos(function(error,result){
 					if(error)throw error;
 					tipos=parser_table_name(result);
-					res.render("home/lista", {listagem:dadosByTableName, tables:tipos, eventoscadastrados : eventoscadastrados, tbn:tupla["tablename"]});
+					res.render("home/lista", {listagem:dadosByTableName, tables:tipos, eventoscadastrados : eventoscadastrados, tbn:tupla["tablename"],msg:null});
 				});
 			});
 		});
@@ -108,7 +119,7 @@ module.exports.salvarPessoa = function(application, req, res){
 				var tbn = form["tipo"].replace("_", " "); 
 				dadosModel.getTipos(function(error,result){
 					tipos=parser_table_name(result);
-					res.render("home/lista", {listagem:dadosByTableName, tables:tipos, eventoscadastrados:eventoscadastrados, tbn:tbn});
+					res.render("home/lista", {listagem:dadosByTableName, tables:tipos, eventoscadastrados:eventoscadastrados, tbn:tbn,msg:null});
 				});	
 			});
 		});
@@ -132,6 +143,21 @@ module.exports.administrar = function(application, req, res){
 	res.render("admin/importar");
 }
 
+module.exports.createOnlyTable = function(application, req, res){
+	
+	var name = req.body["tabela_nome"];
+	var tbn_temp =removeAccents(((name.toUpperCase()).trim()).replace(new RegExp(" ", 'g'), "_"));
+	console.log("tbn_temp",tbn_temp);
+
+	var connection = application.config.dbConnection();
+	var dadosModel = new application.app.models.DadosDAO(connection);
+
+	dadosModel.createOnlyTable(tbn_temp, function(error, result){
+		if(error) throw error;
+		res.redirect('/show?msg=Tabela Criada com Sucesso');
+	});
+}
+
 
 module.exports.importarTodaBaseDados = function(application, req, res){
 	
@@ -147,18 +173,19 @@ module.exports.importarTodaBaseDados = function(application, req, res){
 	
 	let filexlxs = req.files.base;
 	
-	var TRATAMENTO;
-	var  NOME;
-	var  SEXO;
-	var  CARGO;
-	var  EMAIL;
-	var  TELEFONE;
-	var  ENDERECO;
-	var  CEP;
-	var  SITUACAO;
+	var TRATAMENTO="";
+	var  NOME="";
+	var  SEXO="";
+	var  CARGO="";
+	var  EMAIL="";
+	var  TELEFONE="";
+	var  ENDERECO="";
+	var  CEP="";
+	var  SITUACAO="";
 
 	filexlxs.mv('./app/uploads/'+filexlxs["name"], function(error) 
 	{
+		console.log("iniciando upload");	
 		if (error){
 			console.log("erro no MV do arquivo");
 			throw error;
@@ -169,15 +196,18 @@ module.exports.importarTodaBaseDados = function(application, req, res){
 	    .then(function() 
 	    {	
 	    	var tbn_temp=[];
-	    	var valuesGeneral=new Map();
+	    	//var ins_temp=new Map();
+	    	var ins_temp=[]
+	    	//var valuesGeneral=new Map();
 	    	console.log("INICIANDO CAPTURA DOS NOMES DAS SHEETS");
 	    	workbook.eachSheet(function(worksheet, sheetId) 
 	        {
 	        	var tbn_str = removeAccents(((worksheet["name"].toUpperCase()).trim()).replace(new RegExp(" ", 'g'), "_"));
-	        	valuesGeneral[tbn_str] = valuesGeneral[tbn_str] || [];
-
+	        	//ins_temp[tbn_str] = ins_temp[tbn_str] || [];
+	 	
 	        	tbn_temp.push(tbn_str);//nome da tabela
-	        	var valuesToInsertTableSpecific=[];
+	        	//buildInserts();
+	        	
 		        worksheet.eachRow({ includeEmpty: false }, function(row, rowNumber) 
 		        {
 		        	row.eachCell({ includeEmpty: false }, function(cell, colNumber) 
@@ -185,7 +215,6 @@ module.exports.importarTodaBaseDados = function(application, req, res){
 	        			if(rowNumber==1)
 	        			{
 		        			var c = removeAccents((((cell.value).toUpperCase()).replace("-", "")).trim());
-		        			console.log("nome da coluna",c);
 		        			switch(c) 
 		        			{
 							    case "TRATAMENTO":
@@ -216,54 +245,50 @@ module.exports.importarTodaBaseDados = function(application, req, res){
 							        SITUACAO=colNumber;
 							        break;                                
 							    default:
-							        console.log("lixo", c);
+							        //console.log("lixo", c);
 							}
 						}
 	       	 		});
 		        	if(rowNumber>1){
-						var trat_ = (row.getCell(TRATAMENTO).value == null || row.getCell(TRATAMENTO).text == "")?"":row.getCell(TRATAMENTO).text;//.replace(new RegExp(",", 'g'), " ");
-						console.log("trat_",trat_);
-						var nome_ = (row.getCell(NOME).value == null || row.getCell(NOME).text == "")?"":row.getCell(NOME).text;//.replace(new RegExp(",", 'g'), " ");
-						console.log("nome_",nome_);
-						var cargo_ = (row.getCell(CARGO).value == null || row.getCell(CARGO).text == "")?"":row.getCell(CARGO).text;//.replace(new RegExp(",", 'g'), " ");
-						console.log("cargo_",cargo_);
-						var telefone_ = (row.getCell(TELEFONE).value == null || row.getCell(TELEFONE).text == "")?"":row.getCell(TELEFONE).text;//.replace(new RegExp(",", 'g'), " ");
-						console.log("telefone_",telefone_);
-						var email_ = (row.getCell(EMAIL).value == null || row.getCell(EMAIL).text == "")?"":row.getCell(EMAIL).text;//.replace(new RegExp(",", 'g'), " ");
-						console.log("email_",email_);
-						var cep_ = (row.getCell(CEP).value == null || row.getCell(CEP).text == "")?"":row.getCell(CEP).text;//.replace(new RegExp(",", 'g'), " ");
-						console.log("cep_",cep_);
-						var endereco_ = (row.getCell(ENDERECO).value == null || row.getCell(ENDERECO).text == "")?"":(row.getCell(ENDERECO).text).replace(new RegExp(",", 'g'), " ");
-						console.log("endereco_",endereco_);
-						var sexo_ = (row.getCell(SEXO).value == null || row.getCell(SEXO).text == "")?"":row.getCell(SEXO).text;//.replace(new RegExp(",", 'g'), " ");
-						console.log("trat_",trat_);
-						var situacao_ = (row.getCell(SITUACAO).value == null || row.getCell(SITUACAO).text == "")?"":row.getCell(SITUACAO).text;//.replace(new RegExp(",", 'g'), " ");
-						console.log("trat_",trat_);
-						valuesGeneral[tbn_str].push('INSERT INTO '+tbn_str+' VALUES('+trat_+','+nome_+','+cargo_+','+telefone_+','+email_+','+cep_+','+endereco_+','+sexo_+','+situacao_+','+tbn_str+');');
+						var trat_ = (row.getCell(TRATAMENTO).value == null || row.getCell(TRATAMENTO).text == "")?"x":row.getCell(TRATAMENTO).text;//.replace(new RegExp(",", 'g'), " ");
+						var nome_ = (row.getCell(NOME).value == null || row.getCell(NOME).text == "")?"x":row.getCell(NOME).text;//.replace(new RegExp(",", 'g'), " ");
+						var cargo_ = (row.getCell(CARGO).value == null || row.getCell(CARGO).text == "")?"x":row.getCell(CARGO).text;//.replace(new RegExp(",", 'g'), " ");
+						var telefone_ = (row.getCell(TELEFONE).value == null || row.getCell(TELEFONE).text == "")?"(xx)xxxx-xxxx":(row.getCell(TELEFONE).text).replace("|","").replace("/"," ").replace("//","").trim();
+						var email_ = (row.getCell(EMAIL).value == null || row.getCell(EMAIL).text == "")?"x":row.getCell(EMAIL).text;//.replace(new RegExp(",", 'g'), " ");
+						var cep_ = (row.getCell(CEP).value == null || row.getCell(CEP).text == "")?"xxxxx-xxx":row.getCell(CEP).text;//.replace(new RegExp(",", 'g'), " ");
+						var endereco_ = (row.getCell(ENDERECO).value == null || row.getCell(ENDERECO).text == "")?"x":(row.getCell(ENDERECO).text).replace(new RegExp(",", 'g'), " ");
+						var sexo_ = (row.getCell(SEXO).value == null || row.getCell(SEXO).text == "")?"x":row.getCell(SEXO).text;//.replace(new RegExp(",", 'g'), " ");
+						var situacao_ = (row.getCell(SITUACAO).value == null || row.getCell(SITUACAO).text == "")?"x":row.getCell(SITUACAO).text;//.replace(new RegExp(",", 'g'), " ");
+						ins_temp.push('INSERT INTO '+tbn_str+'(`tratamento`,`nome`,`cargo`,`telefone`,`email`,`cep`,`endereco`,`sexo`,`situacao`,`tipo`) VALUES("'+trat_+'","'+nome_+'","'+cargo_+'","'+telefone_+'","'+email_+'","'+cep_+'","'+endereco_+'","'+sexo_+'","'+situacao_+'","'+tbn_str+'");');
+						//ins_temp[tbn_str].push('INSERT INTO '+tbn_str+'(`tratamento`,`nome`,`cargo`,`telefone`,`email`,`cep`,`endereco`,`sexo`,`situacao`,`tipo`) VALUES("'+trat_+'","'+nome_+'","'+cargo_+'","'+telefone_+'","'+email_+'","'+cep_+'","'+endereco_+'","'+sexo_+'","'+situacao_+'","'+tbn_str+'");');
 					}
 	        	});
 	    		
 			});
+	        	//fim
 			dadosModel.createTablesFromExcel(tbn_temp, function(error, result)
     		{
     			if (error){
-					console.log("erro no createTablesFromExcel");
+					console.log("erro no createTablesFromExcel"); 
 					throw error;
 				}
     			console.log("SUCESSO NO CALLBACK PARA CRIAÇÃO DE TABELAS");
-    			for(var i  = 0 ; i < valuesGeneral.length ; i++){
-    				//console.log("GERAL>>>>>",valuesGeneral[i]);
-    			}
-    			//dadosModel.values_to_insert(values_to_insert, function(error, result){
-				// olha isso:connection.destroy();
-    			res.send(valuesGeneral);
-    			//res.send("ok");
-
-    			//});
+    			
+    			//ins_temp["PREFEITOS_DOS_MUNICIPIOS_DO_RJ"
+    			dadosModel.valuesToInsertFromExcel(ins_temp, function(error, result)
+    			{
+    				if (error){
+						console.log("erro na inserção dos dados");
+						throw error;
+					}
+					res.send("ok");
+    			});
+    			
     		});
 		});
-	});
+    });
 }
+
 
 
 module.exports.upload = function(application, req, res){
@@ -453,6 +478,7 @@ module.exports.gerenciarconvidado = function(application, req, res){
 	var linhas="";
 	if(s instanceof Array)
 	{
+		console.log("sou array");	
 		for(var i = 0 ; i < s.length ; i++)
 		{
 			if(i==s.length-1)
@@ -463,6 +489,7 @@ module.exports.gerenciarconvidado = function(application, req, res){
 	}
 	else
 	{
+		console.log("nao sou array");	
 		linhas= "("+s+","+idevento+","+tablename+","+0+","+0+");";
 		
 	}
@@ -538,7 +565,7 @@ function construirQueryByConvidadosMap(convidados_map){
 
 function parser_table_name(result){
 	
-
+	console.log("aqui>>>>>",result);
 	var to_select = new Array();
 	for(var s=0;s<result.length;s++){
 		to_select.push((result[s].TABLE_NAME).replace("_", " "));

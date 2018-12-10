@@ -3,35 +3,63 @@ function DadosDAO(connection){
 }
 
 
-DadosDAO.prototype.createTablesFromExcel = function(tablename, callback){
+DadosDAO.prototype.createTablesFromExcel = function(tablename,callback){
 	
 	var sql="";
-	console.log("tablenames", tablename);
+	//console.log("tablenames", tablename);
 	for(var i = 0 ; i < tablename.length ; i ++){
-		console.log("tablename", tablename[i]);
+		//console.log("tablename", tablename[i]);
 		sql+=" DROP TABLE IF EXISTS `"+tablename[i]+"`;"+
 			" CREATE TABLE `"+tablename[i]+"`"+
 			"(`id` int(10) NOT NULL AUTO_INCREMENT,"+
-				"`tratamento` varchar(100) NULL,"+
-				"`nome` varchar(150) NULL,"+
-				"`cargo` varchar(100) NULL,"+
-				"`telefone` varchar(50) NULL,"+
-				"`email` varchar(100) NULL,"+
-				"`cep` varchar(30) NULL,"+
+				"`tratamento` varchar(500) NULL,"+
+				"`nome` varchar(500) NULL,"+
+				"`cargo` varchar(500) NULL,"+
+				"`telefone` varchar(500) NULL,"+
+				"`email` varchar(500) NULL,"+
+				"`cep` varchar(500) NULL,"+
 				"`endereco` varchar(500) NULL,"+
-				"`sexo` varchar(10) NULL,"+
-				"`situacao` varchar(100) NULL,"+
-				"`tipo` varchar(255) NULL,"+
+				"`sexo` varchar(500) NULL,"+
+				"`situacao` varchar(500) NULL,"+
+				"`tipo` varchar(500) NULL,"+
 				" PRIMARY KEY (`id`));";
 	}
-	console.log("sql", sql);
+	//console.log("sql", sql);
 	this._connection.query(sql, callback);
 }
-DadosDAO.prototype.values_to_insert = function(tbn,pessoas,callback){
-	return pessoas;
-
-	//this._connection.query('insert into '+tbn+' set ? ', pessoas, callback)
+DadosDAO.prototype.valuesToInsertFromExcel = function(pessoas,callback){
+	
+	var sql="";
+	for(var i = 0 ; i < pessoas.length ; i ++){
+		sql+=pessoas[i];
+	}
+	//console.log("inserts:", sql);
+	this._connection.query(sql, callback)
 	//this._connection.query("select * from "+tablename+" where tipo = ? " + " order by id desc ", tablename, callback);
+}
+
+DadosDAO.prototype.createOnlyTable = function(tbn,callback){
+
+	if(tbn=="" || tbn==null){
+		callback(new Error("tabela vazia"));
+	}
+	var sql=" DROP TABLE IF EXISTS `"+tbn+"`;"+
+			" CREATE TABLE `"+tbn+"`"+
+			"(`id` int(10) NOT NULL AUTO_INCREMENT,"+
+				"`tratamento` varchar(500) NULL,"+
+				"`nome` varchar(500) NULL,"+
+				"`cargo` varchar(500) NULL,"+
+				"`telefone` varchar(500) NULL,"+
+				"`email` varchar(500) NULL,"+
+				"`cep` varchar(500) NULL,"+
+				"`endereco` varchar(500) NULL,"+
+				"`sexo` varchar(500) NULL,"+
+				"`situacao` varchar(500) NULL,"+
+				"`tipo` varchar(500) DEFAULT "+'"'+tbn+'"'+
+				", PRIMARY KEY (`id`));";
+	console.log("sql",sql);
+	this._connection.query(sql, callback)
+
 }
 
 
@@ -59,7 +87,7 @@ DadosDAO.prototype.getConvidados = function(ids, tablename, callback){
 
 
 DadosDAO.prototype.getTipos = function(callback){
-	var sql = "select TABLE_NAME from information_schema.tables WHERE TABLE_SCHEMA = 'amaerj' and TABLE_NAME not in('DOCUMENTOS','EVENTOS','SELECIONADOS_EVENTOS')";
+	var sql = "select TABLE_NAME from information_schema.tables WHERE TABLE_SCHEMA = 'premiopatrici' and TABLE_NAME not in('DOCUMENTOS','EVENTOS','SELECIONADOS_EVENTOS')";
 	//this._connection.query('SELECT distinct tipo FROM ASSOCIACOES UNION SELECT distinct tipo FROM AUTORIDADES_ESPECIAIS', callback);
 	this._connection.query(sql, callback);
 }

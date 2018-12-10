@@ -6,18 +6,22 @@
 	<title>Gerência de eventos e convites</title>
 	<link rel="stylesheet" href="/css/bootstrap.min.css">
 	<link rel="stylesheet" href="/css/style.css" >
-	<link rel="stylesheet" href="/css/all.css" >
+	<!--<link rel="stylesheet" href="/css/all.css" >-->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
 	<!-- favicon -->
-	<link rel="shortcut icon" href="images/logo-amaerj.jpg" />
+	<link rel="shortcut icon" href="/images/logo-amaerj.jpg" />
 </head>
 <body>
 	
 	<% include menu.ejs%>
+	<%if(msg!=null){%>
+		<span class="text-info text-center"><h4><%= msg %></h4></span>
+	<%}%>	
 	
-	<div class="row">
 	<div class="container">
-		<div class="row">
-			<div class="col-md-6">
+		<div class="row bg-dark">
+			<div class="col-auto py-3">
+				<h3 class="display-7 text-monospace text-white">Tabela</h3>
 				<form action="/filtrar" method="post" id="formlistagem">
 					<select id="tables" name="tables">
 						<%if(tbn==null){%>
@@ -36,36 +40,56 @@
 						<%}%>
 					</select>
 				</form>
+			</div>	
+			<div class="col-auto  py-2">
+				<button type="button" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#modalNovaTabela">
+				  <span class="fas fa-table text-monospace " style="cursor: pointer; color:white"> Nova Tabela Vazia</span>
+				</button>
+			</div>	
+			<div class="col-auto  py-2">
+				<button type="button" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#exampleModal">
+				  <span class="fas fa-file-import text-monospace" style="cursor: pointer; color:white"> Nova Tabela com dados do Excel
+				</button>
 			</div>
 		</div>
+
+		<hr/>
+			
 		<form action="/convidados" method="post" id="formconvidados">
 			<%if(listagem != null){%>
-				<div class="row">
-	        		<div class="col-md-12">
-	        			<div class="jumbotron jumbotron-fluid">
-				        	<a href="/novo?tablename=<%=listagem[0].tipo%>" class="btn btn-primary">INSERIR NOVO +</a>
-		        		</div>
-				    </div>
-				</div>    		
-	    		<div class="w-100"></div>
-	    		<div class="row">
-	    			<div class="col-md-4">
-		        		<span class="fas fa-search"></span>
-		        		<input type="text" id="myInput" style="max-width:200px" />
-		        	</div>
-		        	<div class="col-md-4">
-			        	<select id="meusEventos">
+				<div class="row bg-light">
+				  	<div class="col-auto py-2">
+				   		<a href="/novo?tablename=<%=listagem[0].tipo%>" class="btn btn-outline-primary btn-sm">
+				   			 <span class="fas fa-user text-monospace" style="cursor: pointer; color:black"> Inserir Novo</span></a>
+			 		</div>
+				 	<div class="col-auto py-2">
+				   		<button type="button" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#modalUpdateTable">
+				  			<span class="fas fa-table text-monospace " style="cursor: pointer; color:black"> Update com dados do Excel</span>
+						</button>
+				 	</div>
+				</div>
+				<hr/>
+	    		<div class="row bg-info">
+	        		<div class="col-6 px-2 py-2">
+					   	<select id="meusEventos">
 							<option selected="selected" disabled="true" value="-1">Selecione o evento</option>		
 							<% for(var k = 0; k < eventoscadastrados.length; k++) {%>
 								<option value='<%= eventoscadastrados[k].id %>'><%= eventoscadastrados[k].nome %></option>		
 							<% } %>
 						</select>
+				  	</div>
+				  	<div class="col-6 px-2 py-2">
+	        			<input id="submitselecionaveis" type="submit" disabled="true" value="CONFIRMAR SELEÇÃO" class="btn btn-primary-success btn-sm">
+	        		</div>
+				</div>
+
+				<div class="row">
+    				<div class="col-auto py-2">
+		        		<input type="text" id="myInput" style="max-width:200px" />
+		        		<span class="fas fa-search"></span>
 					</div>
-					<div class="col-md-4">
-		        		<input id="submitselecionaveis" type="submit" disabled="true" value="CONFIRMAR SELEÇÃO" class="btn btn-primary">
-		        	</div>
-	    		</div>
-		        <div class="table-responsive-sm">
+				</div>	
+				<div class="table-responsive-sm">
 	      			<table id="mytable" class="table table-bordred table-striped">
 	           			<thead>
 	           				<th><input type="checkbox" id="checkall" /></th>
@@ -73,13 +97,13 @@
 		                    <th>Nome</th>
 	                     	<th>Cargo</th>
 	                     	<th>Email</th>
-	                     	<th>Telefone</th>
+	                     	<th>Tel</th>
 	                     	<!--<th>CEP</th>-->
 	                     	<!--<th>Endereço</th>-->
 	                     	<!--<th>Sexo</th>-->
 	                     	<!--<th>Situação</th>-->
-	                      	<th>Editar</th>
-	                       	<th>Remover</th>
+	                      	<th><span class="fas fa-edit"></span></th>
+	                       	<th><span class="fas fa-trash"></span></th>
 	           			</thead>
 						<tbody id="mytable_body">
 							<% for(var i = 0; i < listagem.length; i++) {var data="pessoa"+i;%>
@@ -102,7 +126,6 @@
 								    <td>
 								    	<span class="fas fa-trash" style="cursor: pointer; color:red" id="<%=data%>"onclick="esconderPessoa(this,'<%=listagem[i].id%>','<%=listagem[0].tipo%>');"></span></td>
 								</tr>
-								
 							<%}%>
 							<input type="hidden" name="statuscheckbox" id="idStatuscheckbox" >
 							<input type="hidden" name="idtable" id="idtable" value="<%=listagem[0].tipo%>">
@@ -114,10 +137,86 @@
 			<%}%>
 		</form>
 	</div>
+	<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Importar do Excel</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      	<div class="jumbotron jumbotron-fluid"">
+        <p><h3>A tabela deverá ter as colunas:</h3></p>
+        <hr class="my-4"> 
+        <div class="row">
+        	<div class="col">TRATAMENTO
+        	</div>
+        	<div class="col">NOME
+        	</div>
+        	<div class="col">CARGO
+        	</div>
+        	<div class="col">TELEFONE
+        	</div>
+        	<div class="col">EMAIL
+        	</div>
+        	<div class="col">CEP
+        	</div>
+        	<div class="col">ENDERECO
+        	</div>
+        	<div class="col">SEXO
+        	</div>
+        	<div class="col">SITUACAO
+        	</div>
+        </div>
+        
+	  </div>
+  	</div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <form action="/administrar/update/table" method="post" enctype="multipart/form-data" id="formImportBase">
+  			<input id="arquivoexcel" type="file" name="base" />
+  			<input type="submit" name="btn-upload" value="Importar TODA base de dados" />
+		</form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalNovaTabela" tabindex="-1" role="dialog" aria-labelledby="modalNovaTabelaLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalNovaTabelaLabel">Nova Tabela</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+	  <div class="modal-body">
+	  	<form action="/administrar/create/only/table" method="post" enctype="application/x-www-form-urlencoded">
+  			<fieldset>
+	  			<legend>Nova Tabela</legend>
+				<p>
+					<label for="tabela_nome">Nome</label>
+					<input class="form-control form-control-lg" type="text" name ="tabela_nome" id="tabela_nome">
+				</p>
+	  			<input type="submit" name="btn-upload" value="Criar" />
+  			</fieldset>
+		</form>
+
+	  </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
 	
 <script src="/js/jquery.min.js"></script>
 <script src="/js/bootstrap.min.js"></script>
-<script src="/js/all.js"></script>
+<!--<script src="/js/all.js"></script>-->
 <script src="/js/table-bootsnip.js"></script>
 </body>
 </html>

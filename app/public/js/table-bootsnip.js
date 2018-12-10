@@ -7,7 +7,6 @@ $(document).ready(function(){
             $("#mytable input[type=checkbox]").each(function () {
                 $(this).prop("checked", true);
                 $(this).parent('td').addClass('fica_verde');
-                
             });
 
         } else {
@@ -52,6 +51,7 @@ $(document).ready(function(){
 
     $('#meusEventos').change(function(){ 
         var value = $(this).val();
+        
         $("#idevento").prop("value",value);
         $("#submitselecionaveis").prop("disabled", false);
         //alert( $("#idtable").val());
@@ -113,6 +113,10 @@ $(document).ready(function(){
      $('#gerarEtiquetas').on('click',function(){
         printEtiquetas();
     })
+
+     /*$('#myModal').on('shown.bs.modal', function () {
+        $('#myInput').trigger('focus')
+    })*/
 });
 
 function esconderConvidado(event,idselecionado,idevento,tbn){

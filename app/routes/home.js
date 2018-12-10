@@ -63,6 +63,19 @@ module.exports = function(application){
 		application.app.controllers.home.importarTodaBaseDados(application, req, res);
   	});
 
+  	application.post('/administrar/update/table', function(req, res) {
+		application.app.controllers.home.updateTableFromExcel(application, req, res);
+  	});
+
+  	application.post('/administrar/create/table', function(req, res) {
+		application.app.controllers.home.createTableFromExcel(application, req, res);
+  	});
+
+  	application.post('/administrar/create/only/table', function(req, res) {
+		application.app.controllers.home.createOnlyTable(application, req, res);
+  	});
+  	
+
 	
 
 	/***EVENTOS***/

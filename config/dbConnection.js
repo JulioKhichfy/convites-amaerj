@@ -9,7 +9,7 @@ var connMySQL = function(){
 		//user : 'premiopatrici',
 		password : 'root',
 		//password : 'kkjj00kkjj00',
-		database : 'amaerj'
+		database : 'premiopatrici'
 	});
 }
 
