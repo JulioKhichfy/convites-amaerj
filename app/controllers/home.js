@@ -144,11 +144,8 @@ module.exports.administrar = function(application, req, res){
 }
 
 module.exports.createOnlyTable = function(application, req, res){
-	
 	var name = req.body["tabela_nome"];
 	var tbn_temp =removeAccents(((name.toUpperCase()).trim()).replace(new RegExp(" ", 'g'), "_"));
-	console.log("tbn_temp",tbn_temp);
-
 	var connection = application.config.dbConnection();
 	var dadosModel = new application.app.models.DadosDAO(connection);
 
@@ -472,36 +469,65 @@ module.exports.gerenciarconvidado = function(application, req, res){
 	var connection = application.config.dbConnection();
 	var eventosModel = new application.app.models.DadosDAO(connection);
 	var dados = req.body;
+	
+	console.log("gerenciarconvidado");
 	var s = dados["selecionados"];
 	var tablename = "'"+dados["idtable"]+"'";
 	var idevento = dados["idevento"];
-	var linhas="";
-	if(s instanceof Array)
-	{
-		console.log("sou array");	
-		for(var i = 0 ; i < s.length ; i++)
-		{
-			if(i==s.length-1)
-				linhas+="("+s[i]+","+idevento+","+tablename+","+0+","+0+");";
-			else
-				linhas += "("+s[i]+","+idevento+","+tablename+","+0+","+0+"),";
+	var convidadoSolitarioId = dados["convidadoSolitario"];
+	//res.send(dados);
+	if(dados["convidadoSolitario"] != ""){
+		if(JSON.parse(dados["statuscheckbox"])){
+			//insert
+			eventosModel.adicionarConvidadoSolitarioNoEvento(convidadoSolitarioId,tablename,idevento,function(error,result){
+				if(error)throw error;
+				res.send("Convidado adicionado no evento");
+
+			});
+		}else{
+			//remove
+
+			eventosModel.removerConvidadoSolitarioNoEvento(convidadoSolitarioId,tablename,idevento, function(error, result){
+				if(error)throw error;
+				res.send("Convidado removido do evento");
+
+			});
+			
 		}
-	}
-	else
-	{
-		console.log("nao sou array");	
-		linhas= "("+s+","+idevento+","+tablename+","+0+","+0+");";
-		
-	}
-	eventosModel.criarlistaconvidados2evento(linhas,function(error,result){
-		if(error){
-			if(error.code == 'ER_DUP_ENTRY' || error.errno == 1062){
-				console.log("tentativa de inserir duplicado no BD");
+	}else{
+
+		if(JSON.parse(dados["statuscheckbox"])){
+			var linhas="";
+			for(var i = 0 ; i < s.length ; i++)
+			{
+				if(i==s.length-1)
+					linhas+="("+s[i]+","+idevento+","+tablename+","+0+","+0+");";
+				else
+					linhas += "("+s[i]+","+idevento+","+tablename+","+0+","+0+"),";
 			}
-			throw error;
+			eventosModel.criarlistaconvidados2evento(linhas,function(error,result){
+				if(error){
+					if(error.code == 'ER_DUP_ENTRY' || error.errno == 1062){
+						console.log("tentativa de inserir duplicado no BD");
+					}
+					throw error;
+				}
+				res.send("Convidados adicionados ao evento");
+			});
 		}
-		res.redirect("/eventos");
-	});
+		else{
+
+			eventosModel.removerlistaconvidados2evento(idevento, tablename,function(error,result){
+				if(error){
+					if(error.code == 'ER_DUP_ENTRY' || error.errno == 1062){
+						console.log("tentativa de inserir duplicado no BD");
+					}
+					throw error;
+				}
+				res.send("Convidados removidos do evento");
+			});
+		}
+	}
 }
 
 module.exports.getConvidadosFromSelectEventos = function(application, req, res){
@@ -565,7 +591,6 @@ function construirQueryByConvidadosMap(convidados_map){
 
 function parser_table_name(result){
 	
-	console.log("aqui>>>>>",result);
 	var to_select = new Array();
 	for(var s=0;s<result.length;s++){
 		to_select.push((result[s].TABLE_NAME).replace("_", " "));

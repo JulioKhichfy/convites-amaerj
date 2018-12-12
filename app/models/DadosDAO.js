@@ -149,9 +149,26 @@ DadosDAO.prototype.buscarevento = function(id, callback){
 
 DadosDAO.prototype.criarlistaconvidados2evento = function(linhas, callback){
 	var sql = "INSERT INTO SELECIONADOS_EVENTOS (idselecionado,idevento,tablename,enviado,confirmado) values "+linhas;
-	console.log("sql",sql);
 	this._connection.query(sql, callback);
 }
+
+DadosDAO.prototype.removerlistaconvidados2evento = function(idevento,tablename,callback){
+	var sql = "DELETE FROM SELECIONADOS_EVENTOS WHERE idevento="+idevento+" AND tablename="+tablename;
+	this._connection.query(sql, callback);
+}
+
+DadosDAO.prototype.adicionarConvidadoSolitarioNoEvento = function(convidadoSolitarioId,tablename,idevento, callback){
+	var json={"idselecionado":convidadoSolitarioId, "idevento":idevento, "tablename":tablename, "enviado":0,"enviado":0};
+	this._connection.query("INSERT INTO SELECIONADOS_EVENTOS set ?",json, callback);
+}
+DadosDAO.prototype.removerConvidadoSolitarioNoEvento = function(convidadoSolitarioId,tablename,idevento,callback){
+	var sql = "DELETE FROM SELECIONADOS_EVENTOS WHERE idselecionado="+convidadoSolitarioId+" AND idevento="+idevento+" AND tablename="+tablename;
+	console.log("sql delete", sql);
+	this._connection.query(sql, callback);
+}
+
+
+
 
 DadosDAO.prototype.getlistaconvidados2evento = function(id, callback){
 
@@ -160,8 +177,6 @@ DadosDAO.prototype.getlistaconvidados2evento = function(id, callback){
 
 DadosDAO.prototype.getTodosSelecionaveisByEventoId = function(idevento, tablename, callback){
 	
-	console.log("idevento ", idevento);
-	console.log("tablename ", tablename);
 	this._connection.query("SELECT idselecionado FROM SELECIONADOS_EVENTOS WHERE idevento ="+idevento+" and tablename like ?",tablename,callback);
 }
 
@@ -178,13 +193,11 @@ DadosDAO.prototype.removerConvidado = function(id_pessoa,id_evento, tbn, callbac
 }
 DadosDAO.prototype.saveDocumento = function(nomeoriginal,idevento,nomegerado,caminho,callback){
 	var json={"nomeoriginal":nomeoriginal, "idevento":idevento, "nomegerado":nomegerado, "caminho":caminho};
-	console.log("json",json);
 	this._connection.query("INSERT INTO DOCUMENTOS set ?",json, callback);
 }
 
 DadosDAO.prototype.removerDocumento = function(nomeGerado,idEvento,callback){
 	var sql="DELETE FROM DOCUMENTOS WHERE idevento ="+idEvento+" AND nomegerado like '"+nomeGerado+"'";
-	console.log("sql",sql);
 	this._connection.query(sql,callback);
 }
 

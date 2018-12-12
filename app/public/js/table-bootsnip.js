@@ -2,19 +2,58 @@ $(document).ready(function(){
 
     var selecionaveis = [];
     
-    $("#mytable #checkall").click(function () {
-        if ($("#mytable #checkall").is(':checked')) {
-            $("#mytable input[type=checkbox]").each(function () {
-                $(this).prop("checked", true);
-                $(this).parent('td').addClass('fica_verde');
-            });
+    
+    $("#mytable #checkall").click(function () 
+    {
+        if ($("#mytable #checkall").is(':checked')) 
+        {
+            if( $("#idevento").val() != "" )
+            {
+                $("#mytable input[type=checkbox]").each(function () {
+                    $(this).prop("checked", true);
+                    $(this).parent('td').addClass('fica_verde');
+                });
+
+                $("#convidadoSolitario").val("");
+                $("#idStatuscheckbox").val("true");
+                $.post( '/convidados', $('form#formconvidados').serialize(), function(data) {
+                   
+                    alert(data);
+                });
+            }
+            else
+            {
+                // modal de alerta para escolher um evento
+                $('#modalEscolhaUmEvento').modal('show');
+            }
+
 
         } else {
-            $("#mytable input[type=checkbox]").each(function () {
-                $(this).prop("checked", false);
-                $(this).parent('td').removeClass('fica_verde');
-            });
-        }
+                $("#mytable input[type=checkbox]").each(function () {
+                    $(this).prop("checked", false);
+                    $(this).parent('td').removeClass('fica_verde');
+                });
+
+                if( $("#idevento").val() != "" )
+                {
+                    $("#convidadoSolitario").val("");
+                    $("#idStatuscheckbox").val("false");
+                    $.post( '/convidados', $('form#formconvidados').serialize(), function(data) {
+                        
+                        alert(data);
+                    });
+                   
+                }
+                 else
+                {
+                    // modal de alerta para escolher um evento
+                    $('#modalEscolhaUmEvento').modal('show');
+                    $(this).parent('td').removeClass('fica_verde');
+                    $(this).prop("checked", false);
+                }
+
+            }
+
     });
 
     $("[data-toggle=tooltip]").tooltip();
@@ -29,7 +68,22 @@ $(document).ready(function(){
             $(this).parent('td').addClass('fica_verde');
             //$("#idlinha").val($(this).val());
             $("#idStatuscheckbox").val("true");
-            //$( "#formconvidados" ).submit();
+            
+            if( $("#idevento").val() != "" )
+            {
+                $("#convidadoSolitario").val($(this).val());
+                //$("#formconvidados").submit();
+                  $.post( '/convidados', $('form#formconvidados').serialize(), function(data) {
+                    alert(data);
+                  });
+            }
+            else
+            {
+                // modal de alerta para escolher um evento
+                $('#modalEscolhaUmEvento').modal('show');
+                $(this).parent('td').removeClass('fica_verde');
+                $(this).prop("checked", false);
+            }
         }
         else 
         {
@@ -37,7 +91,18 @@ $(document).ready(function(){
             $(this).parent('td').removeClass('fica_verde');
             //$("#idlinha").val($(this).val());
             $("#idStatuscheckbox").val("false");
-            //$( "#formconvidados" ).submit();
+            if($("#idevento").val() != "" ){
+                //$("#idevento").prop("value",id_evento);
+                $("#convidadoSolitario").val($(this).val());
+                //$("#formconvidados").submit();
+                $.post( '/convidados', $('form#formconvidados').serialize(), function(data) {
+                    alert(data);
+                    });
+            }
+            else
+            {
+                alert("Escolha um EVENTO primeiramente");
+            }
         }
     });
 
@@ -51,7 +116,7 @@ $(document).ready(function(){
 
     $('#meusEventos').change(function(){ 
         var value = $(this).val();
-        
+       
         $("#idevento").prop("value",value);
         $("#submitselecionaveis").prop("disabled", false);
         //alert( $("#idtable").val());
@@ -75,7 +140,7 @@ $(document).ready(function(){
                             var td_id = "#idtd"+data[i].idselecionado;
                             $(td_id).addClass('fica_verde');
                             $(td_id).find( "input" ).prop("checked", true);
-                            $(td_id).find( "input" ).prop("disabled", true);
+                            //$(td_id).find( "input" ).prop("disabled", true);
                         }
                     }
                     else
@@ -114,9 +179,9 @@ $(document).ready(function(){
         printEtiquetas();
     })
 
-     /*$('#myModal').on('shown.bs.modal', function () {
+     $('#myModal').on('shown.bs.modal', function () {
         $('#myInput').trigger('focus')
-    })*/
+    })
 });
 
 function esconderConvidado(event,idselecionado,idevento,tbn){

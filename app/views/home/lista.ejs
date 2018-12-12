@@ -67,12 +67,12 @@
 				  			<span class="fas fa-table text-monospace " style="cursor: pointer; color:black"> Update com dados do Excel</span>
 						</button>
 				 	</div>
-				</div>
+				</div> 
 				<hr/>
 	    		<div class="row bg-info">
 	        		<div class="col-6 px-2 py-2">
 					   	<select id="meusEventos">
-							<option selected="selected" disabled="true" value="-1">Selecione o evento</option>		
+							<option selected="selected" disabled="true" value="" >Selecione o evento</option>		
 							<% for(var k = 0; k < eventoscadastrados.length; k++) {%>
 								<option value='<%= eventoscadastrados[k].id %>'><%= eventoscadastrados[k].nome %></option>		
 							<% } %>
@@ -130,6 +130,7 @@
 							<input type="hidden" name="statuscheckbox" id="idStatuscheckbox" >
 							<input type="hidden" name="idtable" id="idtable" value="<%=listagem[0].tipo%>">
 							<input type="hidden" name="idevento" id="idevento" >
+							<input type="hidden" name="convidadoSolitario" id="convidadoSolitario" >
 							<!--<input type="hidden" name="idlinha" id="idlinha" >-->
 						</tbody>
 					</table>
@@ -209,6 +210,27 @@
 	  </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="modal" id="modalEscolhaUmEvento" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Selecione um Evento</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Por favor, selecione primeiramente o EVENTO que deseja incluir convidados</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
       </div>
     </div>
   </div>
